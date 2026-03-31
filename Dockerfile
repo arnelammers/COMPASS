@@ -30,7 +30,7 @@ USER $MAMBA_USER
 WORKDIR /home/mambauser/workflow
 
 # Install Python packages + Snakemake
-RUN micromamba install -y -n base -c conda-forge \
+RUN micromamba install -y -n base -c conda-forge -c bioconda -c defaults \
     snakemake \
     python=3.10 \
     matchms \
@@ -38,7 +38,6 @@ RUN micromamba install -y -n base -c conda-forge \
     scipy \
     networkx \
     pandas \
-    ms2lda \
     rdkit \
     scikit-learn \
     matplotlib \
@@ -46,26 +45,26 @@ RUN micromamba install -y -n base -c conda-forge \
     jupyter \
     && micromamba clean --all --yes
 
+# Create directory for tools
+RUN mkdir -p /home/mambauser/tools
+
 # Download ThermoRawFileParser
-RUN wget https://github.com/CompOmics/ThermoRawFileParser/releases/download/v2.0.0-dev/ThermoRawFileParser-v.2.0.0-dev-linux.zip \
+RUN wget https://github.com/CompOmics/ThermoRawFileParser/releases/download/v.2.0.0-dev/ThermoRawFileParser-v.2.0.0-dev-linux.zip \
     -O /home/mambauser/tools/ThermoRawFileParser.zip && \
     unzip /home/mambauser/tools/ThermoRawFileParser.zip -d /home/mambauser/tools/ && \
     rm /home/mambauser/tools/ThermoRawFileParser.zip
 
 # Install MZmine
-RUN wget https://github.com/mzmine/mzmine3/releases/download/3.1.0/MZmine-3.1.0.zip && \
-    unzip MZmine-3.1.0.zip -d /home/mambauser/tools/ && \
-    rm MZmine-3.1.0.zip
-ENV PATH="/home/mambauser/tools/MZmine-3.1.0/bin:$PATH"
+RUN wget https://github.com/mzmine/mzmine/releases/download/v4.9.14/mzmine_Linux_portable-4.9.14.zip && \
+    unzip mzmine_Linux_portable-4.9.14.zip -d /home/mambauser/tools/ && \
+    rm mzmine_Linux_portable-4.9.14.zip
+ENV PATH="/home/mambauser/tools/mzmine_Linux_portable-4.9.14/bin:$PATH"
 
 # Install SIRIUS
-RUN wget https://bio.informatik.uni-jena.de/downloads/Sirius-5.7.3_linux64.tar.gz && \
-    tar -xvzf Sirius-5.7.3_linux64.tar.gz -C /home/mambauser/tools/ && \
-    rm Sirius-5.7.3_linux64.tar.gz
-ENV PATH="/home/mambauser/tools/SIRIUS-5.7.3:$PATH"
-
-# Install MS2LDA dependencies
-RUN pip install pyms2lda
+RUN wget https://github.com/sirius-ms/sirius/releases/download/v6.3.4/sirius-6.3.4-linux-x64.zip && \
+    unzip sirius-6.3.4-linux-x64.zip -d /home/mambauser/tools/ && \
+    rm sirius-6.3.4-linux-x64.zip
+ENV PATH="/home/mambauser/tools/sirius-6.3.4-linux-x64/bin:$PATH"
 
 # Set working directory
 WORKDIR /home/mambauser/workflow
