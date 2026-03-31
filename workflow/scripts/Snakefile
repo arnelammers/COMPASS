@@ -1,0 +1,21 @@
+# Load config file 
+configfile: "config.yaml"
+
+# List of datasets from config.yaml
+DATASETS = list(config["datasets"]))
+
+rule all:
+    input:
+        expand("results/{dataset}/mzmine/output.mgf", dataset=DATASETS),
+        expand("results/{dataset}/mzmine/quant.csv", dataset=DATASETS)
+
+rule convert_to_mzml:
+    input:
+        dataset_dir="data/{dataset}"
+    output:
+        mzml_dir="data/{dataset}/mzml"
+    shell:
+        """
+        python3 workflow/scripts/convert_to_mzml.py \
+            --dataset-dir {input.dataset_dir}
+        """
