@@ -2,7 +2,7 @@
 configfile: "config.yaml"
 
 # List of datasets from config.yaml
-DATASETS = list(config["datasets"]))
+DATASETS = list(config["datasets"].keys())
 
 rule all:
     input:
