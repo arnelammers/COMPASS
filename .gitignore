@@ -1,0 +1,26 @@
+# Raw and processed data
+data/
+results/
+
+# Python / Conda
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+envs/
+*.conda
+*.condarc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Logs / temporary
+*.log
+*.tmp
+*.bak
+*.swp
+
+# System / OS files
+.DS_Store
+Thumbs.db
