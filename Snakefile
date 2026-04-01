@@ -1,5 +1,5 @@
 # Load config file 
-configfile: "config.yaml"
+configfile: "config/config.yaml"
 
 # List of datasets from config.yaml
 DATASETS = list(config["datasets"].keys())
