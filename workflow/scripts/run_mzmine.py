@@ -14,7 +14,7 @@ output_mzbatch = Path(snakemake.output["mzbatch"])
 
 # Get input files and template
 input_files = glob(dataset_dir / "mzml" / "*")
-template_file = Path("workflow/scripts/mzmine_batch_template.xml")
+template_file = Path("workflow/templates/mzmine_batch_template.xml")
 
 # Read template
 xml = template_file.read_text()
