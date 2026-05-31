@@ -10,9 +10,11 @@ rule all:
 
 rule convert_to_mzml:
     input:
-        dataset_dir="data/{dataset}"
+        raw_files = lambda wildcards: [
+            str(f) for f in Path(f"data/{wildcards.dataset}/raw").glob("*.raw")
+        ]
     output:
-        mzml_dir="data/{dataset}/mzml"
+        mzml_dir=directory("data/{dataset}/mzml")
     script:
         "scripts/convert_to_mzml.py"
 rule generate_mzmine_config:
