@@ -21,7 +21,7 @@ xml = xml.replace("{input_files}", input_files)
 xml = xml.replace("{metadata_file}", str(Path(snakemake.input["metadata_file"]).resolve()))
 
 # 3. Put output files in batch file
-output_dir = output_mzbatch.parent 
+output_dir = output_mzbatch.resolve().parent 
 xml = xml.replace("{output_feature_table}", str(output_dir / "feature_table.csv"))
 xml = xml.replace("{output_feature_table_before_subtraction}", str(output_dir / "feature_table_before_subtraction.csv"))
 xml = xml.replace("{output_annotations}", str(output_dir / "annotations.csv"))
