@@ -204,18 +204,18 @@
             <parameter name="Scan number"/>
             <parameter name="Base Filtering Integer"/>
             <parameter name="Retention time">
-                <min>0.30000001192092896</min>
-                <max>31.0</max>
+                <min>{rt_range_min}</min>
+                <max>{rt_range_max}</max>
             </parameter>
             <parameter name="Mobility"/>
             <parameter name="MS level filter" selected="MS1, level = 1">1</parameter>
             <parameter name="Scan definition"/>
-            <parameter name="Polarity">+</parameter>
+            <parameter name="Polarity">ANY</parameter>
             <parameter name="Spectrum type">ANY</parameter>
         </parameter>
         <parameter name="Minimum consecutive scans">4</parameter>
         <parameter name="Minimum intensity for consecutive scans">10000.0</parameter>
-        <parameter name="Minimum absolute height">50000.0</parameter>
+        <parameter name="Minimum absolute height">{minimum_feature_height}</parameter>
         <parameter name="m/z tolerance (scan-to-scan)">
             <absolutetolerance>0.002</absolutetolerance>
             <ppmtolerance>7.0</ppmtolerance>
@@ -247,7 +247,7 @@
                 <absolutetolerance>0.01</absolutetolerance>
                 <ppmtolerance>10.0</ppmtolerance>
             </parameter>
-            <parameter name="Retention time filter" selected="Use feature edges" unit="MINUTES">0.1</parameter>
+            <parameter name="Retention time filter" selected="Use feature edges" unit="MINUTES">{approximate_feature_fwhm}</parameter>
             <parameter name="Minimum relative feature height" selected="true">0.25</parameter>
             <parameter name="Minimum required signals" selected="true">1</parameter>
             <parameter name="Limit by ion mobility edges">true</parameter>
@@ -674,10 +674,10 @@
             <by_metadata column="type" group0="procedural_blank" includeExcludeType="include"/>
             <by_metadata column="" includeExcludeType="exclude"/>
         </parameter>
-        <parameter name="Minimum # of detection in blanks">3</parameter>
+        <parameter name="Minimum # of detection in blanks">{blank_subtraction_min_blank_presence}</parameter>
         <parameter name="Abundance measure">Height</parameter>
         <parameter name="Blank abundance ratio type">MAXIMUM</parameter>
-        <parameter name="Fold change increase" selected="true">3.0</parameter>
+        <parameter name="Fold change increase" selected="true">{blank_subtraction_fold_change_threshold}</parameter>
         <parameter name="Check abundance of">maximum_feature</parameter>
         <parameter name="Create secondary list of subtracted features">false</parameter>
         <parameter name="Suffix">subtracted</parameter>

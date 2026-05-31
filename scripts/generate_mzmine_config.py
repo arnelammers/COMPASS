@@ -42,10 +42,14 @@ xml = xml.replace("{output_feature_table_before_subtraction}", str(output_dir / 
 xml = xml.replace("{output_annotations}", str(output_dir / "annotations.csv"))
 xml = xml.replace("{output_export_sirius}", str(output_dir / "export_sirius.mgf"))
 
+# 4. Put other parameters in batch file
+xml = xml.replace("{rt_range_min}", str(dataset_config.mzmine.retention_time_range[0]))
+xml = xml.replace("{rt_range_max}", str(dataset_config.mzmine.retention_time_range[1]))
+xml = xml.replace("{minimum_feature_height}", str(dataset_config.mzmine.minimum_feature_height))
+xml = xml.replace("{approximate_feature_fwhm}", str(dataset_config.mzmine.approximate_feature_fwhm))
+xml = xml.replace("{blank_subtraction_min_blank_presence}", str(dataset_config.mzmine.blank_subtraction.min_blank_presence))
+xml = xml.replace("{blank_subtraction_fold_change_threshold}", str(dataset_config.mzmine.blank_subtraction.fold_change_threshold))
+
 # Write batch file
 with open(output_mzbatch, "w") as f:
     f.write(xml)
-
-# Run MZmine
-cmd = ["mzmine", "--batch", str(output_mzbatch.resolve())]
-subprocess.run(cmd, check=True)
