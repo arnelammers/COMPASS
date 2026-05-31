@@ -58,13 +58,13 @@ RUN wget https://github.com/CompOmics/ThermoRawFileParser/releases/download/v.2.
 RUN wget https://github.com/mzmine/mzmine/releases/download/v4.9.14/mzmine_Linux_portable-4.9.14.zip && \
     unzip mzmine_Linux_portable-4.9.14.zip -d /home/mambauser/tools/ && \
     rm mzmine_Linux_portable-4.9.14.zip
-ENV PATH="/home/mambauser/tools/mzmine_Linux_portable-4.9.14/bin:$PATH"
+ENV PATH="/home/mambauser/tools/mzmine/bin:$PATH"
 
 # Install SIRIUS
 RUN wget https://github.com/sirius-ms/sirius/releases/download/v6.3.4/sirius-6.3.4-linux-x64.zip && \
     unzip sirius-6.3.4-linux-x64.zip -d /home/mambauser/tools/ && \
     rm sirius-6.3.4-linux-x64.zip
-ENV PATH="/home/mambauser/tools/sirius-6.3.4-linux-x64/bin:$PATH"
+ENV PATH="/home/mambauser/tools/sirius/bin:$PATH"
 
 # Set working directory
 WORKDIR /home/mambauser/workflow
