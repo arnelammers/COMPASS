@@ -1,26 +1,15 @@
 # Load config file 
 configfile: "config/config.yaml"
 
+wildcard_constraints:
+    collection="[^/.]+",
+    dataset="[^/]+",
+    sample="[^/]+"
+
 # List of datasets from config.yaml
 DATASETS = list(config["datasets"].keys())
 
-def get_mzmine_params(wildcards):
-    """Returns the mzmine parameters for the given dataset."""
-    return config["datasets"][wildcards.dataset]["mzmine"]
-
-def get_samples(dataset):
-    """Dynamically collects sample names ."""
-    raw_samples = {
-        p.stem
-        for p in Path(f"data/{dataset}/raw").glob("*.raw")
-    }
-
-    mzml_samples = {
-        p.stem
-        for p in Path(f"data/{dataset}/mzml_raw").glob("*.mzML.gz")
-    }
-
-    return sorted(raw_samples | mzml_samples)
+import lib.helpers as helpers
 
 rule all:
     input:
@@ -46,15 +35,42 @@ rule convert_raw_to_mzml:
 
 rule generate_mzmine_config:
     input:
-        mzmls=lambda wildcards: expand(
+        input_files=lambda wildcards: expand(
             "data/{dataset}/mzml/{sample}.mzML.gz",
             dataset=wildcards.dataset,
-            sample=get_samples(wildcards.dataset)
+            sample=helpers.get_samples(wildcards.dataset)
         ),
-        metadata_file="data/{dataset}/metadata.csv"
+        metadata_file="data/{dataset}/metadata.csv",
+        spectral_library_collections=lambda wc:
+            helpers.get_spectral_library_collections(config, wc.dataset)
     output:
         mzbatch="results/{dataset}/mzmine/mzmine_config.mzbatch"
     params:
-        settings=get_mzmine_params
+        settings=lambda wildcards: helpers.get_mzmine_params(config, wildcards)
     script:
         "scripts/generate_mzmine_config.py"
+
+rule download_spectral_library_archive:
+    output:
+        archive="resources/spectral_libraries/{collection}.zip"
+    params:
+        url=lambda wc: config["spectral_libraries"][wc.collection]["url"]
+    shell:
+        """
+        mkdir -p resources/spectral_libraries
+
+        curl -L "{params.url}" \
+            -o {output.archive}
+        """
+
+rule extract_spectral_library_collection:
+    input:
+        archive="resources/spectral_libraries/{collection}.zip"
+    output:
+        directory("resources/spectral_libraries/{collection}")
+    shell:
+        """
+        mkdir -p {output}
+
+        unzip -o {input.archive} -d {output}
+        """

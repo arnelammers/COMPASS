@@ -90,15 +90,7 @@
         </parameter>
         <parameter name="Sort and color">true</parameter>
         <parameter name="Spectral library files">
-            <file>/home/arne-lammers/.mzmine/external_resources/spectral_libraries/msnlib/20250828_targetmol_hts_np_pos_ms2.json</file>
-            <file>/home/arne-lammers/.mzmine/external_resources/spectral_libraries/msnlib/20241003_mcebio_pos_ms2.json</file>
-            <file>/home/arne-lammers/.mzmine/external_resources/spectral_libraries/msnlib/20241003_otavapep_pos_ms2.json</file>
-            <file>/home/arne-lammers/.mzmine/external_resources/spectral_libraries/msnlib/20241003_enamdisc_pos_ms2.json</file>
-            <file>/home/arne-lammers/.mzmine/external_resources/spectral_libraries/msnlib/20241003_nihnp_pos_ms2.json</file>
-            <file>/home/arne-lammers/.mzmine/external_resources/spectral_libraries/msnlib/20241003_mcescaf_pos_ms2.json</file>
-            <file>/home/arne-lammers/.mzmine/external_resources/spectral_libraries/msnlib/20241003_mcedrug_pos_ms2.json</file>
-            <file>/home/arne-lammers/.mzmine/external_resources/spectral_libraries/msnlib/20241003_enammol_pos_ms2.json</file>
-            <file>/home/arne-lammers/.mzmine/external_resources/spectral_libraries/msnlib/20250828_mcediv_50k_sub_pos_ms2.json</file>
+            {spectral_library_files}
         </parameter>
     </batchstep>
     <batchstep method="io.github.mzmine.modules.dataprocessing.featdet_massdetection.MassDetectionModule" module_name="Mass detection" parameter_version="1">
