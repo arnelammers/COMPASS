@@ -59,7 +59,8 @@ RUN mkdir -p /home/mambauser/tools/ThermoRawFileParser && \
 RUN mkdir -p /home/mambauser/tools/mzmine && \
     wget https://github.com/mzmine/mzmine/releases/download/v4.9.14/mzmine_Linux_portable-4.9.14.zip && \
     unzip mzmine_Linux_portable-4.9.14.zip -d /home/mambauser/tools/mzmine && \
-    rm mzmine_Linux_portable-4.9.14.zip
+    rm mzmine_Linux_portable-4.9.14.zip && \
+    chmod -R a+rx /home/mambauser/tools/mzmine
 ENV PATH="/home/mambauser/tools/mzmine/bin:$PATH"
 
 # Install SIRIUS

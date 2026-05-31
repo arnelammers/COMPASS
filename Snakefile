@@ -13,7 +13,7 @@ import lib.helpers as helpers
 
 rule all:
     input:
-        expand("results/{dataset}/mzmine/mzmine_config.mzbatch", dataset=DATASETS)
+        expand("results/{dataset}/mzmine/feature_table.csv", dataset=DATASETS)
 
 rule convert_raw_to_mzml:
     input:
@@ -67,4 +67,23 @@ rule download_spectral_library_file:
         if [ ! -f {output} ]; then
             curl -L "{params.url}" -o {output}
         fi
+        """
+
+rule run_mzmine:
+    input:
+        dataset_dir="data/{dataset}/mzml",
+        mzbatch="results/{dataset}/mzmine/mzmine_config.mzbatch"
+    output:
+        feature_table="results/{dataset}/mzmine/feature_table.csv",
+        feature_table_before_subtraction="results/{dataset}/mzmine/feature_table_before_subtraction.csv",
+        annotations="results/{dataset}/mzmine/annotations.csv",
+        export_sirius="results/{dataset}/mzmine/export_sirius.mgf"
+    log:
+        "logs/mzmine/{dataset}.log"
+    resources:
+        mem_mb=12000
+    shell:
+        """
+        export _JAVA_OPTIONS="-Xmx6g"
+        mzmine -b {input.mzbatch} >> {log} 2>&1
         """
