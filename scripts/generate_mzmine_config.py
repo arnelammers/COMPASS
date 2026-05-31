@@ -7,12 +7,11 @@ from glob import glob
 snakemake = snakemake  # type: ignore
 
 # Get snakemake parameters
-dataset_dir = Path(snakemake.input["dataset_dir"])
+input_files = snakemake.input.mzmls
 metadata_file = Path(snakemake.input["metadata_file"])
 output_mzbatch = Path(snakemake.output["mzbatch"])
 
-# Get input files and template
-input_files = glob(dataset_dir / "*")
+# Get template
 template_file = Path("resources/templates/" + snakemake.params.settings.template + ".mzbatch")
 
 # Read template
