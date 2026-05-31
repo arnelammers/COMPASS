@@ -30,3 +30,6 @@ notebooks/*.ipynb
 
 #Config
 config/*.yaml
+
+# snakemake
+.snakemake
