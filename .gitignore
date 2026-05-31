@@ -24,3 +24,9 @@ envs/
 # System / OS files
 .DS_Store
 Thumbs.db
+
+# Notebooks
+notebooks/*.ipynb
+
+#Config
+config/*.yaml
