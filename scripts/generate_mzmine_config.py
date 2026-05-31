@@ -28,12 +28,12 @@ xml = xml.replace("{output_annotations}", str(output_dir / "annotations.csv"))
 xml = xml.replace("{output_export_sirius}", str(output_dir / "export_sirius.mgf"))
 
 # 4. Put other parameters in batch file
-xml = xml.replace("{rt_range_min}", str(snakemake.params.settings["retention_time_range"][0]))
-xml = xml.replace("{rt_range_max}", str(snakemake.params.settings["retention_time_range"][1]))
+xml = xml.replace("{rt_range_min}", str(float(snakemake.params.settings["retention_time_range"][0])))
+xml = xml.replace("{rt_range_max}", str(float(snakemake.params.settings["retention_time_range"][1])))
 xml = xml.replace("{minimum_feature_height}", str(float(snakemake.params.settings["minimum_feature_height"])))
-xml = xml.replace("{approximate_feature_fwhm}", str(snakemake.params.settings["approximate_feature_fwhm"]))
-xml = xml.replace("{blank_subtraction_min_blank_presence}", str(snakemake.params.settings["blank_subtraction"]["min_blank_presence"]))
-xml = xml.replace("{blank_subtraction_fold_change_threshold}", str(snakemake.params.settings["blank_subtraction"]["fold_change_threshold"]))
+xml = xml.replace("{approximate_feature_fwhm}", str(float(snakemake.params.settings["approximate_feature_fwhm"])))
+xml = xml.replace("{blank_subtraction_min_blank_presence}", str(float(snakemake.params.settings["blank_subtraction"]["min_blank_presence"])))
+xml = xml.replace("{blank_subtraction_fold_change_threshold}", str(float(snakemake.params.settings["blank_subtraction"]["fold_change_threshold"])))
 
 # 5. Put spectral library files in batch file
 spectral_library_files = "\n\t\t\t".join(
