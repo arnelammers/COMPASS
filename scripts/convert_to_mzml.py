@@ -15,19 +15,18 @@ raw_dir = dataset_dir / "raw"
 # If mzml folder exists, skip conversion
 if mzml_dir.exists():
     print(f"mzML folder already exists in {args.dataset_dir}, skipping conversion")
-    return
-    
-# Otherwise, convert all raw files
-raw_files = glob(raw_dir / "*.raw")
+else:
+    # Otherwise, convert all raw files
+    raw_files = glob(raw_dir / "*.raw")
 
-# Create mzml directory if not existing
-mzml_dir.mkdir(exist_ok=True)
+    # Create mzml directory if not existing
+    mzml_dir.mkdir(exist_ok=True)
 
-for raw_file in raw_files:
-    print(f"Converting {raw_file} → {mzml_dir}")
-    subprocess.run([
-        "dotnet", THERMO_PARSER_DLL,
-        "-i", raw_file,
-        "-o", mzml_dir,
-        "-f", "1", "-p", "-g"
-    ], check=True)
+    for raw_file in raw_files:
+        print(f"Converting {raw_file} → {mzml_dir}")
+        subprocess.run([
+            "dotnet", THERMO_PARSER_DLL,
+            "-i", raw_file,
+            "-o", mzml_dir,
+            "-f", "1", "-p", "-g"
+        ], check=True)
