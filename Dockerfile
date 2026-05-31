@@ -49,14 +49,16 @@ RUN micromamba install -y -n base -c conda-forge -c bioconda -c defaults \
 RUN mkdir -p /home/mambauser/tools
 
 # Download ThermoRawFileParser
-RUN wget https://github.com/CompOmics/ThermoRawFileParser/releases/download/v.2.0.0-dev/ThermoRawFileParser-v.2.0.0-dev-linux.zip \
+RUN mkdir -p /home/mambauser/tools/ThermoRawFileParser && \
+    wget https://github.com/CompOmics/ThermoRawFileParser/releases/download/v.2.0.0-dev/ThermoRawFileParser-v.2.0.0-dev-linux.zip \
     -O /home/mambauser/tools/ThermoRawFileParser.zip && \
-    unzip /home/mambauser/tools/ThermoRawFileParser.zip -d /home/mambauser/tools/ && \
+    unzip /home/mambauser/tools/ThermoRawFileParser.zip -d /home/mambauser/tools/ThermoRawFileParser/ && \
     rm /home/mambauser/tools/ThermoRawFileParser.zip
 
 # Install MZmine
-RUN wget https://github.com/mzmine/mzmine/releases/download/v4.9.14/mzmine_Linux_portable-4.9.14.zip && \
-    unzip mzmine_Linux_portable-4.9.14.zip -d /home/mambauser/tools/ && \
+RUN mkdir -p /home/mambauser/tools/mzmine && \
+    wget https://github.com/mzmine/mzmine/releases/download/v4.9.14/mzmine_Linux_portable-4.9.14.zip && \
+    unzip mzmine_Linux_portable-4.9.14.zip -d /home/mambauser/tools/mzmine && \
     rm mzmine_Linux_portable-4.9.14.zip
 ENV PATH="/home/mambauser/tools/mzmine/bin:$PATH"
 
