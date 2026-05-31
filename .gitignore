@@ -33,3 +33,6 @@ config/*.yaml
 
 # snakemake
 .snakemake
+
+# Environment files
+.env
