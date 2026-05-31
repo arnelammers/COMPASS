@@ -18,14 +18,11 @@ def get_samples(dataset):
 
     return sorted(raw_samples | mzml_samples)
 
-def get_spectral_library_collections(config, dataset):
-    """Returns local paths to spectral library collections required by a dataset."""
+def get_spectral_library_files(config, dataset):
+    """Returns local paths to spectral library files required by a dataset."""
     libs = config["datasets"][dataset]["mzmine"]["spectral_library_files"]
 
-    # extract collection name (msnlib from msnlib/file.json)
-    collections = {lib.split("/", 1)[0] for lib in libs}
-
     return [
-        f"resources/spectral_libraries/{c}"
-        for c in sorted(collections)
+        f"resources/spectral_libraries/{lib}"
+        for lib in libs
     ]

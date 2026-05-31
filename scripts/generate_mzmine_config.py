@@ -12,7 +12,7 @@ template_file = Path("resources/templates/" + snakemake.params.settings["templat
 xml = template_file.read_text()
 
 # 1. Put input files in batch file
-input_files = "\n".join(
+input_files = "\n\t\t\t".join(
     [f"<file>{str(Path(f).resolve())}</file>" for f in snakemake.input.input_files]
 )
 xml = xml.replace("{input_files}", input_files)
@@ -36,8 +36,8 @@ xml = xml.replace("{blank_subtraction_min_blank_presence}", str(snakemake.params
 xml = xml.replace("{blank_subtraction_fold_change_threshold}", str(snakemake.params.settings["blank_subtraction"]["fold_change_threshold"]))
 
 # 5. Put spectral library files in batch file
-spectral_library_files = "\n".join(
-    [f"<file>{str(Path(f).resolve())}</file>" for f in snakemake.params.settings["spectral_library_files"]]
+spectral_library_files = "\n\t\t\t".join(
+    [f"<file>{str(Path('resources/spectral_libraries/' + f).resolve())}</file>" for f in snakemake.params.settings["spectral_library_files"]]
 )
 xml = xml.replace("{spectral_library_files}", spectral_library_files)
 

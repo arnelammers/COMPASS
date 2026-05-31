@@ -41,8 +41,8 @@ rule generate_mzmine_config:
             sample=helpers.get_samples(wildcards.dataset)
         ),
         metadata_file="data/{dataset}/metadata.csv",
-        spectral_library_collections=lambda wc:
-            helpers.get_spectral_library_collections(config, wc.dataset)
+        spectral_library_files=lambda wc:
+            helpers.get_spectral_library_files(config, wc.dataset)
     output:
         mzbatch="results/{dataset}/mzmine/mzmine_config.mzbatch"
     params:
@@ -50,27 +50,21 @@ rule generate_mzmine_config:
     script:
         "scripts/generate_mzmine_config.py"
 
-rule download_spectral_library_archive:
+rule download_spectral_library_file:
     output:
-        archive="resources/spectral_libraries/{collection}.zip"
+        "resources/spectral_libraries/{collection}/{filename}"
     params:
-        url=lambda wc: config["spectral_libraries"][wc.collection]["url"]
+        zenodo_id=lambda wc: config["spectral_libraries"][wc.collection]["zenodo_id"],
+        url=lambda wc: (
+            f"https://zenodo.org/records/"
+            f"{config['spectral_libraries'][wc.collection]['zenodo_id']}"
+            f"/files/{wc.filename}?download=1"
+        )
     shell:
         """
-        mkdir -p resources/spectral_libraries
+        mkdir -p resources/spectral_libraries/{wildcards.collection}
 
-        curl -L "{params.url}" \
-            -o {output.archive}
-        """
-
-rule extract_spectral_library_collection:
-    input:
-        archive="resources/spectral_libraries/{collection}.zip"
-    output:
-        directory("resources/spectral_libraries/{collection}")
-    shell:
-        """
-        mkdir -p {output}
-
-        unzip -o {input.archive} -d {output}
+        if [ ! -f {output} ]; then
+            curl -L "{params.url}" -o {output}
+        fi
         """
