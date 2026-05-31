@@ -4,6 +4,8 @@ import subprocess
 from pathlib import Path
 from glob import glob
 
+snakemake = snakemake  # type: ignore
+
 # Get current dataset
 current_dataset = snakemake.wildcards.dataset
 

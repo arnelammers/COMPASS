@@ -6,6 +6,8 @@ from pathlib import Path
 # Location of ThermoRawFileParser DLL
 THERMO_PARSER_DLL = "/home/mambauser/tools/ThermoRawFileParser-v.2.0.0-dev-linux/ThermoRawFileParser.dll"
 
+snakemake = snakemake  # type: ignore
+
 # Get snakemake parameters
 dataset_dir = Path(snakemake.input["dataset_dir"])
 
@@ -14,7 +16,7 @@ raw_dir = dataset_dir / "raw"
 
 # If mzml folder exists, skip conversion
 if mzml_dir.exists():
-    print(f"mzML folder already exists in {args.dataset_dir}, skipping conversion")
+    print(f"mzML folder already exists in {snakemake.input.dataset_dir}, skipping conversion")
 else:
     # Otherwise, convert all raw files
     raw_files = glob(raw_dir / "*.raw")
