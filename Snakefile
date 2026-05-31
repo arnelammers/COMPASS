@@ -17,7 +17,7 @@ rule convert_to_mzml:
         "scripts/convert_to_mzml.py"
 rule generate_mzmine_config:
     input:
-        dataset_dir="data/{dataset}/mzml"
+        dataset_dir="data/{dataset}/mzml",
         metadata_file="data/{dataset}/metadata.csv"
     output:
         mzbatch="results/{dataset}/mzmine/mzmine_config.mzbatch"
