@@ -19,7 +19,7 @@ output_mzbatch = Path(snakemake.output["mzbatch"])
 
 # Get input files and template
 input_files = glob(dataset_dir / "*")
-template_file = Path("resources/templates/dda_orbitrap.mzbatch")
+template_file = Path("resources/templates/" + dataset_config.mzmine.template + ".mzbatch")
 
 # Read template
 xml = template_file.read_text()
