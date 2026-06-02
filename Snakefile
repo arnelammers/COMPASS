@@ -10,6 +10,15 @@ validate(config, "config/schema.json")
 
 # List of datasets from config.yaml
 DATASETS = list(config["datasets"].keys())
+SIRIUS_FILES = [
+    "canopus_formula_summary.tsv",
+    "canopus_structure_summary.tsv",
+    "denovo_structure_identifications.tsv",
+    "formula_identifications.tsv",
+    "spectral_matches.tsv",
+    "spectral_matches_analog.tsv",
+    "structure_identifications.tsv",
+]
 
 
 wildcard_constraints:
@@ -20,7 +29,7 @@ wildcard_constraints:
 
 rule all:
     input:
-        expand("results/{dataset}/sirius/project.sirius", dataset=DATASETS),
+        expand("results/{dataset}/sirius/fbmn/spectra.mgf", dataset=DATASETS),
 
 
 rule convert_raw_to_mzml:
@@ -111,4 +120,33 @@ rule run_sirius:
     shell:
         """
         sirius --input {input.mgf} --project {output.project} --mzmax=800 formulas -p orbitrap fingerprints classes structures denovo-structures >>{log} 2>&1
+        """
+
+
+rule sirius_export_summaries:
+    input:
+        project="results/{dataset}/sirius/project.sirius",
+    output:
+        expand(
+            "results/{{dataset}}/sirius/summaries/{file}",
+            file=SIRIUS_FILES,
+        ),
+    log:
+        "logs/sirius/{dataset}.export_summaries.log",
+    shell:
+        """
+        sirius --project {input.project} summaries -o results/{wildcards.dataset}/sirius/summaries >{log} 2>&1
+        """
+
+
+rule sirius_export_fbmn:
+    input:
+        project="results/{dataset}/sirius/project.sirius",
+    output:
+        mgf="results/{dataset}/sirius/fbmn/spectra.mgf",
+    log:
+        "logs/sirius/{dataset}.export_fbmn.log",
+    shell:
+        """
+        sirius --project {input.project} mgf-export --merge-ms2 -o {output.mgf} >{log} 2>&1
         """
