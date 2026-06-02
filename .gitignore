@@ -34,8 +34,9 @@ notebooks/*.ipynb
 # Environment files
 .env
 
-# Spectral libraries
+# Spectral libraries + models
 resources/spectral_libraries/*
+resources/models/*
 
 # Other config
 .mzmine

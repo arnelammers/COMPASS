@@ -150,3 +150,25 @@ rule sirius_export_fbmn:
         """
         sirius --project {input.project} mgf-export --merge-ms2 -o {output.mgf} >{log} 2>&1
         """
+
+
+rule download_ms2deepscore_model:
+    output:
+        "resources/models/ms2deepscore_model.pt",
+    shell:
+        """
+        mkdir -p resources/models
+
+        wget https://zenodo.org/records/17826815/files/ms2deepscore_model.pt?download=1 -O {output}
+        """
+
+
+rule download_spec2vec_model:
+    output:
+        "resources/models/spec2vec_model.pt",
+    shell:
+        """
+        mkdir -p resources/models
+
+        wget https://zenodo.org/records/4173596/files/spec2vec_AllPositive_ratio05_filtered_201101_iter_15.model?download=1 -O {output}
+        """
