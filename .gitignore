@@ -39,3 +39,7 @@ config/*.yaml
 
 # Spectral libraries
 resources/spectral_libraries/*
+
+# Other config
+.mzmine
+.sirius-6.3
