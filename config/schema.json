@@ -1,0 +1,89 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "file:///home/mambauser/workflow/config/schema.json",
+    "type": "object",
+    "required": [
+        "datasets",
+        "spectral_libraries"
+    ],
+    "properties": {
+        "datasets": {
+            "type": "object",
+            "additionalProperties": {
+                "type": "object",
+                "required": [
+                    "mzmine"
+                ],
+                "properties": {
+                    "mzmine": {
+                        "type": "object",
+                        "required": [
+                            "template",
+                            "retention_time_range",
+                            "approximate_feature_fwhm",
+                            "minimum_feature_height",
+                            "blank_subtraction",
+                            "spectral_library_files"
+                        ],
+                        "properties": {
+                            "template": {
+                                "type": "string"
+                            },
+                            "retention_time_range": {
+                                "type": "array",
+                                "items": {
+                                    "type": "number"
+                                },
+                                "minItems": 2,
+                                "maxItems": 2
+                            },
+                            "approximate_feature_fwhm": {
+                                "type": "number"
+                            },
+                            "minimum_feature_height": {
+                                "type": "number"
+                            },
+                            "blank_subtraction": {
+                                "type": "object",
+                                "properties": {
+                                    "min_blank_presence": {
+                                        "type": "integer"
+                                    },
+                                    "fold_change_threshold": {
+                                        "type": "number"
+                                    }
+                                },
+                                "additionalProperties": false
+                            },
+                            "spectral_library_files": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "minItems": 1
+                            }
+                        },
+                        "additionalProperties": false
+                    }
+                },
+                "additionalProperties": false
+            }
+        },
+        "spectral_libraries": {
+            "type": "object",
+            "additionalProperties": {
+                "type": "object",
+                "required": [
+                    "zenodo_id"
+                ],
+                "properties": {
+                    "zenodo_id": {
+                        "type": "integer"
+                    }
+                },
+                "additionalProperties": false
+            }
+        }
+    },
+    "additionalProperties": false
+}

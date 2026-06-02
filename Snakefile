@@ -1,9 +1,12 @@
 import lib.helpers as helpers
+from snakemake.utils import validate
 
 
 # Load config file
 configfile: "config/config.yaml"
 
+
+validate(config, "config/schema.json")
 
 # List of datasets from config.yaml
 DATASETS = list(config["datasets"].keys())
