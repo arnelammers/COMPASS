@@ -82,11 +82,7 @@ rule download_spectral_library_file:
         ),
     shell:
         """
-        mkdir -p resources/spectral_libraries/{wildcards.collection}
-
-        if [ ! -f {output} ]; then
-            curl -L "{params.url}" -o {output}
-        fi
+        curl -fL "{params.url}" -o {output}
         """
 
 
