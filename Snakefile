@@ -106,7 +106,7 @@ rule run_mzmine:
     shell:
         """
         export _JAVA_OPTIONS="-Xmx6g"
-        mzmine -b {input.mzbatch} >>{log} 2>&1
+        mzmine -b {input.mzbatch} >{log} 2>&1
         """
 
 
@@ -119,7 +119,7 @@ rule run_sirius:
         "logs/sirius/{dataset}.log",
     shell:
         """
-        sirius --input {input.mgf} --project {output.project} --mzmax=800 formulas -p orbitrap fingerprints classes structures denovo-structures >>{log} 2>&1
+        sirius --input {input.mgf} --project {output.project} --mzmax=800 formulas -p orbitrap fingerprints classes structures denovo-structures >{log} 2>&1
         """
 
 
