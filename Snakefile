@@ -154,21 +154,41 @@ rule sirius_export_fbmn:
 
 rule download_ms2deepscore_model:
     output:
-        "resources/models/ms2deepscore_model.pt",
+        "resources/models/ms2deepscore/ms2deepscore_model.pt",
     shell:
         """
-        mkdir -p resources/models
-
-        wget https://zenodo.org/records/17826815/files/ms2deepscore_model.pt?download=1 -O {output}
+        curl -fL "https://zenodo.org/records/17826815/files/ms2deepscore_model.pt?download=1" -o {output}
         """
 
 
 rule download_spec2vec_model:
     output:
-        "resources/models/spec2vec_model.pt",
+        "resources/models/spec2vec/spec2vec_AllPositive_ratio05_filtered_201101_iter_15.model",
     shell:
         """
-        mkdir -p resources/models
+        curl -fL "https://zenodo.org/api/records/4173596/files-archive" -o resources/models/spec2vec.zip
+        unzip resources/models/spec2vec.zip -d resources/models/spec2vec
+        rm resources/models/spec2vec.zip
+        """
 
-        wget https://zenodo.org/records/4173596/files/spec2vec_AllPositive_ratio05_filtered_201101_iter_15.model?download=1 -O {output}
+
+rule run_specreboot:
+    input:
+        mgf="results/{dataset}/sirius/fbmn/spectra.mgf",
+        spec2vec_model="resources/models/spec2vec/spec2vec_AllPositive_ratio05_filtered_201101_iter_15.model",
+        msdeepscore_model="resources/models/ms2deepscore/ms2deepscore_model.pt",
+    output:
+        folder=directory("results/{dataset}/specreboot"),
+    log:
+        "logs/specreboot/{dataset}.log",
+    shell:
+        """
+        /opt/conda/envs/specreboot/bin/specreboot matchms \
+            --mgf {input.mgf} \
+            --similarities all \
+            --ms2dp-model {input.msdeepscore_model} \
+            --spec2vec-model {input.spec2vec_model} \
+            --outdir {output.folder} \
+            --prefix "Reboot" \
+            --B 30 2>&1 | tee {log}
         """

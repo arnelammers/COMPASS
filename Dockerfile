@@ -68,6 +68,14 @@ RUN wget https://github.com/sirius-ms/sirius/releases/download/v6.3.4/sirius-6.3
     rm sirius-6.3.4-linux-x64.zip
 ENV PATH="/home/mambauser/tools/sirius/bin:$PATH"
 
+# Install SpecReboot
+RUN git clone https://github.com/ECharria/SpecReBoot.git /home/mambauser/tools/specreboot 
+
+RUN micromamba create -y -f /home/mambauser/tools/specreboot/environment.yml && \
+    micromamba clean --all --yes
+
+RUN /opt/conda/envs/specreboot/bin/pip install --no-cache-dir -e /home/mambauser/tools/specreboot/
+
 # Set working directory
 WORKDIR /home/mambauser/workflow
 
