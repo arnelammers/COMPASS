@@ -33,7 +33,6 @@ WORKDIR /home/mambauser/workflow
 RUN micromamba install -y -n base -c conda-forge -c bioconda -c defaults \
     snakemake \
     python=3.12 \
-    matchms \
     numpy \
     scipy \
     networkx \
