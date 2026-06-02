@@ -1,27 +1,32 @@
-# Load config file 
+import lib.helpers as helpers
+
+
+# Load config file
 configfile: "config/config.yaml"
 
-wildcard_constraints:
-    collection="[^/.]+",
-    dataset="[^/]+",
-    sample="[^/]+"
 
 # List of datasets from config.yaml
 DATASETS = list(config["datasets"].keys())
 
-import lib.helpers as helpers
+
+wildcard_constraints:
+    collection="[^/.]+",
+    dataset="[^/]+",
+    sample="[^/]+",
+
 
 rule all:
     input:
-        expand("results/{dataset}/mzmine/feature_table.csv", dataset=DATASETS)
+        expand("results/{dataset}/sirius/project.sirius", dataset=DATASETS),
+
 
 rule convert_raw_to_mzml:
     input:
-        raw="data/{dataset}/raw/{sample}.raw"
+        raw="data/{dataset}/raw/{sample}.raw",
     output:
-        mzml="data/{dataset}/mzml/{sample}.mzML.gz"
+        mzml="data/{dataset}/mzml/{sample}.mzML.gz",
     log:
-        "logs/thermo_parser/{dataset}/{sample}.log"
+        "logs/thermo_parser/{dataset}/{sample}.log",
     shell:
         """
         out_dir=$(dirname "{output.mzml}")
@@ -33,33 +38,36 @@ rule convert_raw_to_mzml:
             -f 1 -p -g 2>&1 | tee {log}
         """
 
+
 rule generate_mzmine_config:
     input:
         input_files=lambda wildcards: expand(
             "data/{dataset}/mzml/{sample}.mzML.gz",
             dataset=wildcards.dataset,
-            sample=helpers.get_samples(wildcards.dataset)
+            sample=helpers.get_samples(wildcards.dataset),
         ),
         metadata_file="data/{dataset}/metadata.csv",
-        spectral_library_files=lambda wc:
-            helpers.get_spectral_library_files(config, wc.dataset)
+        spectral_library_files=lambda wc: helpers.get_spectral_library_files(
+            config, wc.dataset
+        ),
     output:
-        mzbatch="results/{dataset}/mzmine/mzmine_config.mzbatch"
+        mzbatch="results/{dataset}/mzmine/mzmine_config.mzbatch",
     params:
-        settings=lambda wildcards: helpers.get_mzmine_params(config, wildcards)
+        settings=lambda wildcards: helpers.get_mzmine_params(config, wildcards),
     script:
         "scripts/generate_mzmine_config.py"
 
+
 rule download_spectral_library_file:
     output:
-        "resources/spectral_libraries/{collection}/{filename}"
+        "resources/spectral_libraries/{collection}/{filename}",
     params:
         zenodo_id=lambda wc: config["spectral_libraries"][wc.collection]["zenodo_id"],
         url=lambda wc: (
             f"https://zenodo.org/records/"
             f"{config['spectral_libraries'][wc.collection]['zenodo_id']}"
             f"/files/{wc.filename}?download=1"
-        )
+        ),
     shell:
         """
         mkdir -p resources/spectral_libraries/{wildcards.collection}
@@ -69,21 +77,35 @@ rule download_spectral_library_file:
         fi
         """
 
+
 rule run_mzmine:
     input:
         dataset_dir="data/{dataset}/mzml",
-        mzbatch="results/{dataset}/mzmine/mzmine_config.mzbatch"
+        mzbatch="results/{dataset}/mzmine/mzmine_config.mzbatch",
     output:
         feature_table="results/{dataset}/mzmine/feature_table.csv",
         feature_table_before_subtraction="results/{dataset}/mzmine/feature_table_before_subtraction.csv",
         annotations="results/{dataset}/mzmine/annotations.csv",
-        export_sirius="results/{dataset}/mzmine/export_sirius.mgf"
+        export_sirius="results/{dataset}/mzmine/export_sirius.mgf",
     log:
-        "logs/mzmine/{dataset}.log"
+        "logs/mzmine/{dataset}.log",
     resources:
-        mem_mb=12000
+        mem_mb=12000,
     shell:
         """
         export _JAVA_OPTIONS="-Xmx6g"
-        mzmine -b {input.mzbatch} >> {log} 2>&1
+        mzmine -b {input.mzbatch} >>{log} 2>&1
+        """
+
+
+rule run_sirius:
+    input:
+        mgf="results/{dataset}/mzmine/export_sirius.mgf",
+    output:
+        project="results/{dataset}/sirius/project.sirius",
+    log:
+        "logs/sirius/{dataset}.log",
+    shell:
+        """
+        sirius --input {input.mgf} --project {output.project} --mzmax=800 formulas -p orbitrap fingerprints classes structures denovo-structures >>{log} 2>&1
         """
