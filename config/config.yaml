@@ -4,7 +4,7 @@ datasets:
       template: "dda_orbitrap_pos"
       retention_time_range: [0.5, 31]
       approximate_feature_fwhm: 0.1
-      minimum_feature_height: 5e4
+      minimum_feature_height: 50000
       blank_subtraction:
         min_blank_presence: 3
         fold_change_threshold: 3
