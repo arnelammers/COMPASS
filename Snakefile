@@ -168,10 +168,19 @@ rule download_spec2vec_model:
         """
 
 
+rule train_spec2vec_model:
+    input:
+        mgf="results/{dataset}/sirius/fbmn/spectra.mgf",
+    output:
+        model="results/{dataset}/spec2vec/spec2vec.model",
+    shell:
+        "/opt/conda/envs/specreboot/bin/python scripts/train_spec2vec_model.py --input {input.mgf} --output {output.model}"
+
+
 rule run_specreboot:
     input:
         mgf="results/{dataset}/sirius/fbmn/spectra.mgf",
-        spec2vec_model="resources/models/spec2vec/spec2vec_AllPositive_ratio05_filtered_201101_iter_15.model",
+        spec2vec_model="results/{dataset}/spec2vec/spec2vec.model",
         msdeepscore_model="resources/models/ms2deepscore/ms2deepscore_model.pt",
     output:
         folder=directory("results/{dataset}/specreboot"),
