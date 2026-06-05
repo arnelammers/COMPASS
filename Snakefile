@@ -197,3 +197,21 @@ rule run_specreboot:
             --prefix "Reboot" \
             --B 30 2>&1 | tee {log}
         """
+
+
+rule generate_report_mzmine_section:
+    input:
+        feature_table="results/{dataset}/mzmine/feature_table.csv",
+        feature_table_before_subtraction="results/{dataset}/mzmine/feature_table_before_subtraction.csv",
+        annotations="results/{dataset}/mzmine/annotations.csv",
+        export_sirius="results/{dataset}/mzmine/export_sirius.mgf",
+        metadata="data/{dataset}/metadata.csv",
+        pca_lib="lib/report/mzmine/pca.py",
+        section_lib="lib/report/mzmine/section.py",
+    output:
+        pca=report(
+            "results/{dataset}/report/mzmine/figures/pca.png",
+            category="MZmine",
+        ),
+    script:
+        "scripts/generate_report_mzmine_section.py"
