@@ -29,7 +29,7 @@ wildcard_constraints:
 
 rule all:
     input:
-        expand("results/{dataset}/sirius/fbmn/spectra.mgf", dataset=DATASETS),
+        expand("results/{dataset}/report/mzmine/figures/pca.png", dataset=DATASETS),
 
 
 rule convert_raw_to_mzml:
