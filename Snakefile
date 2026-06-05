@@ -207,12 +207,20 @@ rule generate_report_mzmine_section:
         export_sirius="results/{dataset}/mzmine/export_sirius.mgf",
         metadata="data/{dataset}/metadata.csv",
         pca_lib="lib/report/mzmine/pca.py",
+        stats_lib="lib/report/mzmine/stats.py",
         section_lib="lib/report/mzmine/section.py",
     output:
         pca=report(
             "results/{dataset}/report/mzmine/figures/pca.png",
             category="MZmine",
-            labels={"dataset": "{dataset}", "item": "PCA"},
+            subcategory="Principal Component Analysis",
+            labels={"Dataset": "{dataset}"},
+        ),
+        stats=report(
+            "results/{dataset}/report/mzmine/tables/stats.html",
+            category="mzmine",
+            subcategory="{dataset}",
+            labels={"item": "Statistics"},
         ),
     script:
         "scripts/generate_report_mzmine_section.py"

@@ -5,6 +5,7 @@ if TYPE_CHECKING:
 
 from lib.report.mzmine.pca import MzminePCA
 from lib.report.mzmine.section import MzmineSection
+from lib.report.mzmine.stats import MzmineStats
 
 mzmine_section = MzmineSection(
     input=snakemake.input,
@@ -16,3 +17,6 @@ mzmine_section = MzmineSection(
 
 pca = MzminePCA(mzmine_section)
 pca.save_figure()
+
+stats = MzmineStats(mzmine_section)
+stats.save_to_file()

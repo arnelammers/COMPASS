@@ -13,6 +13,7 @@ class MzmineSectionInput(TypedDict):
 
 class MzmineSectionOutput(TypedDict):
     pca: str
+    stats: str
 
 
 class PcaConfig(TypedDict):
@@ -36,6 +37,8 @@ class MzmineSection:
         self.input = input
         self.output = output
         self.config = config
+
+        self.feature_table_df = pd.read_csv(input["feature_table"])
 
         self.feature_table_before_subtraction_df = pd.read_csv(
             input["feature_table_before_subtraction"]
