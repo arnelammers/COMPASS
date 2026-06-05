@@ -212,6 +212,7 @@ rule generate_report_mzmine_section:
         pca=report(
             "results/{dataset}/report/mzmine/figures/pca.png",
             category="MZmine",
+            labels={"dataset": "{dataset}", "item": "PCA"},
         ),
     script:
         "scripts/generate_report_mzmine_section.py"
