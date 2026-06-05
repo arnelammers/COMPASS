@@ -27,6 +27,11 @@ datasets:
         - "msnlib/20241003_mcedrug_pos_ms2.json"
         - "msnlib/20241003_enammol_pos_ms2.json"
         - "msnlib/20250828_mcediv_50k_sub_pos_ms2.json"
+    report:
+      mzmine:
+        pca:
+          samples_groupby: ["group", "fraction"]
+          procedural_blanks_groupby: ["fraction"]
 spectral_libraries:
   msnlib:
     zenodo_id: 16984129
@@ -49,14 +54,20 @@ MZmine processing settings for a dataset.
 | `approximate_feature_fwhm` | number | Estimated peak width at half maximum, used to tune peak detection. |
 | `minimum_feature_height` | number | Minimum intensity for a feature to be detected. |
 | `blank_subtraction` | object | Settings for filtering out background signals (see below). |
+| `blank_subtraction.min_blank_presence` | integer | Minimum number of blanks in which a feature must appear to be considered background. |
+| `blank_subtraction.fold_change_threshold` | number | Minimum fold-change between sample and blank intensity for a feature to be retained. |
 | `spectral_library_files` | string[] | Library files to use for annotation. Must be formatted as `{collection}/{filename}.json`, where `collection` matches a key in `spectral_libraries`. |
 
-### `blank_subtraction`
+### `report`
+
+Report settings for a dataset.
+
+#### `mzmine`
 
 | Field | Type | Description |
 |---|---|---|
-| `min_blank_presence` | integer | Minimum number of blanks in which a feature must appear to be considered background. |
-| `fold_change_threshold` | number | Minimum fold-change between sample and blank intensity for a feature to be retained. |
+| `pca.samples_groupby` | array | By which columns to group samples in PCA plot. |
+| `pca.procedural_blanks_groupby` | array | By which columns to group procedural blanks in PCA plot. |
 
 ---
 

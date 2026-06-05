@@ -18,6 +18,11 @@ datasets:
         - "msnlib/20241003_mcedrug_pos_ms2.json"
         - "msnlib/20241003_enammol_pos_ms2.json"
         - "msnlib/20250828_mcediv_50k_sub_pos_ms2.json"
+    report:
+      mzmine:
+        pca:
+          samples_groupby: ["group", "fraction"]
+          procedural_blanks_groupby: ["fraction"]
 spectral_libraries:
   msnlib:
     zenodo_id: 16984129

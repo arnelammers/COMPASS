@@ -12,7 +12,8 @@
             "additionalProperties": {
                 "type": "object",
                 "required": [
-                    "mzmine"
+                    "mzmine",
+                    "report"
                 ],
                 "properties": {
                     "mzmine": {
@@ -61,6 +62,48 @@
                                     "type": "string"
                                 },
                                 "minItems": 1
+                            }
+                        },
+                        "additionalProperties": false
+                    },
+                    "report": {
+                        "type": "object",
+                        "required": [
+                            "mzmine"
+                        ],
+                        "properties": {
+                            "mzmine": {
+                                "type": "object",
+                                "required": [
+                                    "pca"
+                                ],
+                                "properties": {
+                                    "pca": {
+                                        "type": "object",
+                                        "required": [
+                                            "samples_groupby",
+                                            "procedural_blanks_groupby"
+                                        ],
+                                        "properties": {
+                                            "samples_groupby": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "procedural_blanks_groupby": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "additionalProperties": false
+                                        },
+                                        "additionalProperties": false
+                                    },
+                                    "additionalProperties": false
+                                },
+                                "additionalProperties": false
                             }
                         },
                         "additionalProperties": false
