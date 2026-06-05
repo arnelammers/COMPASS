@@ -15,9 +15,10 @@ class MzminePCA:
         self,
         section: "MzmineSection",
     ):
-        self.section = section
-        self.df = section.feature_table
-        self.metadata_df = section.metadata
+        self.feature_table_df = section.feature_table_before_subtraction_df
+        self.metadata_df = section.metadata_df
+        self.config = section.config["pca"]
+        self.output = section.output["pca"]
 
         # Keep a list of expected filenames from metadata
         self.valid_filenames = set(self.metadata_df["filename"].tolist())
@@ -29,7 +30,7 @@ class MzminePCA:
         self.pca, self.pca_df = self._extract_pca()
 
         # Generate PCA
-        self._generate_pca()
+        self._fig = self._generate_pca()
 
     def _extract_area_df(self) -> pd.DataFrame:
         """Filters, cleans, and aligns the area columns with metadata."""
@@ -37,12 +38,12 @@ class MzminePCA:
         # Identify all area columns
         area_cols = [
             col
-            for col in self.df.columns
+            for col in self.feature_table_df.columns
             if col.startswith("datafile:") and col.endswith(":area")
         ]
 
         # Slice the dataframe and immediately copy
-        area_df = self.df[area_cols].copy()
+        area_df = self.feature_table_df[area_cols].copy()
 
         # Clean the column names cleanly using .rename()
         # Example: 'datafile:Sample_A.mzML:area' -> 'Sample_A.mzML'
@@ -79,10 +80,8 @@ class MzminePCA:
         return pca, pca_df
 
     def _generate_pca(self):
-        samples_groupby = self.section.config["pca"]["samples_groupby"]
-        procedural_blanks_groupby = self.section.config["pca"][
-            "procedural_blanks_groupby"
-        ]
+        samples_groupby = self.config["samples_groupby"]
+        procedural_blanks_groupby = self.config["procedural_blanks_groupby"]
 
         # Map type to marker shapes
         type_markers = {
@@ -92,7 +91,7 @@ class MzminePCA:
         }
 
         # Set figure size
-        plt.figure(figsize=(10, 8))
+        fig, ax = plt.subplots(figsize=(10, 8))
 
         # --- Samples ---
         samples = self.pca_df[self.pca_df["type"] == "sample"].copy()
@@ -100,7 +99,7 @@ class MzminePCA:
         # Set group by column and et unique combinations
         samples["groupby"] = samples[samples_groupby].astype(str).agg("_".join, axis=1)
         samples_unique_groupby = sorted(
-            samples["groupby"].unique(), key=lambda s: s.split("_")
+            samples["groupby"].unique(), key=lambda s: tuple(s.split("_"))
         )
 
         # Assign colors using palette
@@ -112,7 +111,7 @@ class MzminePCA:
         # Plot samples
         for sample_groupby in samples_unique_groupby:
             subset = samples[samples["groupby"] == sample_groupby]
-            plt.scatter(
+            ax.scatter(
                 subset["PC1"],
                 subset["PC2"],
                 color=samples_color_mapping[sample_groupby],
@@ -132,7 +131,7 @@ class MzminePCA:
             .agg("_".join, axis=1)
         )
         procedural_blanks_unique_groupby = sorted(
-            procedural_blanks["groupby"].unique(), key=lambda s: s.split("_")
+            procedural_blanks["groupby"].unique(), key=lambda s: tuple(s.split("_"))
         )
 
         # Assign colors
@@ -145,9 +144,9 @@ class MzminePCA:
 
         for procedural_blank_groupby in procedural_blanks_unique_groupby:
             subset = procedural_blanks[
-                procedural_blanks["fraction"] == procedural_blank_groupby
+                procedural_blanks["groupby"] == procedural_blank_groupby
             ]
-            plt.scatter(
+            ax.scatter(
                 subset["PC1"],
                 subset["PC2"],
                 color=procedural_blanks_color_mapping[procedural_blank_groupby],
@@ -157,7 +156,7 @@ class MzminePCA:
 
         # --- Instrumental blanks ---
         instrumental_blanks = self.pca_df[self.pca_df["type"] == "instrumental_blank"]
-        plt.scatter(
+        ax.scatter(
             instrumental_blanks["PC1"],
             instrumental_blanks["PC2"],
             color="black",
@@ -165,12 +164,14 @@ class MzminePCA:
             label="Instrumental blank",
         )
 
-        plt.xlabel(f"PC1 ({self.pca.explained_variance_ratio_[0] * 100:.2f}%)")
-        plt.ylabel(f"PC2 ({self.pca.explained_variance_ratio_[1] * 100:.2f}%)")
-        plt.title(f"PCA: Colored by {'+'.join(samples_groupby)}, shape by type")
-        plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left", fontsize=8)
-        plt.grid(True)
+        ax.set_xlabel(f"PC1 ({self.pca.explained_variance_ratio_[0] * 100:.2f}%)")
+        ax.set_ylabel(f"PC2 ({self.pca.explained_variance_ratio_[1] * 100:.2f}%)")
+        ax.set_title(f"PCA: Colored by {'+'.join(samples_groupby)}, shape by type")
+        ax.legend(bbox_to_anchor=(1.05, 1), loc="upper left", fontsize=8)
+        ax.grid(True)
+
+        return fig
 
     def save_figure(self):
-        plt.savefig(self.section.output["pca"], dpi=300, bbox_inches="tight")
-        plt.close()
+        self._fig.savefig(self.output, dpi=300, bbox_inches="tight")
+        plt.close(self._fig)

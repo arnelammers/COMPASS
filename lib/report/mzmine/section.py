@@ -37,6 +37,8 @@ class MzmineSection:
         self.output = output
         self.config = config
 
-        self.feature_table = pd.read_csv(input["feature_table_before_subtraction"])
+        self.feature_table_before_subtraction_df = pd.read_csv(
+            input["feature_table_before_subtraction"]
+        )
 
-        self.metadata = pd.read_csv(input["metadata"])
+        self.metadata_df = pd.read_csv(input["metadata"])
