@@ -91,7 +91,7 @@ class MzminePCA:
         }
 
         # Set figure size
-        fig, ax = plt.subplots(figsize=(10, 8))
+        fig, ax = plt.subplots(figsize=(7, 5), constrained_layout=True)
 
         # --- Samples ---
         samples = self.pca_df[self.pca_df["type"] == "sample"].copy()
@@ -173,5 +173,5 @@ class MzminePCA:
         return fig
 
     def save_figure(self):
-        self._fig.savefig(self.output, dpi=300, bbox_inches="tight")
+        self._fig.savefig(self.output)
         plt.close(self._fig)
