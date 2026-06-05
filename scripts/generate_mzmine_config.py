@@ -1,6 +1,8 @@
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-from snakemake.script import snakemake
+if TYPE_CHECKING:
+    from snakemake.iocontainers import snakemake
 
 # Get snakemake parameters
 output_mzbatch = Path(snakemake.output["mzbatch"])
