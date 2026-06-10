@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 import pandas as pd
 
 if TYPE_CHECKING:
-    from snakemake.script import snakemake
+    from snakemake.iocontainers import snakemake
 
 config = snakemake.config["datasets"][snakemake.wildcards.dataset]["report"][
     "annotations"

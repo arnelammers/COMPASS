@@ -8,7 +8,7 @@ from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 
 if TYPE_CHECKING:
-    from snakemake.script import snakemake
+    from snakemake.iocontainers import snakemake
 
 config = snakemake.config["datasets"][snakemake.wildcards.dataset]["report"]["mzmine"]
 
