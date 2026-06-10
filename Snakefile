@@ -29,15 +29,10 @@ wildcard_constraints:
 
 rule all:
     input:
-        expand("results/{dataset}/report/mzmine/figures/pca.png", dataset=DATASETS),
-        expand("results/{dataset}/report/mzmine/tables/stats.html", dataset=DATASETS),
-        expand(
-            "results/{dataset}/report/annotations/smiles_combined.csv",
-            dataset=DATASETS,
-        ),
-        expand(
-            "results/{dataset}/report/annotations/tables/stats.html", dataset=DATASETS
-        ),
+        expand("results/{dataset}/analysis/features/pca.png", dataset=DATASETS),
+        expand("results/{dataset}/analysis/features/stats.json", dataset=DATASETS),
+        expand("results/{dataset}/analysis/annotations/smiles_combined.csv", dataset=DATASETS),
+        expand("results/{dataset}/analysis/annotations/stats.json", dataset=DATASETS),
 
 
 rule convert_raw_to_mzml:
@@ -207,51 +202,30 @@ rule run_specreboot:
         """
 
 
-rule generate_report_mzmine_section:
+rule analysis_features:
     input:
         feature_table="results/{dataset}/mzmine/feature_table.csv",
         feature_table_before_subtraction="results/{dataset}/mzmine/feature_table_before_subtraction.csv",
         annotations="results/{dataset}/mzmine/annotations.csv",
         export_sirius="results/{dataset}/mzmine/export_sirius.mgf",
         metadata="data/{dataset}/metadata.csv",
-        pca_lib="lib/report/mzmine/pca.py",
-        stats_lib="lib/report/mzmine/stats.py",
-        section_lib="lib/report/mzmine/section.py",
         config="config/config.yaml",
     output:
-        pca=report(
-            "results/{dataset}/report/mzmine/figures/pca.png",
-            category="mzmine",
-            subcategory="Principal Component Analysis",
-            labels={"Dataset": "{dataset}"},
-        ),
-        stats=report(
-            "results/{dataset}/report/mzmine/tables/stats.html",
-            category="mzmine",
-            subcategory="{dataset}",
-            labels={"item": "Statistics"},
-        ),
+        pca="results/{dataset}/analysis/features/pca.png",
+        stats="results/{dataset}/analysis/features/stats.json",
     script:
-        "scripts/generate_report_mzmine_section.py"
+        "scripts/analysis_features.py"
 
 
-rule generate_report_annotations_section:
+rule analysis_annotations:
     input:
         feature_table="results/{dataset}/mzmine/feature_table.csv",
         mzmine_annotations="results/{dataset}/mzmine/annotations.csv",
         sirius_structure_identifications="results/{dataset}/sirius/summaries/structure_identifications.tsv",
         sirius_denovo_structure_identifications="results/{dataset}/sirius/summaries/denovo_structure_identifications.tsv",
-        smiles_combined_lib="lib/report/annotations/smiles_combined.py",
-        stats_lib="lib/report/annotations/stats.py",
-        section_lib="lib/report/annotations/section.py",
         config="config/config.yaml",
     output:
-        smiles_combined="results/{dataset}/report/annotations/smiles_combined.csv",
-        stats=report(
-            "results/{dataset}/report/annotations/tables/stats.html",
-            category="annotations",
-            subcategory="{dataset}",
-            labels={"item": "Statistics"},
-        ),
+        smiles_combined="results/{dataset}/analysis/annotations/smiles_combined.csv",
+        stats="results/{dataset}/analysis/annotations/stats.json",
     script:
-        "scripts/generate_report_annotations_section.py"
+        "scripts/analysis_annotations.py"
