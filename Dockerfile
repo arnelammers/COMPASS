@@ -31,7 +31,7 @@ WORKDIR /home/mambauser/workflow
 
 # Install Python packages + Snakemake
 RUN micromamba install -y -n base -c conda-forge -c bioconda -c defaults \
-    python=3.10 \
+    python=3.12 \
     pip \
     snakemake \
     numpy \
