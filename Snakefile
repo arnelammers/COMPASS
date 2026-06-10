@@ -30,6 +30,14 @@ wildcard_constraints:
 rule all:
     input:
         expand("results/{dataset}/report/mzmine/figures/pca.png", dataset=DATASETS),
+        expand("results/{dataset}/report/mzmine/tables/stats.html", dataset=DATASETS),
+        expand(
+            "results/{dataset}/report/annotations/smiles_combined.csv",
+            dataset=DATASETS,
+        ),
+        expand(
+            "results/{dataset}/report/annotations/tables/stats.html", dataset=DATASETS
+        ),
 
 
 rule convert_raw_to_mzml:
@@ -209,10 +217,11 @@ rule generate_report_mzmine_section:
         pca_lib="lib/report/mzmine/pca.py",
         stats_lib="lib/report/mzmine/stats.py",
         section_lib="lib/report/mzmine/section.py",
+        config="config/config.yaml",
     output:
         pca=report(
             "results/{dataset}/report/mzmine/figures/pca.png",
-            category="MZmine",
+            category="mzmine",
             subcategory="Principal Component Analysis",
             labels={"Dataset": "{dataset}"},
         ),
@@ -224,3 +233,25 @@ rule generate_report_mzmine_section:
         ),
     script:
         "scripts/generate_report_mzmine_section.py"
+
+
+rule generate_report_annotations_section:
+    input:
+        feature_table="results/{dataset}/mzmine/feature_table.csv",
+        mzmine_annotations="results/{dataset}/mzmine/annotations.csv",
+        sirius_structure_identifications="results/{dataset}/sirius/summaries/structure_identifications.tsv",
+        sirius_denovo_structure_identifications="results/{dataset}/sirius/summaries/denovo_structure_identifications.tsv",
+        smiles_combined_lib="lib/report/annotations/smiles_combined.py",
+        stats_lib="lib/report/annotations/stats.py",
+        section_lib="lib/report/annotations/section.py",
+        config="config/config.yaml",
+    output:
+        smiles_combined="results/{dataset}/report/annotations/smiles_combined.csv",
+        stats=report(
+            "results/{dataset}/report/annotations/tables/stats.html",
+            category="annotations",
+            subcategory="{dataset}",
+            labels={"item": "Statistics"},
+        ),
+    script:
+        "scripts/generate_report_annotations_section.py"

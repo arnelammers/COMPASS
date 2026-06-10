@@ -69,7 +69,8 @@
                     "report": {
                         "type": "object",
                         "required": [
-                            "mzmine"
+                            "mzmine",
+                            "annotations"
                         ],
                         "properties": {
                             "mzmine": {
@@ -99,6 +100,26 @@
                                             }
                                         },
                                         "additionalProperties": false
+                                    }
+                                },
+                                "additionalProperties": false
+                            },
+                            "annotations": {
+                                "type": "object",
+                                "required": [
+                                    "spectral_library_match_score_cutoff",
+                                    "structure_database_confidence_cutoff",
+                                    "msnovelist_score_cutoff"
+                                ],
+                                "properties": {
+                                    "spectral_library_match_score_cutoff": {
+                                        "type": "number"
+                                    },
+                                    "structure_database_confidence_cutoff": {
+                                        "type": "number"
+                                    },
+                                    "msnovelist_score_cutoff": {
+                                        "type": "number"
                                     }
                                 },
                                 "additionalProperties": false
