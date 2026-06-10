@@ -34,6 +34,8 @@ Then enter the container using the following command:
 
 ```bash
 docker run -it --rm \
+  --memory=14g --shm-size=8g \
+  -e JAVA_TOOL_OPTIONS="-Xmx12g" \
   -u "$(id -u):$(id -g)" \
   -v "$(pwd)":/home/mambauser/workflow \
   -v "$(pwd)/.sirius-6.3":/home/mambauser/.sirius-6.3 \
