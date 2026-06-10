@@ -31,8 +31,9 @@ WORKDIR /home/mambauser/workflow
 
 # Install Python packages + Snakemake
 RUN micromamba install -y -n base -c conda-forge -c bioconda -c defaults \
+    python=3.10 \
+    pip \
     snakemake \
-    python=3.12 \
     numpy \
     scipy \
     networkx \
@@ -42,7 +43,8 @@ RUN micromamba install -y -n base -c conda-forge -c bioconda -c defaults \
     matplotlib \
     seaborn \
     jupyter \
-    && micromamba clean --all --yes
+    && micromamba clean --all --yes \
+    && micromamba run -n base python -m pip install signaturizer
 
 # Create directory for tools
 RUN mkdir -p /home/mambauser/tools
