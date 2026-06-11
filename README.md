@@ -53,7 +53,7 @@ sirius login -u  -p
 Then run the pipeline in the container:
 
 ```bash
-snakemake --cores 8
+snakemake --use-conda --cores 8
 ```
 
 The results for each substep will appear in the `results/` folder for each dataset that was specified in the configuration. Logs for each tool are written to the `logs/` folder.

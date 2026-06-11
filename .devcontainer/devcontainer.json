@@ -3,12 +3,12 @@
     "build": {
         "dockerfile": "../Dockerfile"
     },
-    "remoteUser": "mambauser",
-    "workspaceFolder": "/home/mambauser/workflow",
-    "workspaceMount": "source=${localWorkspaceFolder},target=/home/mambauser/workflow,type=bind",
+    "remoteUser": "bio",
+    "workspaceFolder": "/home/bio/workflow",
+    "workspaceMount": "source=${localWorkspaceFolder},target=/home/bio/workflow,type=bind",
     "mounts": [
-        "source=${localWorkspaceFolder}/.sirius-6.3,target=/home/mambauser/.sirius-6.3,type=bind",
-        "source=${localWorkspaceFolder}/.mzmine,target=/home/mambauser/.mzmine,type=bind"
+        "source=${localWorkspaceFolder}/.sirius-6.3,target=/home/bio/.sirius-6.3,type=bind",
+        "source=${localWorkspaceFolder}/.mzmine,target=/home/bio/.mzmine,type=bind"
     ],
     "runArgs": [
         "--user",
