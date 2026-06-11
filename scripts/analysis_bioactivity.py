@@ -30,10 +30,6 @@ all_smiles = np.concatenate([smiles_dataset, smiles_query])
 
 query_mask = np.isin(all_smiles, smiles_query)
 
-smiles_to_name = dict(
-    zip(annotations_combined_df["smiles"], annotations_combined_df["compound_name"])
-) | dict(zip(query_df["smiles"], query_df["compound_name"]))
-
 
 def read_fingerprints():
     with h5py.File(snakemake.input["h5"], "r") as fh:
@@ -98,12 +94,10 @@ def get_clustered_with_query(labels):
     neighbors_df = pd.DataFrame(
         {"smiles": all_smiles[result_mask], "label": labels[result_mask]}
     )
-    neighbors_df["compound_name"] = neighbors_df["smiles"].map(smiles_to_name)
 
     query_df = pd.DataFrame(
         {"smiles": all_smiles[query_mask], "label": labels[query_mask]}
     )
-    query_df["compound_name"] = query_df["smiles"].map(smiles_to_name)
 
     label_to_query_names = (
         query_df.groupby("label")["compound_name"]
@@ -112,7 +106,9 @@ def get_clustered_with_query(labels):
     )
     neighbors_df["query_compounds"] = neighbors_df["label"].map(label_to_query_names)
 
-    return neighbors_df[["compound_name", "smiles", "label", "query_compounds"]]
+    merged_df = annotations_combined_df.merge(neighbors_df, on="smiles", how="inner")
+
+    return merged_df
 
 
 def create_umap(signature, labels):
