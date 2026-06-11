@@ -1,6 +1,7 @@
 # Raw and processed data
 data/
 results/
+config/config.yaml
 
 # Python / Conda
 __pycache__/
