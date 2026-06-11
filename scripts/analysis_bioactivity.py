@@ -62,7 +62,7 @@ def create_tsne(signature) -> plt.Figure:
     return fig
 
 
-def get_clustering(signature):
+def get_hdbscan_clustering(signature):
     clusterable_embedding = umap.UMAP(
         n_neighbors=30,
         min_dist=0.0,
@@ -95,13 +95,12 @@ def get_clustered_with_query(labels):
         {"smiles": all_smiles[result_mask], "label": labels[result_mask]}
     )
 
-    query_df = pd.DataFrame(
-        {"smiles": all_smiles[query_mask], "label": labels[query_mask]}
-    )
+    query_label_df = query_df.copy()
+    query_label_df["label"] = labels[query_mask]
 
     label_to_query_names = (
-        query_df.groupby("label")["compound_name"]
-        .apply(lambda x: list(x.dropna().unique()))
+        query_label_df.groupby("label")["compound_name"]
+        .apply(lambda x: ";".join(list(x.dropna().unique())))
         .to_dict()
     )
     neighbors_df["query_compounds"] = neighbors_df["label"].map(label_to_query_names)
@@ -155,13 +154,17 @@ def create_umap(signature, labels):
 # Compute fingerprints
 fingerprints = read_fingerprints()
 
-# Save figure
+# Save tsne
 tsne = create_tsne(fingerprints)
 tsne.savefig(snakemake.output["tsne"], dpi=300)
 
-labels = get_clustering(fingerprints)
+# Get label of HDBSCAN clustering
+labels = get_hdbscan_clustering(fingerprints)
+
+# Get compounds clustered with query
 clustered_df = get_clustered_with_query(labels)
 clustered_df.to_csv(snakemake.output["clustered"], index=False)
 
+# Create UMAP and save
 umapfig = create_umap(fingerprints, labels)
 umapfig.savefig(snakemake.output["umap"], dpi=300)
