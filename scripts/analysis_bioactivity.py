@@ -73,7 +73,7 @@ def get_hdbscan_clustering(signature):
         min_dist=0.0,
         n_components=2,
         random_state=42,
-    ).fit_transform(fingerprints)
+    ).fit_transform(signature)
 
     labels = hdbscan.HDBSCAN(
         min_samples=2,
