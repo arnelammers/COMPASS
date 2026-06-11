@@ -207,7 +207,12 @@ def get_molecular_network(graphml, clustered: pd.DataFrame):
     # Get dict that map id to smiles/mol formula
     structure_id_to_name = (
         structure_annotations_combined_df.set_index("sirius_id")
-        .apply(lambda r: f"{r['compound_name']} ({r['annotation_type']})", axis=1)
+        .apply(
+            lambda r: (
+                f"{r['compound_name']} [{r['molecularFormula']}] ({r['annotation_type']})"
+            ),
+            axis=1,
+        )
         .to_dict()
     )
 
