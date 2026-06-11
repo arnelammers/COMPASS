@@ -205,13 +205,17 @@ def get_molecular_network(graphml, clustered: pd.DataFrame):
     )
 
     # Get dict that map id to smiles/mol formula
-    structure_id_to_name = structure_annotations_combined_df.set_index("sirius_id")[
-        "compound_name"
-    ].to_dict()
+    structure_id_to_name = (
+        structure_annotations_combined_df.set_index("sirius_id")
+        .apply(lambda r: f"{r['compound_name']} ({r['annotation_type']})", axis=1)
+        .to_dict()
+    )
 
-    formula_id_to_formula = formula_annotations_df.set_index("sirius_id")[
-        "molecularFormula"
-    ].to_dict()
+    formula_id_to_formula = (
+        formula_annotations_df.set_index("sirius_id")
+        .apply(lambda r: f"{r['molecularFormula']} (formula)", axis=1)
+        .to_dict()
+    )
 
     # Determine labels of nodes
     labels = {
@@ -227,7 +231,14 @@ def get_molecular_network(graphml, clustered: pd.DataFrame):
         texts,
         ax=ax,
         expand_points=(1.2, 1.4),
-        arrowprops=dict(arrowstyle="-", lw=0.3, color="lightgray"),
+        arrowprops=dict(
+            arrowstyle="-",
+            lw=0.3,
+            color="gray",
+            shrinkA=10,
+            shrinkB=5,
+            linestyle=(0, (2, 2)),
+        ),
     )
 
     return fig
