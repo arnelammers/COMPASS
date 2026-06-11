@@ -134,7 +134,7 @@ combined_df = merge_annotations()
 combined_df = filter_annotations(combined_df)
 
 # Save combined annotations
-combined_df.to_csv(snakemake.output["smiles_combined"], index=False)
+combined_df.to_csv(snakemake.output["annotations_combined"], index=False)
 
 ## Stats
 

@@ -31,8 +31,16 @@ rule all:
     input:
         expand("results/{dataset}/analysis/features/pca.png", dataset=DATASETS),
         expand("results/{dataset}/analysis/features/stats.json", dataset=DATASETS),
-        expand("results/{dataset}/analysis/annotations/smiles_combined.csv", dataset=DATASETS),
+        expand(
+            "results/{dataset}/analysis/annotations/annotations_combined.csv",
+            dataset=DATASETS,
+        ),
         expand("results/{dataset}/analysis/annotations/stats.json", dataset=DATASETS),
+        expand(
+            "results/{dataset}/analysis/bioactivity/fingerprints.h5", dataset=DATASETS
+        ),
+        expand("results/{dataset}/analysis/bioactivity/tsne.png", dataset=DATASETS),
+        expand("results/{dataset}/analysis/bioactivity/clustered.csv", dataset=DATASETS),
 
 
 rule convert_raw_to_mzml:
@@ -225,7 +233,32 @@ rule analysis_annotations:
         sirius_denovo_structure_identifications="results/{dataset}/sirius/summaries/denovo_structure_identifications.tsv",
         config="config/config.yaml",
     output:
-        smiles_combined="results/{dataset}/analysis/annotations/smiles_combined.csv",
+        annotations_combined="results/{dataset}/analysis/annotations/annotations_combined.csv",
         stats="results/{dataset}/analysis/annotations/stats.json",
     script:
         "scripts/analysis_annotations.py"
+
+
+rule create_fingerprints:
+    input:
+        annotations_combined="results/{dataset}/analysis/annotations/annotations_combined.csv",
+        config="config/config.yaml",
+    output:
+        h5="results/{dataset}/analysis/bioactivity/fingerprints.h5",
+    conda:
+        "signaturizer_env"
+    script:
+        "scripts/create_fingerprints.py"
+
+
+rule analysis_bioactivity:
+    input:
+        h5="results/{dataset}/analysis/bioactivity/fingerprints.h5",
+        annotations_combined="results/{dataset}/analysis/annotations/annotations_combined.csv",
+        config="config/config.yaml",
+    output:
+        tsne="results/{dataset}/analysis/bioactivity/tsne.png",
+        umap="results/{dataset}/analysis/bioactivity/umap.png",
+        clustered="results/{dataset}/analysis/bioactivity/clustered.csv",
+    script:
+        "scripts/analysis_bioactivity.py"

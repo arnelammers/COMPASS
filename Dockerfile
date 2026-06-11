@@ -49,6 +49,8 @@ RUN conda install -y -n base -c conda-forge -c bioconda -c defaults \
     seaborn \
     jupyter \
     h5py \
+    umap-learn \
+    hdbscan \
     && conda clean --all --yes
 
 # Create signaturizer env

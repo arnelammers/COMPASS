@@ -70,7 +70,8 @@
                         "type": "object",
                         "required": [
                             "mzmine",
-                            "annotations"
+                            "annotations",
+                            "bioactivity"
                         ],
                         "properties": {
                             "mzmine": {
@@ -120,6 +121,25 @@
                                     },
                                     "msnovelist_score_cutoff": {
                                         "type": "number"
+                                    }
+                                },
+                                "additionalProperties": false
+                            },
+                            "bioactivity": {
+                                "type": "object",
+                                "required": [
+                                    "cc_spaces",
+                                    "query"
+                                ],
+                                "properties": {
+                                    "cc_spaces": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "query": {
+                                        "type": "string"
                                     }
                                 },
                                 "additionalProperties": false
