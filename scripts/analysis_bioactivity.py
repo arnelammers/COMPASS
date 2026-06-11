@@ -22,6 +22,9 @@ config = snakemake.config["datasets"][snakemake.wildcards.dataset]["report"][
 structure_annotations_combined_df = pd.read_csv(
     snakemake.input["structure_annotations_combined"], low_memory=False
 )
+formula_annotations_df = pd.read_csv(
+    snakemake.input["formula_annotations"], low_memory=False
+)
 query_df = pd.read_csv(
     f"resources/bioactivity_queries/{config['query']}.csv", low_memory=False
 )
@@ -177,17 +180,24 @@ def get_molecular_network(graphml, clustered: pd.DataFrame):
 
     fig, ax = plt.subplots(figsize=(12, 12))
 
-    id_to_name = structure_annotations_combined_df.set_index("sirius_id")[
-        "compound_name"
-    ].to_dict()
-
     pos = nx.spring_layout(
         G_filtered,
         seed=42,
         k=1.5 / np.sqrt(len(G_filtered.nodes())),
     )
 
-    labels = {n: id_to_name.get(int(n)) or str(n) for n in G_filtered.nodes()}
+    structure_id_to_name = structure_annotations_combined_df.set_index("sirius_id")[
+        "compound_name"
+    ].to_dict()
+
+    formula_id_to_formula = formula_annotations_df.set_index("sirius_id")[
+        "molecularFormula"
+    ].to_dict()
+
+    labels = {
+        n: structure_id_to_name.get(int(n)) or formula_id_to_formula.get(int(n)) or "?"
+        for n in G_filtered.nodes()
+    }
 
     nx.draw(
         G_filtered,
