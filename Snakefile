@@ -238,10 +238,11 @@ rule analysis_features:
         annotations="results/{dataset}/mzmine/annotations.csv",
         export_sirius="results/{dataset}/mzmine/export_sirius.mgf",
         metadata="data/{dataset}/metadata.csv",
-        config="config/config.yaml",
     output:
         pca="results/{dataset}/analysis/features/pca.png",
         stats="results/{dataset}/analysis/features/stats.json",
+    params:
+        config=lambda wc: config["datasets"][wc.dataset]["analysis"]["features"],
     script:
         "scripts/analysis_features.py"
 
@@ -253,11 +254,12 @@ rule analysis_annotations:
         sirius_formula_identifications="results/{dataset}/sirius/summaries/formula_identifications.tsv",
         sirius_structure_identifications="results/{dataset}/sirius/summaries/structure_identifications.tsv",
         sirius_denovo_structure_identifications="results/{dataset}/sirius/summaries/denovo_structure_identifications.tsv",
-        config="config/config.yaml",
     output:
         structure_annotations_combined="results/{dataset}/analysis/annotations/structure_annotations_combined.csv",
         formula_annotations="results/{dataset}/analysis/annotations/formula_annotations.csv",
         stats="results/{dataset}/analysis/annotations/stats.json",
+    params:
+        config=lambda wc: config["datasets"][wc.dataset]["analysis"]["annotations"],
     script:
         "scripts/analysis_annotations.py"
 
@@ -265,11 +267,12 @@ rule analysis_annotations:
 rule create_fingerprints:
     input:
         structure_annotations_combined="results/{dataset}/analysis/annotations/structure_annotations_combined.csv",
-        config="config/config.yaml",
     output:
         h5="results/{dataset}/analysis/bioactivity/fingerprints.h5",
     conda:
         "signaturizer_env"
+    params:
+        config=lambda wc: config["datasets"][wc.dataset]["analysis"]["bioactivity"],
     script:
         "scripts/create_fingerprints.py"
 
@@ -283,7 +286,6 @@ rule analysis_bioactivity:
         graphml_modcosine="results/{dataset}/specreboot/Reboot_bootstrap_threshold_ModCosine.graphml",
         graphml_spec2vec="results/{dataset}/specreboot/Reboot_bootstrap_threshold_Spec2Vec.graphml",
         graphml_ms2deepscore="results/{dataset}/specreboot/Reboot_bootstrap_threshold_MS2DeepScore.graphml",
-        config="config/config.yaml",
     output:
         tsne="results/{dataset}/analysis/bioactivity/tsne.png",
         umap="results/{dataset}/analysis/bioactivity/umap.png",
@@ -292,6 +294,8 @@ rule analysis_bioactivity:
         molnet_modcosine="results/{dataset}/analysis/bioactivity/molnet_modcosine.png",
         molnet_spec2vec="results/{dataset}/analysis/bioactivity/molnet_spec2vec.png",
         molnet_ms2deepscore="results/{dataset}/analysis/bioactivity/molnet_ms2deepscore.png",
+    params:
+        config=lambda wc: config["datasets"][wc.dataset]["analysis"]["bioactivity"],
     script:
         "scripts/analysis_bioactivity.py"
 
@@ -303,8 +307,9 @@ rule analysis_differential:
         clustered="results/{dataset}/analysis/bioactivity/clustered.csv",
         structure_annotations_combined="results/{dataset}/analysis/annotations/structure_annotations_combined.csv",
         formula_annotations="results/{dataset}/analysis/annotations/formula_annotations.csv",
-        config="config/config.yaml",
     output:
         da="results/{dataset}/analysis/differential/da.csv",
+    params:
+        config=lambda wc: config["datasets"][wc.dataset]["analysis"]["differential"],
     script:
         "scripts/analysis_differential.py"

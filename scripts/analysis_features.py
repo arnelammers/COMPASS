@@ -10,9 +10,7 @@ from sklearn.preprocessing import StandardScaler
 if TYPE_CHECKING:
     from snakemake.iocontainers import snakemake
 
-config = snakemake.config["datasets"][snakemake.wildcards.dataset]["analysis"][
-    "features"
-]
+config = snakemake.params["config"]
 
 feature_table_df = pd.read_csv(snakemake.input["feature_table"], low_memory=False)
 feature_table_before_subtraction_df = pd.read_csv(

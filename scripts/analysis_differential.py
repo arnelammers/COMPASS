@@ -7,9 +7,7 @@ from scipy.stats import ttest_ind
 if TYPE_CHECKING:
     from snakemake.iocontainers import snakemake
 
-config = snakemake.config["datasets"][snakemake.wildcards.dataset]["analysis"][
-    "differential"
-]
+config = snakemake.params["config"]
 
 # Get dataframes from annotations
 feature_table_df = pd.read_csv(snakemake.input["feature_table"], low_memory=False)

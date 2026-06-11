@@ -6,9 +6,7 @@ import pandas as pd
 if TYPE_CHECKING:
     from snakemake.iocontainers import snakemake
 
-config = snakemake.config["datasets"][snakemake.wildcards.dataset]["analysis"][
-    "annotations"
-]
+config = snakemake.params["config"]
 
 feature_table_df = pd.read_csv(snakemake.input["feature_table"], low_memory=False)
 mzmine_annotations_df = pd.read_csv(

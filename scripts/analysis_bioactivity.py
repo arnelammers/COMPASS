@@ -14,9 +14,7 @@ from sklearn.manifold import TSNE
 if TYPE_CHECKING:
     from snakemake.iocontainers import snakemake
 
-config = snakemake.config["datasets"][snakemake.wildcards.dataset]["analysis"][
-    "bioactivity"
-]
+config = snakemake.params["config"]
 
 # Get dataframes from annotations and query
 structure_annotations_combined_df = pd.read_csv(
