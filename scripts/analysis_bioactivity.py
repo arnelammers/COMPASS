@@ -161,18 +161,23 @@ def create_umap(signature, labels):
 def get_molecular_network(graphml, clustered: pd.DataFrame):
     G = nx.read_graphml(graphml)
 
+    # Get list of ids that are clustered with query compounds
     valid_ids = clustered["sirius_id"].tolist()
 
+    # Get clusters that contain at least one id from query
     hit_clusters = {
         attrs.get("component") for n, attrs in G.nodes(data=True) if int(n) in valid_ids
     }
 
+    # Filter nodes to only have nodes within clusters that have clustered compounds
     nodes_to_keep = [
         n for n, attrs in G.nodes(data=True) if attrs.get("component") in hit_clusters
     ]
 
+    # filter graph
     G_filtered = G.subgraph(nodes_to_keep).copy()
 
+    # Color clustered compounds red
     node_colors = [
         "red" if int(n) in valid_ids else "lightgray"
         for n, attrs in G_filtered.nodes(data=True)
@@ -180,25 +185,14 @@ def get_molecular_network(graphml, clustered: pd.DataFrame):
 
     fig, ax = plt.subplots(figsize=(12, 12))
 
+    # Make nodes more seperate
     pos = nx.spring_layout(
         G_filtered,
         seed=42,
         k=1.5 / np.sqrt(len(G_filtered.nodes())),
     )
 
-    structure_id_to_name = structure_annotations_combined_df.set_index("sirius_id")[
-        "compound_name"
-    ].to_dict()
-
-    formula_id_to_formula = formula_annotations_df.set_index("sirius_id")[
-        "molecularFormula"
-    ].to_dict()
-
-    labels = {
-        n: structure_id_to_name.get(int(n)) or formula_id_to_formula.get(int(n)) or "?"
-        for n in G_filtered.nodes()
-    }
-
+    # Draw nodes and edges
     nx.draw(
         G_filtered,
         pos,
@@ -210,13 +204,30 @@ def get_molecular_network(graphml, clustered: pd.DataFrame):
         with_labels=False,
     )
 
+    # Get dict that map id to smiles/mol formula
+    structure_id_to_name = structure_annotations_combined_df.set_index("sirius_id")[
+        "compound_name"
+    ].to_dict()
+
+    formula_id_to_formula = formula_annotations_df.set_index("sirius_id")[
+        "molecularFormula"
+    ].to_dict()
+
+    # Determine labels of nodes
+    labels = {
+        n: structure_id_to_name.get(int(n)) or formula_id_to_formula.get(int(n)) or "?"
+        for n in G_filtered.nodes()
+    }
+
+    # Get texts
     texts = [ax.text(x, y, labels[n], fontsize=6) for n, (x, y) in pos.items()]
 
+    # Use adjust text to prevent nodes colliding
     adjust_text(
         texts,
         ax=ax,
         expand_points=(1.2, 1.4),
-        arrowprops=dict(arrowstyle="-", lw=0.3, color="gray"),
+        arrowprops=dict(arrowstyle="-", lw=0.3, color="lightgray"),
     )
 
     return fig
