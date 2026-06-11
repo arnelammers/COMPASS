@@ -6,6 +6,7 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 import umap
+from adjustText import adjust_text
 from matplotlib import pyplot as plt
 from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE
@@ -194,9 +195,16 @@ def get_molecular_network(graphml, clustered: pd.DataFrame):
         node_size=50,
         edge_color="gray",
         width=0.5,
-        with_labels=True,
-        labels=labels,
-        font_size=6,
+        with_labels=False,
+    )
+
+    texts = [ax.text(x, y, labels[n], fontsize=6) for n, (x, y) in pos.items()]
+
+    adjust_text(
+        texts,
+        ax=ax,
+        expand_points=(1.2, 1.4),
+        arrowprops=dict(arrowstyle="-", lw=0.3, color="gray"),
     )
 
     return fig

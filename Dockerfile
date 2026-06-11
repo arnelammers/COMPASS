@@ -52,6 +52,7 @@ RUN conda install -y -n base -c conda-forge -c bioconda -c defaults \
     h5py \
     umap-learn \
     hdbscan \
+    adjusttext \
     && conda clean --all --yes
 
 # Create signaturizer env
