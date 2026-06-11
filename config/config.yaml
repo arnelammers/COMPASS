@@ -24,6 +24,7 @@ datasets:
           samples_groupby: ["group", "fraction"]
           procedural_blanks_groupby: ["fraction"]
       annotations:
+        formula_identification_score_cutoff: 0.8
         spectral_library_match_score_cutoff: 0.8
         structure_database_confidence_cutoff: 0.8
         msnovelist_score_cutoff: -3

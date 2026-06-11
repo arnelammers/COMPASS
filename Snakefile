@@ -32,7 +32,11 @@ rule all:
         expand("results/{dataset}/analysis/features/pca.png", dataset=DATASETS),
         expand("results/{dataset}/analysis/features/stats.json", dataset=DATASETS),
         expand(
-            "results/{dataset}/analysis/annotations/annotations_combined.csv",
+            "results/{dataset}/analysis/annotations/structure_annotations_combined.csv",
+            dataset=DATASETS,
+        ),
+        expand(
+            "results/{dataset}/analysis/annotations/formula_annotations.csv",
             dataset=DATASETS,
         ),
         expand("results/{dataset}/analysis/annotations/stats.json", dataset=DATASETS),
@@ -245,11 +249,13 @@ rule analysis_annotations:
     input:
         feature_table="results/{dataset}/mzmine/feature_table.csv",
         mzmine_annotations="results/{dataset}/mzmine/annotations.csv",
+        sirius_formula_identifications="results/{dataset}/sirius/summaries/formula_identifications.tsv",
         sirius_structure_identifications="results/{dataset}/sirius/summaries/structure_identifications.tsv",
         sirius_denovo_structure_identifications="results/{dataset}/sirius/summaries/denovo_structure_identifications.tsv",
         config="config/config.yaml",
     output:
-        annotations_combined="results/{dataset}/analysis/annotations/annotations_combined.csv",
+        structure_annotations_combined="results/{dataset}/analysis/annotations/structure_annotations_combined.csv",
+        formula_annotations="results/{dataset}/analysis/annotations/formula_annotations.csv",
         stats="results/{dataset}/analysis/annotations/stats.json",
     script:
         "scripts/analysis_annotations.py"
@@ -257,7 +263,7 @@ rule analysis_annotations:
 
 rule create_fingerprints:
     input:
-        annotations_combined="results/{dataset}/analysis/annotations/annotations_combined.csv",
+        structure_annotations_combined="results/{dataset}/analysis/annotations/structure_annotations_combined.csv",
         config="config/config.yaml",
     output:
         h5="results/{dataset}/analysis/bioactivity/fingerprints.h5",
@@ -270,7 +276,8 @@ rule create_fingerprints:
 rule analysis_bioactivity:
     input:
         h5="results/{dataset}/analysis/bioactivity/fingerprints.h5",
-        annotations_combined="results/{dataset}/analysis/annotations/annotations_combined.csv",
+        structure_annotations_combined="results/{dataset}/analysis/annotations/structure_annotations_combined.csv",
+        formula_annotations="results/{dataset}/analysis/annotations/formula_annotations.csv",
         graphml_cosine="results/{dataset}/specreboot/Reboot_bootstrap_threshold_Cosine.graphml",
         graphml_modcosine="results/{dataset}/specreboot/Reboot_bootstrap_threshold_ModCosine.graphml",
         graphml_spec2vec="results/{dataset}/specreboot/Reboot_bootstrap_threshold_Spec2Vec.graphml",

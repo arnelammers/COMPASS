@@ -19,14 +19,14 @@ config = snakemake.config["datasets"][snakemake.wildcards.dataset]["report"][
 ]
 
 # Get dataframes from annotations and query
-annotations_combined_df = pd.read_csv(
-    snakemake.input["annotations_combined"], low_memory=False
+structure_annotations_combined_df = pd.read_csv(
+    snakemake.input["structure_annotations_combined"], low_memory=False
 )
 query_df = pd.read_csv(
     f"resources/bioactivity_queries/{config['query']}.csv", low_memory=False
 )
 
-smiles_dataset = annotations_combined_df["smiles"].to_numpy()
+smiles_dataset = structure_annotations_combined_df["smiles"].to_numpy()
 smiles_query = query_df["smiles"].to_numpy()
 all_smiles = np.concatenate([smiles_dataset, smiles_query])
 
@@ -107,7 +107,9 @@ def get_clustered_with_query(labels):
     )
     neighbors_df["query_compounds"] = neighbors_df["label"].map(label_to_query_names)
 
-    merged_df = annotations_combined_df.merge(neighbors_df, on="smiles", how="inner")
+    merged_df = structure_annotations_combined_df.merge(
+        neighbors_df, on="smiles", how="inner"
+    )
 
     return merged_df
 
@@ -175,7 +177,7 @@ def get_molecular_network(graphml, clustered: pd.DataFrame):
 
     fig, ax = plt.subplots(figsize=(12, 12))
 
-    id_to_name = annotations_combined_df.set_index("sirius_id")[
+    id_to_name = structure_annotations_combined_df.set_index("sirius_id")[
         "compound_name"
     ].to_dict()
 

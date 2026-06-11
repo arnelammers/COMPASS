@@ -14,6 +14,12 @@ feature_table_df = pd.read_csv(snakemake.input["feature_table"], low_memory=Fals
 mzmine_annotations_df = pd.read_csv(
     snakemake.input["mzmine_annotations"], low_memory=False
 )
+sirius_formula_identifications_df = pd.read_csv(
+    snakemake.input["sirius_formula_identifications"],
+    delimiter="\t",
+    dtype={"alignedFeatureId": "Int64"},
+    low_memory=False,
+)
 sirius_structure_identifications_df = pd.read_csv(
     snakemake.input["sirius_structure_identifications"],
     delimiter="\t",
@@ -28,7 +34,7 @@ sirius_denovo_structure_identifications_df = pd.read_csv(
 )
 
 
-def merge_annotations():
+def merge_structure_annotations():
     spectral = mzmine_annotations_df.rename(
         columns={
             "compound_name": "compound_name",
@@ -113,7 +119,7 @@ def merge_annotations():
     return combined
 
 
-def filter_annotations(annotations_df: pd.DataFrame):
+def filter_structure_annotations(annotations_df: pd.DataFrame):
     # Remove below cutoff
     spectral_mask = ~(
         (annotations_df["annotation_type"] == "spectral_match")
@@ -151,6 +157,36 @@ def filter_annotations(annotations_df: pd.DataFrame):
     return annotations_df
 
 
+def get_formula_annotations():
+    formula = sirius_structure_identifications_df.rename(
+        columns={
+            "mappingFeatureId": "id",
+            "alignedFeatureId": "sirius_id",
+            "molecularFormula": "molecularFormula",
+            "SiriusScoreNormalized": "score",
+        }
+    ).assign(annotation_type="structure_database")[
+        [
+            "id",
+            "sirius_id",
+            "molecularFormula",
+            "score",
+        ]
+    ]
+    return formula
+
+
+def filter_formula_annotations(annotations_df: pd.DataFrame):
+    # Remove below cutoff
+    formula_mask = ~(
+        annotations_df["score"] < config["formula_identification_score_cutoff"]
+    )
+
+    annotations_df = annotations_df.loc[formula_mask].copy()
+
+    return annotations_df
+
+
 def get_number_of_spectral_matches(annotations_df: pd.DataFrame):
     return len(annotations_df[annotations_df["annotation_type"] == "spectral_match"])
 
@@ -165,21 +201,35 @@ def get_number_of_denovo_predictions(annotations_df: pd.DataFrame):
     return len(annotations_df[annotations_df["annotation_type"] == "denovo"])
 
 
-# Merge and filter annotations
-combined_df = merge_annotations()
-combined_df = filter_annotations(combined_df)
+def get_number_of_formula_predictions(annotations_df: pd.DataFrame):
+    return len(annotations_df)
 
-# Save combined annotations
-combined_df.to_csv(snakemake.output["annotations_combined"], index=False)
+
+# Merge and filter structure annotations
+structure_combined_df = merge_structure_annotations()
+structure_combined_df = filter_structure_annotations(structure_combined_df)
+
+# Save combined structure annotations
+structure_combined_df.to_csv(
+    snakemake.output["structure_annotations_combined"], index=False
+)
+
+# Get formula annotations
+formula_df = get_formula_annotations()
+formula_df = filter_formula_annotations(formula_df)
+
+# Save combined structure annotations
+formula_df.to_csv(snakemake.output["formula_annotations"], index=False)
 
 ## Stats
 
 stats = {
-    "# Spectral library matches": get_number_of_spectral_matches(combined_df),
+    "# Formula predictions": get_number_of_formula_predictions(formula_df),
+    "# Spectral library matches": get_number_of_spectral_matches(structure_combined_df),
     "# Structure database matches": get_number_of_structure_database_matches(
-        combined_df
+        structure_combined_df
     ),
-    "# De novo predictions": get_number_of_denovo_predictions(combined_df),
+    "# De novo predictions": get_number_of_denovo_predictions(structure_combined_df),
 }
 
 with open(snakemake.output["stats"], "w") as f:

@@ -108,11 +108,15 @@
                             "annotations": {
                                 "type": "object",
                                 "required": [
+                                    "formula_identification_score_cutoff",
                                     "spectral_library_match_score_cutoff",
                                     "structure_database_confidence_cutoff",
                                     "msnovelist_score_cutoff"
                                 ],
                                 "properties": {
+                                    "formula_identification_score_cutoff": {
+                                        "type": "number"
+                                    },
                                     "spectral_library_match_score_cutoff": {
                                         "type": "number"
                                     },

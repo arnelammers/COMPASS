@@ -10,8 +10,8 @@ config = snakemake.config["datasets"][snakemake.wildcards.dataset]["report"][
     "bioactivity"
 ]
 
-annotations_combined_df = pd.read_csv(
-    snakemake.input["annotations_combined"], low_memory=False
+structure_annotations_combined_df = pd.read_csv(
+    snakemake.input["structure_annotations_combined"], low_memory=False
 )
 smiles_query_df = pd.read_csv(
     f"resources/bioactivity_queries/{config['query']}.csv", low_memory=False
@@ -25,7 +25,7 @@ def compute_fingerprints(smiles_list: list[str]):
 
 
 # Get unique smiles from dataframes
-smiles_dataset = annotations_combined_df["smiles"].tolist()
+smiles_dataset = structure_annotations_combined_df["smiles"].tolist()
 smiles_query = smiles_query_df["smiles"].tolist()
 all_smiles = smiles_dataset + smiles_query
 
