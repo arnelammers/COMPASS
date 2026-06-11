@@ -31,6 +31,8 @@ datasets:
       bioactivity:
         cc_spaces: ["B3", "C3", "C4", "D2", "D3"]
         query: "op"
+      differential:
+        condition_columns: ["fraction", "day_type"]
 spectral_libraries:
   msnlib:
     zenodo_id: 16984129

@@ -71,7 +71,8 @@
                         "required": [
                             "features",
                             "annotations",
-                            "bioactivity"
+                            "bioactivity",
+                            "differential"
                         ],
                         "properties": {
                             "features": {
@@ -144,6 +145,21 @@
                                     },
                                     "query": {
                                         "type": "string"
+                                    }
+                                },
+                                "additionalProperties": false
+                            },
+                            "differential": {
+                                "type": "object",
+                                "required": [
+                                    "condition_columns"
+                                ],
+                                "properties": {
+                                    "condition_columns": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
                                     }
                                 },
                                 "additionalProperties": false

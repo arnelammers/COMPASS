@@ -40,6 +40,8 @@ datasets:
       bioactivity:
         cc_spaces: ["B3", "C3", "C4", "D2", "D3"]
         query: "op"
+      differential:
+        condition_columns: ["fraction", "day_type"]
 spectral_libraries:
   msnlib:
     zenodo_id: 16984129
@@ -92,6 +94,12 @@ Analysis settings for a dataset.
 |---|---|---|
 | `cc_spaces` | array | Defines which Chemical Checker (CC) bioactivity spaces are used to compute similarity between compounds in dataset and query/reference compounds. Each space encodes a different level of biological abstraction, from chemical structure to clinical outcomes (see https://doi.org/10.1038/s41467-021-24150-4 and https://doi-org.ezproxy.library.wur.nl/10.1038/s41587-020-0502-7). |
 | `query` | string | Name of the query set of smiles to use for bioactivity comparison, currently only `op` is supported, but further templates can be places under `resources/bioactivity_queries` |
+
+#### `differential`
+
+| Field | Type | Description |
+|---|---|---|
+| `condition_columns` | array | What columns in metadata to use for differential analysis |
 
 ---
 
