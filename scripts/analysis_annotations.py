@@ -17,13 +17,13 @@ mzmine_annotations_df = pd.read_csv(
 sirius_structure_identifications_df = pd.read_csv(
     snakemake.input["sirius_structure_identifications"],
     delimiter="\t",
-    dtype={"compoundId": "Int64"},
+    dtype={"alignedFeatureId": "Int64"},
     low_memory=False,
 )
 sirius_denovo_structure_identifications_df = pd.read_csv(
     snakemake.input["sirius_denovo_structure_identifications"],
     delimiter="\t",
-    dtype={"compoundId": "Int64"},
+    dtype={"alignedFeatureId": "Int64"},
     low_memory=False,
 )
 
@@ -41,7 +41,7 @@ def merge_annotations():
     db = sirius_structure_identifications_df.rename(
         columns={
             "mappingFeatureId": "id",
-            "compoundId": "sirius_id",
+            "alignedFeatureId": "sirius_id",
             "name": "compound_name",
             "smiles": "smiles",
             "ConfidenceScoreExact": "score",
@@ -52,7 +52,7 @@ def merge_annotations():
     denovo = sirius_denovo_structure_identifications_df.rename(
         columns={
             "mappingFeatureId": "id",
-            "compoundId": "sirius_id",
+            "alignedFeatureId": "sirius_id",
             "name": "compound_name",
             "smiles": "smiles",
             "ModelScore": "score",
