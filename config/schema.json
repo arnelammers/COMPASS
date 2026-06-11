@@ -13,7 +13,7 @@
                 "type": "object",
                 "required": [
                     "mzmine",
-                    "report"
+                    "analysis"
                 ],
                 "properties": {
                     "mzmine": {
@@ -66,15 +66,15 @@
                         },
                         "additionalProperties": false
                     },
-                    "report": {
+                    "analysis": {
                         "type": "object",
                         "required": [
-                            "mzmine",
+                            "features",
                             "annotations",
                             "bioactivity"
                         ],
                         "properties": {
-                            "mzmine": {
+                            "features": {
                                 "type": "object",
                                 "required": [
                                     "pca"

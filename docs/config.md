@@ -27,8 +27,8 @@ datasets:
         - "msnlib/20241003_mcedrug_pos_ms2.json"
         - "msnlib/20241003_enammol_pos_ms2.json"
         - "msnlib/20250828_mcediv_50k_sub_pos_ms2.json"
-    report:
-      mzmine:
+    analysis:
+      features:
         pca:
           samples_groupby: ["group", "fraction"]
           procedural_blanks_groupby: ["fraction"]
@@ -66,11 +66,11 @@ MZmine processing settings for a dataset.
 | `blank_subtraction.fold_change_threshold` | number | Minimum fold-change between sample and blank intensity for a feature to be retained. |
 | `spectral_library_files` | string[] | Library files to use for annotation. Must be formatted as `{collection}/{filename}.json`, where `collection` matches a key in `spectral_libraries`. |
 
-### `report`
+### `analysis`
 
-Report settings for a dataset.
+Analysis settings for a dataset.
 
-#### `mzmine`
+#### `features`
 
 | Field | Type | Description |
 |---|---|---|

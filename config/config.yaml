@@ -18,8 +18,8 @@ datasets:
         - "msnlib/20241003_mcedrug_pos_ms2.json"
         - "msnlib/20241003_enammol_pos_ms2.json"
         - "msnlib/20250828_mcediv_50k_sub_pos_ms2.json"
-    report:
-      mzmine:
+    analysis:
+      features:
         pca:
           samples_groupby: ["group", "fraction"]
           procedural_blanks_groupby: ["fraction"]

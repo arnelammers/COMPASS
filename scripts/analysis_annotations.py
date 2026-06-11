@@ -6,7 +6,7 @@ import pandas as pd
 if TYPE_CHECKING:
     from snakemake.iocontainers import snakemake
 
-config = snakemake.config["datasets"][snakemake.wildcards.dataset]["report"][
+config = snakemake.config["datasets"][snakemake.wildcards.dataset]["analysis"][
     "annotations"
 ]
 
