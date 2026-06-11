@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING
 
 import h5py
 import hdbscan
+import matplotlib as mpl
 import networkx as nx
 import numpy as np
 import pandas as pd
@@ -120,14 +121,14 @@ def create_umap(signature, labels):
 
     clustered = labels >= 0
 
-    fig, ax = plt.subplots(figsize=(6, 6))
+    fig, ax = plt.subplots(figsize=(6, 6), constrained_layout=True)
 
     # background points
     ax.scatter(
         standard_embedding[~clustered, 0],
         standard_embedding[~clustered, 1],
         color=(0.5, 0.5, 0.5),
-        s=1,
+        s=5,
         alpha=0.5,
     )
 
@@ -136,8 +137,8 @@ def create_umap(signature, labels):
         standard_embedding[clustered, 0],
         standard_embedding[clustered, 1],
         c=labels[clustered],
-        s=1,
-        cmap="Spectral",
+        cmap="tab10",
+        s=5,
         alpha=0.5,
     )
 
@@ -147,9 +148,34 @@ def create_umap(signature, labels):
         standard_embedding[:, 1][query_mask],
         c="red",
         marker="x",
-        s=10,
+        s=20,
         linewidths=1,
         alpha=0.25,
+    )
+
+    unique_labels = np.unique(labels[clustered])
+    cmap = mpl.colormaps["tab10"]
+
+    handles = [
+        plt.Line2D(
+            [0],
+            [0],
+            marker="o",
+            linestyle="",
+            markerfacecolor=cmap(i),
+            markeredgecolor="none",
+            markersize=6,
+            label=str(lbl),
+        )
+        for i, lbl in enumerate(unique_labels)
+    ]
+
+    ax.legend(
+        bbox_to_anchor=(1.05, 1),
+        loc="upper left",
+        fontsize=8,
+        handles=handles,
+        title="Labels",
     )
 
     ax.set_title("UMAP")
@@ -181,7 +207,7 @@ def get_molecular_network(graphml, clustered: pd.DataFrame):
         for n, attrs in G_filtered.nodes(data=True)
     ]
 
-    fig, ax = plt.subplots(figsize=(12, 12))
+    fig, ax = plt.subplots(figsize=(12, 12), constrained_layout=True)
 
     # Make nodes more seperate
     pos = nx.spring_layout(
