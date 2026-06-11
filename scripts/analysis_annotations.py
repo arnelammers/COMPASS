@@ -33,10 +33,18 @@ def merge_annotations():
         columns={
             "compound_name": "compound_name",
             "smiles": "smiles",
+            "mol_formula": "molecularFormula",
             "score": "score",
         }
     ).assign(annotation_type="spectral_match")[
-        ["id", "annotation_type", "compound_name", "smiles", "score"]
+        [
+            "id",
+            "annotation_type",
+            "compound_name",
+            "smiles",
+            "molecularFormula",
+            "score",
+        ]
     ]
     db = sirius_structure_identifications_df.rename(
         columns={
@@ -44,10 +52,19 @@ def merge_annotations():
             "alignedFeatureId": "sirius_id",
             "name": "compound_name",
             "smiles": "smiles",
+            "molecularFormula": "molecularFormula",
             "ConfidenceScoreExact": "score",
         }
     ).assign(annotation_type="structure_database")[
-        ["id", "sirius_id", "annotation_type", "compound_name", "smiles", "score"]
+        [
+            "id",
+            "sirius_id",
+            "annotation_type",
+            "compound_name",
+            "smiles",
+            "molecularFormula",
+            "score",
+        ]
     ]
     denovo = sirius_denovo_structure_identifications_df.rename(
         columns={
@@ -55,10 +72,19 @@ def merge_annotations():
             "alignedFeatureId": "sirius_id",
             "name": "compound_name",
             "smiles": "smiles",
+            "molecularFormula": "molecularFormula",
             "ModelScore": "score",
         }
     ).assign(annotation_type="denovo")[
-        ["id", "sirius_id", "annotation_type", "compound_name", "smiles", "score"]
+        [
+            "id",
+            "sirius_id",
+            "annotation_type",
+            "compound_name",
+            "smiles",
+            "molecularFormula",
+            "score",
+        ]
     ]
 
     # Merge sirius annotations
@@ -72,7 +98,17 @@ def merge_annotations():
     combined = pd.concat(
         [spectral, sirius_all],
         ignore_index=True,
-    )[["id", "sirius_id", "annotation_type", "compound_name", "smiles", "score"]]
+    )[
+        [
+            "id",
+            "sirius_id",
+            "annotation_type",
+            "compound_name",
+            "smiles",
+            "molecularFormula",
+            "score",
+        ]
+    ]
 
     return combined
 
