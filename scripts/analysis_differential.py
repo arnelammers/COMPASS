@@ -119,4 +119,4 @@ def get_foldchanges_df():
 
 
 fc_df = get_foldchanges_df()
-fc_df.to_csv(snakemake.output["foldchanges"], index=False)
+fc_df.to_csv(snakemake.output["da"], index=False)

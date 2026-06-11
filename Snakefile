@@ -61,9 +61,7 @@ rule all:
             "results/{dataset}/analysis/bioactivity/molnet_ms2deepscore.png",
             dataset=DATASETS,
         ),
-        expand(
-            "results/{dataset}/analysis/differential/foldchanges.csv", dataset=DATASETS
-        ),
+        expand("results/{dataset}/analysis/differential/da.csv", dataset=DATASETS),
 
 
 rule convert_raw_to_mzml:
@@ -307,6 +305,6 @@ rule analysis_differential:
         formula_annotations="results/{dataset}/analysis/annotations/formula_annotations.csv",
         config="config/config.yaml",
     output:
-        foldchanges="results/{dataset}/analysis/differential/foldchanges.csv",
+        da="results/{dataset}/analysis/differential/da.csv",
     script:
         "scripts/analysis_differential.py"
