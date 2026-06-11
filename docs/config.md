@@ -38,7 +38,7 @@ datasets:
         structure_database_confidence_cutoff: 0.8
         msnovelist_score_cutoff: 0.8
       bioactivity:
-        cc_spaces: ["B3", "C3", "C4", "D2", "D3"]
+        cc_spaces: ["C3", "C4", "D2", "D3"]
         query: "op"
       differential:
         condition_columns: ["fraction", "day_type"]
