@@ -155,7 +155,6 @@ def create_umap(signature, labels):
 def get_molecular_network(graphml, clustered: pd.DataFrame):
     G = nx.read_graphml(graphml)
 
-    annotated_ids = annotations_combined_df["sirius_id"].tolist()
     valid_ids = clustered["sirius_id"].tolist()
 
     hit_clusters = {
@@ -163,9 +162,7 @@ def get_molecular_network(graphml, clustered: pd.DataFrame):
     }
 
     nodes_to_keep = [
-        n
-        for n, attrs in G.nodes(data=True)
-        if attrs.get("component") in hit_clusters and int(n) in annotated_ids
+        n for n, attrs in G.nodes(data=True) if attrs.get("component") in hit_clusters
     ]
 
     G_filtered = G.subgraph(nodes_to_keep).copy()
@@ -187,7 +184,7 @@ def get_molecular_network(graphml, clustered: pd.DataFrame):
         k=1.5 / np.sqrt(len(G_filtered.nodes())),
     )
 
-    labels = {n: id_to_name.get(int(n)) for n in G_filtered.nodes()}
+    labels = {n: id_to_name.get(int(n)) or str(n) for n in G_filtered.nodes()}
 
     nx.draw(
         G_filtered,
