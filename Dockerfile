@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     curl \
     git \
+    openssh-client \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
