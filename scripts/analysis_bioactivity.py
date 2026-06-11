@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING
 
 import h5py
 import hdbscan
+import networkx as nx
 import numpy as np
 import pandas as pd
 import umap
@@ -151,6 +152,59 @@ def create_umap(signature, labels):
     return fig
 
 
+def get_molecular_network(graphml, clustered: pd.DataFrame):
+    G = nx.read_graphml(graphml)
+
+    annotated_ids = annotations_combined_df["sirius_id"].tolist()
+    valid_ids = clustered["sirius_id"].tolist()
+
+    hit_clusters = {
+        attrs.get("component") for n, attrs in G.nodes(data=True) if int(n) in valid_ids
+    }
+
+    nodes_to_keep = [
+        n
+        for n, attrs in G.nodes(data=True)
+        if attrs.get("component") in hit_clusters and int(n) in annotated_ids
+    ]
+
+    G_filtered = G.subgraph(nodes_to_keep).copy()
+
+    node_colors = [
+        "red" if int(n) in valid_ids else "lightgray"
+        for n, attrs in G_filtered.nodes(data=True)
+    ]
+
+    fig, ax = plt.subplots(figsize=(12, 12))
+
+    id_to_name = annotations_combined_df.set_index("sirius_id")[
+        "compound_name"
+    ].to_dict()
+
+    pos = nx.spring_layout(
+        G_filtered,
+        seed=42,
+        k=1.5 / np.sqrt(len(G_filtered.nodes())),
+    )
+
+    labels = {n: id_to_name.get(int(n)) for n in G_filtered.nodes()}
+
+    nx.draw(
+        G_filtered,
+        pos,
+        ax=ax,
+        node_color=node_colors,
+        node_size=50,
+        edge_color="gray",
+        width=0.5,
+        with_labels=True,
+        labels=labels,
+        font_size=6,
+    )
+
+    return fig
+
+
 # Compute fingerprints
 fingerprints = read_fingerprints()
 
@@ -168,3 +222,22 @@ clustered_df.to_csv(snakemake.output["clustered"], index=False)
 # Create UMAP and save
 umapfig = create_umap(fingerprints, labels)
 umapfig.savefig(snakemake.output["umap"], dpi=300)
+
+# Create molecular network
+molnet_cosine = get_molecular_network(snakemake.input["graphml_cosine"], clustered_df)
+molnet_cosine.savefig(snakemake.output["molnet_cosine"], dpi=300)
+
+molnet_modcosine = get_molecular_network(
+    snakemake.input["graphml_modcosine"], clustered_df
+)
+molnet_modcosine.savefig(snakemake.output["molnet_modcosine"], dpi=300)
+
+molnet_spec2vec = get_molecular_network(
+    snakemake.input["graphml_spec2vec"], clustered_df
+)
+molnet_spec2vec.savefig(snakemake.output["molnet_spec2vec"], dpi=300)
+
+molnet_ms2deepscore = get_molecular_network(
+    snakemake.input["graphml_ms2deepscore"], clustered_df
+)
+molnet_ms2deepscore.savefig(snakemake.output["molnet_ms2deepscore"], dpi=300)

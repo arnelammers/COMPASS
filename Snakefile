@@ -41,6 +41,22 @@ rule all:
         ),
         expand("results/{dataset}/analysis/bioactivity/tsne.png", dataset=DATASETS),
         expand("results/{dataset}/analysis/bioactivity/clustered.csv", dataset=DATASETS),
+        expand(
+            "results/{dataset}/analysis/bioactivity/molnet_cosine.png",
+            dataset=DATASETS,
+        ),
+        expand(
+            "results/{dataset}/analysis/bioactivity/molnet_modcosine.png",
+            dataset=DATASETS,
+        ),
+        expand(
+            "results/{dataset}/analysis/bioactivity/molnet_spec2vec.png",
+            dataset=DATASETS,
+        ),
+        expand(
+            "results/{dataset}/analysis/bioactivity/molnet_ms2deepscore.png",
+            dataset=DATASETS,
+        ),
 
 
 rule convert_raw_to_mzml:
@@ -255,10 +271,18 @@ rule analysis_bioactivity:
     input:
         h5="results/{dataset}/analysis/bioactivity/fingerprints.h5",
         annotations_combined="results/{dataset}/analysis/annotations/annotations_combined.csv",
+        graphml_cosine="results/{dataset}/specreboot/Reboot_bootstrap_threshold_Cosine.graphml",
+        graphml_modcosine="results/{dataset}/specreboot/Reboot_bootstrap_threshold_ModCosine.graphml",
+        graphml_spec2vec="results/{dataset}/specreboot/Reboot_bootstrap_threshold_Spec2Vec.graphml",
+        graphml_ms2deepscore="results/{dataset}/specreboot/Reboot_bootstrap_threshold_MS2DeepScore.graphml",
         config="config/config.yaml",
     output:
         tsne="results/{dataset}/analysis/bioactivity/tsne.png",
         umap="results/{dataset}/analysis/bioactivity/umap.png",
         clustered="results/{dataset}/analysis/bioactivity/clustered.csv",
+        molnet_cosine="results/{dataset}/analysis/bioactivity/molnet_cosine.png",
+        molnet_modcosine="results/{dataset}/analysis/bioactivity/molnet_modcosine.png",
+        molnet_spec2vec="results/{dataset}/analysis/bioactivity/molnet_spec2vec.png",
+        molnet_ms2deepscore="results/{dataset}/analysis/bioactivity/molnet_ms2deepscore.png",
     script:
         "scripts/analysis_bioactivity.py"
