@@ -59,7 +59,7 @@ def create_tsne(X) -> plt.Figure:
     )
 
     ax.set_title(
-        f"t-SNE visualization of PCA-reduced data (PCA: {n_components} components)"
+        f"t-SNE visualization of PCA-reduced data (PCA 85% variance retained: {n_components} components)"
     )
     ax.set_xlabel("Component 1")
     ax.set_ylabel("Component 2")
