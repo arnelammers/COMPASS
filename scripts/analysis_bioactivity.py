@@ -74,15 +74,16 @@ def get_hdbscan_clustering(X):
         random_state=42,
     ).fit_transform(X)
 
-    labels = hdbscan.HDBSCAN(
+    clustering = hdbscan.HDBSCAN(
         min_samples=2,
         min_cluster_size=5,
-    ).fit_predict(clusterable_embedding)
+    ).fit(clusterable_embedding)
 
-    return labels
+    return clustering
 
 
-def get_query_neighbors_df(labels):
+def get_query_neighbors_df(clustering):
+    labels = clustering.labels_
     # Get labels of query compounds
     query_labels = labels[query_mask]
 
@@ -96,18 +97,25 @@ def get_query_neighbors_df(labels):
     result_mask = cluster_mask & ~query_mask
 
     neighbors_df = pd.DataFrame(
-        {"smiles": all_smiles[result_mask], "label": labels[result_mask]}
+        {
+            "smiles": all_smiles[result_mask],
+            "cluster_label": labels[result_mask],
+            "cluster_membership_probability": clustering.probabilities_[result_mask],
+            "cluster_outlier_score": clustering.outlier_scores_[result_mask],
+        }
     )
 
     query_label_df = query_df.copy()
-    query_label_df["label"] = labels[query_mask]
+    query_label_df["cluster_label"] = labels[query_mask]
 
     label_to_query_names = (
-        query_label_df.groupby("label")["compound_name"]
+        query_label_df.groupby("cluster_label")["compound_name"]
         .apply(lambda x: ";".join(list(x.dropna().unique())))
         .to_dict()
     )
-    neighbors_df["query_compounds"] = neighbors_df["label"].map(label_to_query_names)
+    neighbors_df["query_compounds"] = neighbors_df["cluster_label"].map(
+        label_to_query_names
+    )
 
     merged_df = structure_annotations_combined_df.merge(
         neighbors_df, on="smiles", how="inner"
@@ -116,7 +124,8 @@ def get_query_neighbors_df(labels):
     return merged_df
 
 
-def create_umap(X, labels):
+def create_umap(X, clustering):
+    labels = clustering.labels_
     standard_embedding = umap.UMAP(random_state=42).fit_transform(X)
 
     clustered = labels >= 0
@@ -273,6 +282,33 @@ def get_molecular_network_query_neighbors(graphml, query_neighbors: pd.DataFrame
     return fig
 
 
+def get_structure_annotations_clustered_df(clustering):
+    labels = clustering.labels_
+    clustering_df = pd.DataFrame(
+        {
+            "smiles": all_smiles[~query_mask],
+            "cluster_label": labels[~query_mask],
+            "cluster_membership_probability": clustering.probabilities_[~query_mask],
+            "cluster_outlier_score": clustering.outlier_scores_[~query_mask],
+        }
+    )
+    clustering_df = structure_annotations_combined_df.merge(
+        clustering_df, on="smiles", how="inner"
+    )
+    return clustering_df
+
+
+def get_clusters_df(clustering):
+    clusters_df = pd.DataFrame(
+        {
+            "cluster_label": range(len(clustering.cluster_persistence_)),
+            "cluster_persistence": clustering.cluster_persistence_,
+        }
+    )
+
+    return clusters_df
+
+
 # Compute signatures
 signatures = read_signatures()
 
@@ -281,14 +317,25 @@ tsne = create_tsne(signatures)
 tsne.savefig(snakemake.output["tsne"], dpi=300)
 
 # Get label of HDBSCAN clustering
-labels = get_hdbscan_clustering(signatures)
+clustering = get_hdbscan_clustering(signatures)
+
+# Get clusters
+clusters_df = get_clusters_df(clustering)
+clusters_df.to_csv(snakemake.output["clusters"], index=False)
+
+
+# Get annoytations with cluster label
+annot_cluster_df = get_structure_annotations_clustered_df(clustering)
+annot_cluster_df.to_csv(
+    snakemake.output["structure_annotations_clustered"], index=False
+)
 
 # Get compounds clustered with query
-query_neighbors_df = get_query_neighbors_df(labels)
+query_neighbors_df = get_query_neighbors_df(clustering)
 query_neighbors_df.to_csv(snakemake.output["query_neighbors"], index=False)
 
 # Create UMAP and save
-umapfig = create_umap(signatures, labels)
+umapfig = create_umap(signatures, clustering)
 umapfig.savefig(snakemake.output["umap"], dpi=300)
 
 # Create molecular network

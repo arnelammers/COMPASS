@@ -47,6 +47,14 @@ rule all:
             dataset=DATASETS,
         ),
         expand(
+            "results/{dataset}/analysis/bioactivity/structure_annotations_clustered.csv",
+            dataset=DATASETS,
+        ),
+        expand(
+            "results/{dataset}/analysis/bioactivity/clusters.csv",
+            dataset=DATASETS,
+        ),
+        expand(
             "results/{dataset}/analysis/bioactivity/molnet_query_neighbors_cosine.png",
             dataset=DATASETS,
         ),
@@ -290,7 +298,9 @@ rule analysis_bioactivity:
     output:
         tsne="results/{dataset}/analysis/bioactivity/tsne.png",
         umap="results/{dataset}/analysis/bioactivity/umap.png",
+        clusters="results/{dataset}/analysis/bioactivity/clusters.csv",
         query_neighbors="results/{dataset}/analysis/bioactivity/query_neighbors.csv",
+        structure_annotations_clustered="results/{dataset}/analysis/bioactivity/structure_annotations_clustered.csv",
         molnet_query_neighbors_cosine="results/{dataset}/analysis/bioactivity/molnet_query_neighbors_cosine.png",
         molnet_query_neighbors_modcosine="results/{dataset}/analysis/bioactivity/molnet_query_neighbors_modcosine.png",
         molnet_query_neighbors_spec2vec="results/{dataset}/analysis/bioactivity/molnet_query_neighbors_spec2vec.png",
