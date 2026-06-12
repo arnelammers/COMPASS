@@ -18,7 +18,7 @@ smiles_query_df = pd.read_csv(
 
 def compute_signatures(smiles_list: list[str]):
     signaturizer = Signaturizer(config["cc_spaces"])
-    results = signaturizer.predict(all_smiles, snakemake.output["signatures"])
+    results = signaturizer.predict(smiles_list, snakemake.output["signatures"])
     return results
 
 
