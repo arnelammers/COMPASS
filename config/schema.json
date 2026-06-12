@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "file:///home/mambauser/workflow/config/schema.json",
+    "$id": "file:///home/bio/workflow/config/schema.json",
     "type": "object",
     "required": [
         "datasets",

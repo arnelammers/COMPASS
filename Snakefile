@@ -77,7 +77,7 @@ rule convert_raw_to_mzml:
         out_dir=$(dirname "{output.mzml}")
         mkdir -p "$out_dir"
 
-        dotnet /home/mambauser/tools/ThermoRawFileParser/ThermoRawFileParser.dll \
+        dotnet /home/bio/tools/ThermoRawFileParser/ThermoRawFileParser.dll \
             -i {input.raw} \
             -o "$out_dir" \
             -f 1 -p -g 2>&1 | tee {log}

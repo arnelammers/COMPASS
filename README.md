@@ -37,9 +37,9 @@ docker run -it --rm \
   --memory=14g --shm-size=8g \
   -e JAVA_TOOL_OPTIONS="-Xmx12g" \
   -u "$(id -u):$(id -g)" \
-  -v "$(pwd)":/home/mambauser/workflow \
-  -v "$(pwd)/.sirius-6.3":/home/mambauser/.sirius-6.3 \
-  -v "$(pwd)/.mzmine":/home/mambauser/.mzmine \
+  -v "$(pwd)":/home/bio/workflow \
+  -v "$(pwd)/.sirius-6.3":/home/bio/.sirius-6.3 \
+  -v "$(pwd)/.mzmine":/home/bio/.mzmine \
   compass-app bash
 ```
 
