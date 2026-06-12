@@ -43,8 +43,8 @@ def read_signatures():
 def create_tsne(X) -> plt.Figure:
     # Retain 85% of the total variance in the data
     pca = PCA(n_components=0.85)
-    n_components = pca.n_components
     transformed = pca.fit_transform(X)
+    n_components = pca.n_components_
 
     projection = TSNE(n_components=2).fit_transform(transformed)
 
