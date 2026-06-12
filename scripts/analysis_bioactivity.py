@@ -40,7 +40,7 @@ def read_signatures():
         return fh["signature"][:]
 
 
-def create_tsne(X) -> plt.Figure:
+def get_tsne_figure(X) -> plt.Figure:
     # Retain 85% of the total variance in the data
     pca = PCA(n_components=0.85)
     transformed = pca.fit_transform(X)
@@ -124,7 +124,7 @@ def get_query_neighbors_df(clustering):
     return merged_df
 
 
-def create_umap(X, clustering):
+def get_umap_figure(X, clustering):
     labels = clustering.labels_
     standard_embedding = umap.UMAP(random_state=42).fit_transform(X)
 
@@ -191,7 +191,9 @@ def create_umap(X, clustering):
     return fig
 
 
-def get_molecular_network_query_neighbors(graphml, query_neighbors: pd.DataFrame):
+def get_molecular_network_figure_query_neighbors(
+    graphml, query_neighbors: pd.DataFrame
+):
     G = nx.read_graphml(graphml)
 
     # Get list of ids that are clustered with query compounds
@@ -215,19 +217,22 @@ def get_molecular_network_query_neighbors(graphml, query_neighbors: pd.DataFrame
         "red" if int(n) in valid_ids else "lightgray"
         for n, attrs in G_filtered.nodes(data=True)
     ]
+    return get_molecular_network_figure(G_filtered, node_colors)
 
+
+def get_molecular_network_figure(G, node_colors):
     fig, ax = plt.subplots(figsize=(12, 12), constrained_layout=True)
 
     # Make nodes more seperate
     pos = nx.spring_layout(
-        G_filtered,
+        G,
         seed=42,
-        k=1.5 / np.sqrt(len(G_filtered.nodes())),
+        k=1.5 / np.sqrt(len(G.nodes())),
     )
 
     # Draw nodes and edges
     nx.draw(
-        G_filtered,
+        G,
         pos,
         ax=ax,
         node_color=node_colors,
@@ -258,7 +263,7 @@ def get_molecular_network_query_neighbors(graphml, query_neighbors: pd.DataFrame
     # Determine labels of nodes
     labels = {
         n: structure_id_to_name.get(int(n)) or formula_id_to_formula.get(int(n)) or "?"
-        for n in G_filtered.nodes()
+        for n in G.nodes()
     }
 
     # Get texts
@@ -313,7 +318,7 @@ def get_clusters_df(clustering):
 signatures = read_signatures()
 
 # Save tsne
-tsne = create_tsne(signatures)
+tsne = get_tsne_figure(signatures)
 tsne.savefig(snakemake.output["tsne"], dpi=300)
 
 # Get label of HDBSCAN clustering
@@ -335,14 +340,14 @@ query_neighbors_df = get_query_neighbors_df(clustering)
 query_neighbors_df.to_csv(snakemake.output["query_neighbors"], index=False)
 
 # Create UMAP and save
-umapfig = create_umap(signatures, clustering)
+umapfig = get_umap_figure(signatures, clustering)
 umapfig.savefig(snakemake.output["umap"], dpi=300)
 
 similarity_methods = ["cosine", "modcosine", "spec2vec", "ms2deepscore"]
 for similarity_method in similarity_methods:
-    molnet = get_molecular_network_query_neighbors(
+    molnet_query = get_molecular_network_figure_query_neighbors(
         snakemake.input["graphml_" + similarity_method], query_neighbors_df
     )
-    molnet.savefig(
+    molnet_query.savefig(
         snakemake.output["molnet_query_neighbors_" + similarity_method], dpi=300
     )
