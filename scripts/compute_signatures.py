@@ -16,9 +16,9 @@ smiles_query_df = pd.read_csv(
 )
 
 
-def compute_fingerprints(smiles_list: list[str]):
+def compute_signatures(smiles_list: list[str]):
     signaturizer = Signaturizer(config["cc_spaces"])
-    results = signaturizer.predict(all_smiles, snakemake.output["h5"])
+    results = signaturizer.predict(all_smiles, snakemake.output["signatures"])
     return results
 
 
@@ -27,5 +27,5 @@ smiles_dataset = structure_annotations_combined_df["smiles"].tolist()
 smiles_query = smiles_query_df["smiles"].tolist()
 all_smiles = smiles_dataset + smiles_query
 
-# Compute fingerprints
-fingerprints = compute_fingerprints(all_smiles)
+# Compute signatures
+signatures = compute_signatures(all_smiles)

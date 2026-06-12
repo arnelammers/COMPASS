@@ -40,25 +40,26 @@ rule all:
             dataset=DATASETS,
         ),
         expand("results/{dataset}/analysis/annotations/stats.json", dataset=DATASETS),
-        expand(
-            "results/{dataset}/analysis/bioactivity/fingerprints.h5", dataset=DATASETS
-        ),
+        expand("results/{dataset}/analysis/bioactivity/signatures.h5", dataset=DATASETS),
         expand("results/{dataset}/analysis/bioactivity/tsne.png", dataset=DATASETS),
-        expand("results/{dataset}/analysis/bioactivity/clustered.csv", dataset=DATASETS),
         expand(
-            "results/{dataset}/analysis/bioactivity/molnet_cosine.png",
+            "results/{dataset}/analysis/bioactivity/query_neighbors.csv",
             dataset=DATASETS,
         ),
         expand(
-            "results/{dataset}/analysis/bioactivity/molnet_modcosine.png",
+            "results/{dataset}/analysis/bioactivity/molnet_query_neighbors_cosine.png",
             dataset=DATASETS,
         ),
         expand(
-            "results/{dataset}/analysis/bioactivity/molnet_spec2vec.png",
+            "results/{dataset}/analysis/bioactivity/molnet_query_neighbors_modcosine.png",
             dataset=DATASETS,
         ),
         expand(
-            "results/{dataset}/analysis/bioactivity/molnet_ms2deepscore.png",
+            "results/{dataset}/analysis/bioactivity/molnet_query_neighbors_spec2vec.png",
+            dataset=DATASETS,
+        ),
+        expand(
+            "results/{dataset}/analysis/bioactivity/molnet_query_neighbors_ms2deepscore.png",
             dataset=DATASETS,
         ),
         expand("results/{dataset}/analysis/differential/da.csv", dataset=DATASETS),
@@ -264,22 +265,22 @@ rule analysis_annotations:
         "scripts/analysis_annotations.py"
 
 
-rule create_fingerprints:
+rule compute_signatures:
     input:
         structure_annotations_combined="results/{dataset}/analysis/annotations/structure_annotations_combined.csv",
     output:
-        h5="results/{dataset}/analysis/bioactivity/fingerprints.h5",
+        signatures="results/{dataset}/analysis/bioactivity/signatures.h5",
     conda:
         "signaturizer_env"
     params:
         config=lambda wc: config["datasets"][wc.dataset]["analysis"]["bioactivity"],
     script:
-        "scripts/create_fingerprints.py"
+        "scripts/compute_signatures.py"
 
 
 rule analysis_bioactivity:
     input:
-        h5="results/{dataset}/analysis/bioactivity/fingerprints.h5",
+        signatures="results/{dataset}/analysis/bioactivity/signatures.h5",
         structure_annotations_combined="results/{dataset}/analysis/annotations/structure_annotations_combined.csv",
         formula_annotations="results/{dataset}/analysis/annotations/formula_annotations.csv",
         graphml_cosine="results/{dataset}/specreboot/Reboot_bootstrap_threshold_Cosine.graphml",
@@ -289,11 +290,11 @@ rule analysis_bioactivity:
     output:
         tsne="results/{dataset}/analysis/bioactivity/tsne.png",
         umap="results/{dataset}/analysis/bioactivity/umap.png",
-        clustered="results/{dataset}/analysis/bioactivity/clustered.csv",
-        molnet_cosine="results/{dataset}/analysis/bioactivity/molnet_cosine.png",
-        molnet_modcosine="results/{dataset}/analysis/bioactivity/molnet_modcosine.png",
-        molnet_spec2vec="results/{dataset}/analysis/bioactivity/molnet_spec2vec.png",
-        molnet_ms2deepscore="results/{dataset}/analysis/bioactivity/molnet_ms2deepscore.png",
+        query_neighbors="results/{dataset}/analysis/bioactivity/query_neighbors.csv",
+        molnet_query_neighbors_cosine="results/{dataset}/analysis/bioactivity/molnet_query_neighbors_cosine.png",
+        molnet_query_neighbors_modcosine="results/{dataset}/analysis/bioactivity/molnet_query_neighbors_modcosine.png",
+        molnet_query_neighbors_spec2vec="results/{dataset}/analysis/bioactivity/molnet_query_neighbors_spec2vec.png",
+        molnet_query_neighbors_ms2deepscore="results/{dataset}/analysis/bioactivity/molnet_query_neighbors_ms2deepscore.png",
     params:
         config=lambda wc: config["datasets"][wc.dataset]["analysis"]["bioactivity"],
     script:
@@ -304,7 +305,7 @@ rule analysis_differential:
     input:
         feature_table="results/{dataset}/mzmine/feature_table.csv",
         metadata="data/{dataset}/metadata.csv",
-        clustered="results/{dataset}/analysis/bioactivity/clustered.csv",
+        query_neighbors="results/{dataset}/analysis/bioactivity/query_neighbors.csv",
         structure_annotations_combined="results/{dataset}/analysis/annotations/structure_annotations_combined.csv",
         formula_annotations="results/{dataset}/analysis/annotations/formula_annotations.csv",
     output:

@@ -17,7 +17,7 @@ structure_annotations_combined_df = pd.read_csv(
 formula_annotations_df = pd.read_csv(
     snakemake.input["formula_annotations"], low_memory=False
 )
-clustered_df = pd.read_csv(snakemake.input["clustered"], low_memory=False)
+query_neighbors_df = pd.read_csv(snakemake.input["query_neighbors"], low_memory=False)
 
 metadata_df = pd.read_csv(snakemake.input["metadata"], low_memory=False)
 
@@ -103,15 +103,21 @@ def get_foldchanges_df():
         on="id",
         how="left",
     )
-    fc_df["clustered"] = fc_df["id"].isin(clustered_df["id"])
+    fc_df["query_neighbors"] = fc_df["id"].isin(query_neighbors_df["id"])
 
     # reorder columns
-    front_cols = ["id", "compound_name", "smiles", "molecularFormula", "clustered"]
+    front_cols = [
+        "id",
+        "compound_name",
+        "smiles",
+        "molecularFormula",
+        "query_neighbors",
+    ]
 
     fc_df = fc_df[front_cols + [c for c in fc_df.columns if c not in front_cols]]
 
     # order df
-    fc_df = fc_df.sort_values(by=["clustered", "id"], ascending=[False, True])
+    fc_df = fc_df.sort_values(by=["query_neighbors", "id"], ascending=[False, True])
 
     return fc_df
 

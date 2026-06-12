@@ -35,16 +35,16 @@ all_smiles = np.concatenate([smiles_dataset, smiles_query])
 query_mask = np.isin(all_smiles, smiles_query)
 
 
-def read_fingerprints():
-    with h5py.File(snakemake.input["h5"], "r") as fh:
+def read_signatures():
+    with h5py.File(snakemake.input["signatures"], "r") as fh:
         return fh["signature"][:]
 
 
-def create_tsne(signature) -> plt.Figure:
+def create_tsne(X) -> plt.Figure:
     # Retain 85% of the total variance in the data
     pca = PCA(n_components=0.85)
     n_components = pca.n_components
-    transformed = pca.fit_transform(signature)
+    transformed = pca.fit_transform(X)
 
     projection = TSNE(n_components=2).fit_transform(transformed)
 
@@ -66,13 +66,13 @@ def create_tsne(signature) -> plt.Figure:
     return fig
 
 
-def get_hdbscan_clustering(signature):
+def get_hdbscan_clustering(X):
     clusterable_embedding = umap.UMAP(
         n_neighbors=30,
         min_dist=0.0,
         n_components=2,
         random_state=42,
-    ).fit_transform(signature)
+    ).fit_transform(X)
 
     labels = hdbscan.HDBSCAN(
         min_samples=2,
@@ -82,7 +82,7 @@ def get_hdbscan_clustering(signature):
     return labels
 
 
-def get_clustered_with_query(labels):
+def get_query_neighbors_df(labels):
     # Get labels of query compounds
     query_labels = labels[query_mask]
 
@@ -116,8 +116,8 @@ def get_clustered_with_query(labels):
     return merged_df
 
 
-def create_umap(signature, labels):
-    standard_embedding = umap.UMAP(random_state=42).fit_transform(fingerprints)
+def create_umap(X, labels):
+    standard_embedding = umap.UMAP(random_state=42).fit_transform(X)
 
     clustered = labels >= 0
 
@@ -182,11 +182,11 @@ def create_umap(signature, labels):
     return fig
 
 
-def get_molecular_network(graphml, clustered: pd.DataFrame):
+def get_molecular_network_query_neighbors(graphml, query_neighbors: pd.DataFrame):
     G = nx.read_graphml(graphml)
 
     # Get list of ids that are clustered with query compounds
-    valid_ids = clustered["sirius_id"].tolist()
+    valid_ids = query_neighbors["sirius_id"].tolist()
 
     # Get clusters that contain at least one id from query
     hit_clusters = {
@@ -273,39 +273,43 @@ def get_molecular_network(graphml, clustered: pd.DataFrame):
     return fig
 
 
-# Compute fingerprints
-fingerprints = read_fingerprints()
+# Compute signatures
+signatures = read_signatures()
 
 # Save tsne
-tsne = create_tsne(fingerprints)
+tsne = create_tsne(signatures)
 tsne.savefig(snakemake.output["tsne"], dpi=300)
 
 # Get label of HDBSCAN clustering
-labels = get_hdbscan_clustering(fingerprints)
+labels = get_hdbscan_clustering(signatures)
 
 # Get compounds clustered with query
-clustered_df = get_clustered_with_query(labels)
-clustered_df.to_csv(snakemake.output["clustered"], index=False)
+query_neighbors_df = get_query_neighbors_df(labels)
+query_neighbors_df.to_csv(snakemake.output["query_neighbors"], index=False)
 
 # Create UMAP and save
-umapfig = create_umap(fingerprints, labels)
+umapfig = create_umap(signatures, labels)
 umapfig.savefig(snakemake.output["umap"], dpi=300)
 
 # Create molecular network
-molnet_cosine = get_molecular_network(snakemake.input["graphml_cosine"], clustered_df)
-molnet_cosine.savefig(snakemake.output["molnet_cosine"], dpi=300)
-
-molnet_modcosine = get_molecular_network(
-    snakemake.input["graphml_modcosine"], clustered_df
+molnet_cosine = get_molecular_network_query_neighbors(
+    snakemake.input["graphml_cosine"], query_neighbors_df
 )
-molnet_modcosine.savefig(snakemake.output["molnet_modcosine"], dpi=300)
+molnet_cosine.savefig(snakemake.output["molnet_query_neighbors_cosine"], dpi=300)
 
-molnet_spec2vec = get_molecular_network(
-    snakemake.input["graphml_spec2vec"], clustered_df
+molnet_modcosine = get_molecular_network_query_neighbors(
+    snakemake.input["graphml_modcosine"], query_neighbors_df
 )
-molnet_spec2vec.savefig(snakemake.output["molnet_spec2vec"], dpi=300)
+molnet_modcosine.savefig(snakemake.output["molnet_query_neighbors_modcosine"], dpi=300)
 
-molnet_ms2deepscore = get_molecular_network(
-    snakemake.input["graphml_ms2deepscore"], clustered_df
+molnet_spec2vec = get_molecular_network_query_neighbors(
+    snakemake.input["graphml_spec2vec"], query_neighbors_df
 )
-molnet_ms2deepscore.savefig(snakemake.output["molnet_ms2deepscore"], dpi=300)
+molnet_spec2vec.savefig(snakemake.output["molnet_query_neighbors_spec2vec"], dpi=300)
+
+molnet_ms2deepscore = get_molecular_network_query_neighbors(
+    snakemake.input["graphml_ms2deepscore"], query_neighbors_df
+)
+molnet_ms2deepscore.savefig(
+    snakemake.output["molnet_query_neighbors_ms2deepscore"], dpi=300
+)
