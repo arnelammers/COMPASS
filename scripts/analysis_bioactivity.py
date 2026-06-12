@@ -68,7 +68,7 @@ def create_tsne(X) -> plt.Figure:
 
 def get_hdbscan_clustering(X):
     clusterable_embedding = umap.UMAP(
-        n_neighbors=30,
+        n_neighbors=12,
         min_dist=0.0,
         n_components=2,
         random_state=42,
