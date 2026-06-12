@@ -338,25 +338,11 @@ query_neighbors_df.to_csv(snakemake.output["query_neighbors"], index=False)
 umapfig = create_umap(signatures, clustering)
 umapfig.savefig(snakemake.output["umap"], dpi=300)
 
-# Create molecular network
-molnet_cosine = get_molecular_network_query_neighbors(
-    snakemake.input["graphml_cosine"], query_neighbors_df
-)
-molnet_cosine.savefig(snakemake.output["molnet_query_neighbors_cosine"], dpi=300)
-
-molnet_modcosine = get_molecular_network_query_neighbors(
-    snakemake.input["graphml_modcosine"], query_neighbors_df
-)
-molnet_modcosine.savefig(snakemake.output["molnet_query_neighbors_modcosine"], dpi=300)
-
-molnet_spec2vec = get_molecular_network_query_neighbors(
-    snakemake.input["graphml_spec2vec"], query_neighbors_df
-)
-molnet_spec2vec.savefig(snakemake.output["molnet_query_neighbors_spec2vec"], dpi=300)
-
-molnet_ms2deepscore = get_molecular_network_query_neighbors(
-    snakemake.input["graphml_ms2deepscore"], query_neighbors_df
-)
-molnet_ms2deepscore.savefig(
-    snakemake.output["molnet_query_neighbors_ms2deepscore"], dpi=300
-)
+similarity_methods = ["cosine", "modcosine", "spec2vec", "ms2deepscore"]
+for similarity_method in similarity_methods:
+    molnet = get_molecular_network_query_neighbors(
+        snakemake.input["graphml_" + similarity_method], query_neighbors_df
+    )
+    molnet.savefig(
+        snakemake.output["molnet_query_neighbors_" + similarity_method], dpi=300
+    )
