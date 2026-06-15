@@ -132,6 +132,8 @@ def get_umap_figure(X, clustering):
 
     fig, ax = plt.subplots(figsize=(6, 6), constrained_layout=True)
 
+    cmap = mpl.colormaps["tab10"]
+
     # background points
     ax.scatter(
         standard_embedding[~clustered, 0],
@@ -142,11 +144,11 @@ def get_umap_figure(X, clustering):
     )
 
     # clustered points
+    colors_mapped = [cmap(lbl % cmap.N) for lbl in labels[clustered]]
     ax.scatter(
         standard_embedding[clustered, 0],
         standard_embedding[clustered, 1],
-        c=labels[clustered],
-        cmap="tab10",
+        c=colors_mapped,
         s=5,
         alpha=0.5,
     )
@@ -163,7 +165,6 @@ def get_umap_figure(X, clustering):
     )
 
     unique_labels = np.unique(labels[clustered])
-    cmap = mpl.colormaps["tab10"]
 
     handles = [
         plt.Line2D(
@@ -171,12 +172,12 @@ def get_umap_figure(X, clustering):
             [0],
             marker="o",
             linestyle="",
-            markerfacecolor=cmap(i),
+            markerfacecolor=cmap(lbl % cmap.N),
             markeredgecolor="none",
             markersize=6,
             label=str(lbl),
         )
-        for i, lbl in enumerate(unique_labels)
+        for lbl in unique_labels
     ]
 
     ax.legend(
