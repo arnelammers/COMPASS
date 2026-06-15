@@ -68,15 +68,15 @@ def get_tsne_figure(X) -> plt.Figure:
 
 def get_hdbscan_clustering(X):
     clusterable_embedding = umap.UMAP(
-        n_neighbors=12,
+        n_neighbors=15,
         min_dist=0.0,
-        n_components=2,
+        n_components=5,
         random_state=42,
     ).fit_transform(X)
 
     clustering = hdbscan.HDBSCAN(
-        min_samples=2,
-        min_cluster_size=5,
+        min_samples=5,
+        min_cluster_size=10,
     ).fit(clusterable_embedding)
 
     return clustering
