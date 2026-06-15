@@ -24,24 +24,51 @@ Then update the configuration file to your preferences according to the [configu
 
 ## Quickstart
 
-Clone the repository and build the Docker image:
+### Windows
+
+Firstly, clone the repository from Github. Then build the Docker image by executing the build script in the `bin/windows` folder in Powershell.
+
+```powershell
+./build.ps1
+```
+
+Then run the initialization script with the following command:
+
+```powershell
+./init.ps1
+```
+
+Then enter the container using the following command:
+
+```powershell
+./run.ps1
+```
+
+The rest of the process is platform-independent and can be found below under 'Inside container'.
+
+### Linux
+
+Firstly, clone the repository from Github. Then build the Docker image by executing the build script in the `bin/linux` folder in Powershell.
 
 ```bash
-docker build -t compass-app .
+./build.sh
+```
+
+Then run the initialization script with the following command:
+
+```bash
+./init.sh
 ```
 
 Then enter the container using the following command:
 
 ```bash
-docker run -it --rm \
-  --memory=14g --shm-size=8g \
-  -e JAVA_TOOL_OPTIONS="-Xmx12g" \
-  -u "$(id -u):$(id -g)" \
-  -v "$(pwd)":/home/bio/workflow \
-  -v "$(pwd)/.sirius-6.3":/home/bio/.sirius-6.3 \
-  -v "$(pwd)/.mzmine":/home/bio/.mzmine \
-  compass-app bash
+./run.sh
 ```
+
+The rest of the process is platform-independent and can be found below under 'Inside container'.
+
+### Inside container
 
 Before running the pipeline for the first time, log in to MZmine and SIRIUS in the container by the following commands respectively. Their configurations will be stored on your local machine via the mounted volumes:
 
