@@ -50,10 +50,12 @@ def get_area_columns(condition_column, condition):
 
 
 def get_foldchanges_df():
-    # Filter features that have formula annotations
+    # Filter features that have annotations
     df_filtered = feature_table_df[
         feature_table_df["id"].isin(formula_annotations_df["id"])
+        | feature_table_df["id"].isin(structure_annotations_combined_df["id"])
     ].copy()
+    print(len(df_filtered))
 
     # Do comparison for each column
     for condition_column in condition_columns:
