@@ -129,7 +129,11 @@ rule download_spectral_library_file:
 
 rule run_mzmine:
     input:
-        dataset_dir="data/{dataset}/mzml",
+        mzmls=lambda wildcards: expand(
+            "data/{dataset}/mzml/{sample}.mzML.gz",
+            dataset=wildcards.dataset,
+            sample=helpers.get_samples(wildcards.dataset),
+        ),
         mzbatch="results/{dataset}/mzmine/mzmine_config.mzbatch",
     output:
         feature_table="results/{dataset}/mzmine/feature_table.csv",
@@ -224,7 +228,10 @@ rule run_specreboot:
         spec2vec_model="results/{dataset}/spec2vec/spec2vec.model",
         msdeepscore_model="resources/models/ms2deepscore/ms2deepscore_model.pt",
     output:
-        folder=directory("results/{dataset}/specreboot"),
+        graphml_cosine="results/{dataset}/specreboot/Reboot_bootstrap_threshold_Cosine.graphml",
+        graphml_modcosine="results/{dataset}/specreboot/Reboot_bootstrap_threshold_ModCosine.graphml",
+        graphml_spec2vec="results/{dataset}/specreboot/Reboot_bootstrap_threshold_Spec2Vec.graphml",
+        graphml_ms2deepscore="results/{dataset}/specreboot/Reboot_bootstrap_threshold_MS2DeepScore.graphml",
     log:
         "logs/specreboot/{dataset}.log",
     shell:
@@ -234,7 +241,7 @@ rule run_specreboot:
             --similarities all \
             --ms2dp-model {input.msdeepscore_model} \
             --spec2vec-model {input.spec2vec_model} \
-            --outdir {output.folder} \
+            --outdir "results/{wildcards.dataset}/specreboot" \
             --prefix "Reboot" \
             --B 30 2>&1 | tee {log}
         """
