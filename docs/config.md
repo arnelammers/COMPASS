@@ -8,7 +8,7 @@ The workflow is configured via a YAML file located at `config/config.yaml`.
 
 ```yaml
 datasets:
-  easvolee_pos:
+  test:
     mzmine:
       template: "dda_orbitrap_pos"
       retention_time_range: [0.5, 31]
