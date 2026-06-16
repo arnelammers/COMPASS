@@ -12,8 +12,13 @@
     ],
     "runArgs": [
         "--user",
-        "1000:1000"
+        "1000:1000",
+        "--memory=14g",
+        "--shm-size=8g"
     ],
+    "containerEnv": {
+        "JAVA_TOOL_OPTIONS": "-Xmx12g"
+    },
     "customizations": {
         "vscode": {
             "extensions": [
