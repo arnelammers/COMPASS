@@ -146,7 +146,6 @@ rule run_mzmine:
         mem_mb=12000,
     shell:
         """
-        export _JAVA_OPTIONS="-Xmx6g"
         mzmine -b {input.mzbatch} >{log} 2>&1
         """
 

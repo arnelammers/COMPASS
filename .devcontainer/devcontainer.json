@@ -17,7 +17,7 @@
         "--shm-size=8g"
     ],
     "containerEnv": {
-        "JAVA_TOOL_OPTIONS": "-Xmx12g"
+        "JAVA_TOOL_OPTIONS": "-Xmx10g"
     },
     "customizations": {
         "vscode": {

@@ -8,7 +8,7 @@ ROOT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
 docker run -it --rm \
   --memory=14g --shm-size=8g \
-  -e JAVA_TOOL_OPTIONS="-Xmx12g" \
+  -e JAVA_TOOL_OPTIONS="-Xmx10g" \
   -u "$(id -u):$(id -g)" \
   -v "$ROOT_DIR":/home/bio/workflow \
   -v "$ROOT_DIR/.sirius-6.3":/home/bio/.sirius-6.3 \
