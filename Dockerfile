@@ -36,37 +36,6 @@ RUN usermod -l bio -d /home/bio -m ubuntu && \
 USER bio
 WORKDIR /home/bio/workflow
 
-# Install Python packages + Snakemake
-RUN conda install -y -n base -c conda-forge -c bioconda -c defaults \
-    python=3.12 \
-    snakemake \
-    numpy \
-    scipy \
-    networkx \
-    pandas \
-    rdkit \
-    scikit-learn \
-    matplotlib \
-    seaborn \
-    jupyter \
-    h5py \
-    umap-learn \
-    hdbscan \
-    adjusttext \
-    && conda clean --all --yes
-
-# Create signaturizer env
-RUN conda create --no-default-packages -n signaturizer_env -y \
-    python=3.10 \
-    && conda clean -a -y
-
-RUN conda run -n signaturizer_env \
-    conda install -y rdkit setuptools=69.5.1 \
-    && conda clean -a -y
-
-RUN conda run -n signaturizer_env \
-    pip install signaturizer
-
 # Create directory for tools
 RUN mkdir -p /home/bio/tools
 
@@ -94,11 +63,27 @@ ENV PATH="/home/bio/tools/sirius/bin:$PATH"
 # Install SpecReboot
 RUN git clone https://github.com/ECharria/SpecReBoot.git /home/bio/tools/specreboot 
 
-RUN conda env create -f /home/bio/tools/specreboot/environment.yml && \
+RUN --mount=type=cache,target=/opt/conda/pkgs \
+    conda env create -f /home/bio/tools/specreboot/environment.yml && \
     conda clean -a -y
 
-RUN conda run -n specreboot \
+RUN --mount=type=cache,target=/root/.cache/pip \
+    conda run -n specreboot \
     pip install -e /home/bio/tools/specreboot/
+
+# Install Python packages + Snakemake
+COPY signaturizer_env.yml /tmp/
+COPY analysis_env.yml /tmp/
+
+# Create signaturizer env
+RUN --mount=type=cache,target=/opt/conda/pkgs \
+    conda env create -f /tmp/signaturizer_env.yml && \
+    conda clean -afy
+
+# Create base
+RUN --mount=type=cache,target=/opt/conda/pkgs \
+    conda env update -n base -f /tmp/analysis_env.yml && \
+    conda clean -afy
 
 # Set working directory
 WORKDIR /home/bio/workflow

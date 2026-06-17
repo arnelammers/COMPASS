@@ -1,0 +1,40 @@
+name: base
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+
+dependencies:
+  - python=3.12
+
+  # core scientific stack (modern, stable line)
+  - numpy=2.1.*
+  - scipy=1.14.*
+  - pandas=2.2.*
+
+  # ML stack
+  - scikit-learn=1.5.*
+  - statsmodels=0.14.*
+
+  # chemistry / bio
+  - rdkit=2024.09.*
+
+  # visualization
+  - matplotlib=3.9.*
+  - seaborn=0.13.*
+
+  # embeddings / clustering
+  - umap-learn=0.5.*
+  - hdbscan=0.8.*
+
+  # workflows
+  - snakemake=9.*
+
+  # notebooks
+  - jupyter
+  - ipykernel
+
+  # misc
+  - networkx=3.3
+  - h5py=3.11
+  - adjusttext=1.3.*
