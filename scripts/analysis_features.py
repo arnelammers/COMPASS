@@ -5,7 +5,6 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import seaborn as sns
 from matplotlib.colors import LinearSegmentedColormap
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
@@ -102,7 +101,6 @@ def generate_pca(pca: PCA, pca_df: pd.DataFrame):
 
     samples_palette = [cmap(i) for i in np.linspace(0, 1, len(samples_unique_groupby))]
 
-    samples_palette = sns.color_palette("tab20", n_colors=len(samples_unique_groupby))
     samples_color_mapping = dict(zip(samples_unique_groupby, samples_palette))
 
     # Plot samples
@@ -129,16 +127,13 @@ def generate_pca(pca: PCA, pca_df: pd.DataFrame):
 
     # Assign colors
     procedural_blanks_cmap = LinearSegmentedColormap.from_list(
-        "grey_blend", ["lightgrey", "darkgrey"]
+        "grey_blend", ["darkgrey", "lightgrey"]
     )
 
     procedural_blanks_palette = [
         procedural_blanks_cmap(x)
         for x in np.linspace(0, 1, len(procedural_blanks_unique_groupby))
     ]
-    procedural_blanks_palette = sns.blend_palette(
-        ["lightgrey", "darkgrey"], n_colors=len(procedural_blanks_unique_groupby)
-    )
     procedural_blanks_color_mapping = dict(
         zip(procedural_blanks_unique_groupby, procedural_blanks_palette)
     )
