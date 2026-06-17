@@ -121,6 +121,10 @@ def get_query_neighbors_df(clustering):
         neighbors_df, on="smiles", how="inner"
     )
 
+    merged_df.sort_values(
+        by="cluster_membership_probability", ascending=False, inplace=True
+    )
+
     return merged_df
 
 
@@ -301,7 +305,11 @@ def get_structure_annotations_clustered_df(clustering):
     clustering_df = structure_annotations_combined_df.merge(
         clustering_df, on="smiles", how="inner"
     )
-    clustering_df.sort_values(by="cluster_label", inplace=True)
+    clustering_df.sort_values(
+        by=["cluster_label", "cluster_membership_probability"],
+        ascending=[True, False],
+        inplace=True,
+    )
     return clustering_df
 
 
