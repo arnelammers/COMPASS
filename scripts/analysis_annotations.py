@@ -204,13 +204,11 @@ def get_number_of_formula_predictions(annotations_df: pd.DataFrame):
 
 
 # Merge and filter structure annotations
-structure_combined_df = merge_structure_annotations()
-structure_combined_df = filter_structure_annotations(structure_combined_df)
+structure_df = merge_structure_annotations()
+structure_df = filter_structure_annotations(structure_df)
 
 # Save combined structure annotations
-structure_combined_df.to_csv(
-    snakemake.output["structure_annotations_combined"], index=False
-)
+structure_df.to_csv(snakemake.output["structure_annotations"], index=False)
 
 # Get formula annotations
 formula_df = get_formula_annotations()
@@ -223,11 +221,11 @@ formula_df.to_csv(snakemake.output["formula_annotations"], index=False)
 
 stats = {
     "# Formula predictions": get_number_of_formula_predictions(formula_df),
-    "# Spectral library matches": get_number_of_spectral_matches(structure_combined_df),
+    "# Spectral library matches": get_number_of_spectral_matches(structure_df),
     "# Structure database matches": get_number_of_structure_database_matches(
-        structure_combined_df
+        structure_df
     ),
-    "# De novo predictions": get_number_of_denovo_predictions(structure_combined_df),
+    "# De novo predictions": get_number_of_denovo_predictions(structure_df),
 }
 
 with open(snakemake.output["stats"], "w") as f:

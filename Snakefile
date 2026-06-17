@@ -32,7 +32,7 @@ rule all:
         expand("results/{dataset}/analysis/features/pca.png", dataset=DATASETS),
         expand("results/{dataset}/analysis/features/stats.json", dataset=DATASETS),
         expand(
-            "results/{dataset}/analysis/annotations/structure_annotations_combined.csv",
+            "results/{dataset}/analysis/annotations/structure_annotations.csv",
             dataset=DATASETS,
         ),
         expand(
@@ -40,6 +40,10 @@ rule all:
             dataset=DATASETS,
         ),
         expand("results/{dataset}/analysis/annotations/stats.json", dataset=DATASETS),
+        expand(
+            "results/{dataset}/analysis/annotations/structure_annotations_da.csv",
+            dataset=DATASETS,
+        ),
         expand("results/{dataset}/analysis/bioactivity/signatures.h5", dataset=DATASETS),
         expand("results/{dataset}/analysis/bioactivity/tsne.png", dataset=DATASETS),
         expand(
@@ -70,7 +74,6 @@ rule all:
             "results/{dataset}/analysis/bioactivity/molnet_query_neighbors_ms2deepscore.png",
             dataset=DATASETS,
         ),
-        expand("results/{dataset}/analysis/differential/da.csv", dataset=DATASETS),
 
 
 rule convert_raw_to_mzml:
@@ -270,7 +273,7 @@ rule analysis_annotations:
         sirius_structure_identifications="results/{dataset}/sirius/summaries/structure_identifications.tsv",
         sirius_denovo_structure_identifications="results/{dataset}/sirius/summaries/denovo_structure_identifications.tsv",
     output:
-        structure_annotations_combined="results/{dataset}/analysis/annotations/structure_annotations_combined.csv",
+        structure_annotations="results/{dataset}/analysis/annotations/structure_annotations.csv",
         formula_annotations="results/{dataset}/analysis/annotations/formula_annotations.csv",
         stats="results/{dataset}/analysis/annotations/stats.json",
     params:
@@ -279,9 +282,23 @@ rule analysis_annotations:
         "scripts/analysis_annotations.py"
 
 
+rule analysis_annotations_differential:
+    input:
+        feature_table="results/{dataset}/mzmine/feature_table.csv",
+        metadata="data/{dataset}/metadata.csv",
+        structure_annotations="results/{dataset}/analysis/annotations/structure_annotations.csv",
+        formula_annotations="results/{dataset}/analysis/annotations/formula_annotations.csv",
+    output:
+        da="results/{dataset}/analysis/annotations/structure_annotations_da.csv",
+    params:
+        config=lambda wc: config["datasets"][wc.dataset]["analysis"]["differential"],
+    script:
+        "scripts/analysis_differential.py"
+
+
 rule compute_signatures:
     input:
-        structure_annotations_combined="results/{dataset}/analysis/annotations/structure_annotations_combined.csv",
+        structure_annotations="results/{dataset}/analysis/annotations/structure_annotations.csv",
     output:
         signatures="results/{dataset}/analysis/bioactivity/signatures.h5",
     conda:
@@ -295,7 +312,7 @@ rule compute_signatures:
 rule analysis_bioactivity:
     input:
         signatures="results/{dataset}/analysis/bioactivity/signatures.h5",
-        structure_annotations_combined="results/{dataset}/analysis/annotations/structure_annotations_combined.csv",
+        structure_annotations="results/{dataset}/analysis/annotations/structure_annotations.csv",
         formula_annotations="results/{dataset}/analysis/annotations/formula_annotations.csv",
         graphml_cosine="results/{dataset}/specreboot/Reboot_bootstrap_threshold_Cosine.graphml",
         graphml_modcosine="results/{dataset}/specreboot/Reboot_bootstrap_threshold_ModCosine.graphml",
@@ -315,17 +332,3 @@ rule analysis_bioactivity:
         config=lambda wc: config["datasets"][wc.dataset]["analysis"]["bioactivity"],
     script:
         "scripts/analysis_bioactivity.py"
-
-
-rule analysis_differential:
-    input:
-        feature_table="results/{dataset}/mzmine/feature_table.csv",
-        metadata="data/{dataset}/metadata.csv",
-        structure_annotations_combined="results/{dataset}/analysis/annotations/structure_annotations_combined.csv",
-        formula_annotations="results/{dataset}/analysis/annotations/formula_annotations.csv",
-    output:
-        da="results/{dataset}/analysis/differential/da.csv",
-    params:
-        config=lambda wc: config["datasets"][wc.dataset]["analysis"]["differential"],
-    script:
-        "scripts/analysis_differential.py"

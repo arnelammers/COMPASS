@@ -11,8 +11,8 @@ config = snakemake.params["config"]
 
 # Get dataframes from annotations
 feature_table_df = pd.read_csv(snakemake.input["feature_table"], low_memory=False)
-structure_annotations_combined_df = pd.read_csv(
-    snakemake.input["structure_annotations_combined"], low_memory=False
+structure_annotations_df = pd.read_csv(
+    snakemake.input["structure_annotations"], low_memory=False
 )
 formula_annotations_df = pd.read_csv(
     snakemake.input["formula_annotations"], low_memory=False
@@ -52,7 +52,7 @@ def get_foldchanges_df():
     # Filter features that have annotations
     df_filtered = feature_table_df[
         feature_table_df["id"].isin(formula_annotations_df["id"])
-        | feature_table_df["id"].isin(structure_annotations_combined_df["id"])
+        | feature_table_df["id"].isin(structure_annotations_df["id"])
     ].copy()
 
     # Do comparison for each column
@@ -99,7 +99,7 @@ def get_foldchanges_df():
     )
     # include structure annotations
     fc_df = fc_df.merge(
-        structure_annotations_combined_df[["id", "compound_name", "smiles"]],
+        structure_annotations_df[["id", "compound_name", "smiles"]],
         on="id",
         how="left",
     )

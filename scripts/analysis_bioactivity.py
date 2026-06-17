@@ -21,8 +21,8 @@ if TYPE_CHECKING:
 config = snakemake.params["config"]
 
 # Get dataframes from annotations and query
-structure_annotations_combined_df = pd.read_csv(
-    snakemake.input["structure_annotations_combined"], low_memory=False
+structure_annotations_df = pd.read_csv(
+    snakemake.input["structure_annotations"], low_memory=False
 )
 formula_annotations_df = pd.read_csv(
     snakemake.input["formula_annotations"], low_memory=False
@@ -31,7 +31,7 @@ query_df = pd.read_csv(
     f"resources/bioactivity_queries/{config['query']}.csv", low_memory=False
 )
 
-smiles_dataset = structure_annotations_combined_df["smiles"].to_numpy()
+smiles_dataset = structure_annotations_df["smiles"].to_numpy()
 smiles_query = query_df["smiles"].to_numpy()
 all_smiles = np.concatenate([smiles_dataset, smiles_query])
 
@@ -120,9 +120,7 @@ def get_query_neighbors_df(clustering):
         label_to_query_names
     )
 
-    merged_df = structure_annotations_combined_df.merge(
-        neighbors_df, on="smiles", how="inner"
-    )
+    merged_df = structure_annotations_df.merge(neighbors_df, on="smiles", how="inner")
 
     merged_df.sort_values(
         by="cluster_membership_probability", ascending=False, inplace=True
@@ -252,7 +250,7 @@ def get_molecular_network_figure(G, node_colors):
 
     # Get dict that map id to smiles/mol formula
     structure_id_to_name = (
-        structure_annotations_combined_df.set_index("sirius_id")
+        structure_annotations_df.set_index("sirius_id")
         .apply(
             lambda r: (
                 f"{r['compound_name']} [{r['molecularFormula']}] ({r['annotation_type']})"
@@ -305,7 +303,7 @@ def get_structure_annotations_clustered_df(clustering):
             "cluster_outlier_score": clustering.outlier_scores_[~query_mask],
         }
     )
-    clustering_df = structure_annotations_combined_df.merge(
+    clustering_df = structure_annotations_df.merge(
         clustering_df, on="smiles", how="inner"
     )
     clustering_df.sort_values(
