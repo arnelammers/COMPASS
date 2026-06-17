@@ -146,7 +146,7 @@ rule run_mzmine:
         mem_mb=12000,
     shell:
         """
-        mzmine -b {input.mzbatch} >{log} 2>&1
+        mzmine -b {input.mzbatch} 2>&1 | tee {log}
         """
 
 
@@ -159,7 +159,7 @@ rule run_sirius:
         "logs/sirius/{dataset}.log",
     shell:
         """
-        sirius --input {input.mgf} --project {output.project} --mzmax=800 formulas -p orbitrap fingerprints classes structures denovo-structures >{log} 2>&1
+        sirius --input {input.mgf} --project {output.project} --mzmax=800 formulas -p orbitrap fingerprints classes structures denovo-structures 2>&1 | tee {log}
         """
 
 
@@ -175,7 +175,7 @@ rule sirius_export_summaries:
         "logs/sirius/{dataset}.export_summaries.log",
     shell:
         """
-        sirius --project {input.project} summaries -o results/{wildcards.dataset}/sirius/summaries >{log} 2>&1
+        sirius --project {input.project} summaries -o results/{wildcards.dataset}/sirius/summaries 2>&1 | tee {log}
         """
 
 
@@ -188,7 +188,7 @@ rule sirius_export_fbmn:
         "logs/sirius/{dataset}.export_fbmn.log",
     shell:
         """
-        sirius --project {input.project} mgf-export --merge-ms2 -o {output.mgf} >{log} 2>&1
+        sirius --project {input.project} mgf-export --merge-ms2 -o {output.mgf} 2>&1 | tee {log}
         """
 
 
