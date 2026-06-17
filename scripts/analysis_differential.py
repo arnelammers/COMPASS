@@ -36,7 +36,18 @@ if bad_cols:
     )
 
 
-def get_area_columns(condition_column, condition):
+def get_area_columns_samples():
+    # Get all filenames
+    files = metadata_df.loc[
+        (metadata_df["type"] == "sample"),
+        "filename",
+    ].tolist()
+    # map filennames to get area columns
+    mapped_files = [f"datafile:{x}:area" for x in files]
+    return mapped_files
+
+
+def get_area_columns_condition(condition_column, condition):
     # Get all filenames with condition
     files = metadata_df.loc[
         (metadata_df[condition_column] == condition)
@@ -54,6 +65,9 @@ def get_foldchanges_df():
         feature_table_df["id"].isin(formula_annotations_df["id"])
         | feature_table_df["id"].isin(structure_annotations_df["id"])
     ].copy()
+    df_filtered["da:nonzero_rate"] = (
+        np.abs(df_filtered[get_area_columns_samples()]) > 1e-9
+    ).mean(axis=1)
 
     # Do comparison for each column
     for condition_column in condition_columns:
@@ -62,7 +76,7 @@ def get_foldchanges_df():
         # Do for each condition
         for condition in conditions:
             # get area columns
-            area_columns = get_area_columns(condition_column, condition)
+            area_columns = get_area_columns_condition(condition_column, condition)
             # fillna 0
             df_filtered[area_columns] = df_filtered[area_columns].fillna(0)
             # add mean values column
@@ -80,10 +94,10 @@ def get_foldchanges_df():
         )
         # Get p-value
         areas_condition1 = df_filtered[
-            get_area_columns(condition_column, conditions[0])
+            get_area_columns_condition(condition_column, conditions[0])
         ]
         areas_condition2 = df_filtered[
-            get_area_columns(condition_column, conditions[1])
+            get_area_columns_condition(condition_column, conditions[1])
         ]
 
         df_filtered["da:" + conditions_combined + ":welch_p"] = [
@@ -110,6 +124,7 @@ def get_foldchanges_df():
         "compound_name",
         "smiles",
         "molecularFormula",
+        "da:nonzero_rate",
     ]
 
     fc_df = fc_df[front_cols + [c for c in fc_df.columns if c not in front_cols]]
