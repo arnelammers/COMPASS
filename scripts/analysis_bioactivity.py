@@ -11,6 +11,9 @@ from adjustText import adjust_text
 from matplotlib import pyplot as plt
 from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE
+from sklearn.preprocessing import StandardScaler
+
+from lib.fingerprints import get_op_fingerprint
 
 if TYPE_CHECKING:
     from snakemake.iocontainers import snakemake
@@ -326,13 +329,22 @@ def get_clusters_df(clustering):
 
 # Compute signatures
 signatures = read_signatures()
+scaler_signatures = StandardScaler()
+signatures_scaled = scaler_signatures.fit_transform(signatures)
+
+additional = get_op_fingerprint(all_smiles)
+scaler_additional = StandardScaler()
+additional_scaled = scaler_additional.fit_transform(additional)
+
+X = np.hstack([signatures_scaled, additional_scaled])
+
 
 # Save tsne
-tsne = get_tsne_figure(signatures)
+tsne = get_tsne_figure(X)
 tsne.savefig(snakemake.output["tsne"], dpi=300)
 
 # Get label of HDBSCAN clustering
-clustering = get_hdbscan_clustering(signatures)
+clustering = get_hdbscan_clustering(X)
 
 # Get clusters
 clusters_df = get_clusters_df(clustering)
@@ -350,7 +362,7 @@ query_neighbors_df = get_query_neighbors_df(clustering)
 query_neighbors_df.to_csv(snakemake.output["query_neighbors"], index=False)
 
 # Create UMAP and save
-umapfig = get_umap_figure(signatures, clustering)
+umapfig = get_umap_figure(X, clustering)
 umapfig.savefig(snakemake.output["umap"], dpi=300)
 
 similarity_methods = ["cosine", "modcosine", "spec2vec", "ms2deepscore"]
