@@ -321,7 +321,6 @@ rule analysis_differential:
     input:
         feature_table="results/{dataset}/mzmine/feature_table.csv",
         metadata="data/{dataset}/metadata.csv",
-        query_neighbors="results/{dataset}/analysis/bioactivity/query_neighbors.csv",
         structure_annotations_combined="results/{dataset}/analysis/annotations/structure_annotations_combined.csv",
         formula_annotations="results/{dataset}/analysis/annotations/formula_annotations.csv",
     output:
