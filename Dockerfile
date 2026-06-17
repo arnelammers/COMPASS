@@ -72,15 +72,15 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     pip install -e /home/bio/tools/specreboot/
 
 # Install Python packages + Snakemake
-COPY signaturizer_env.yml /tmp/
-COPY analysis_env.yml /tmp/
 
 # Create signaturizer env
+COPY signaturizer_env.yml /tmp/
 RUN --mount=type=cache,target=/opt/conda/pkgs \
     conda env create -f /tmp/signaturizer_env.yml && \
     conda clean -afy
 
 # Create base
+COPY analysis_env.yml /tmp/
 RUN --mount=type=cache,target=/opt/conda/pkgs \
     conda env update -n base -f /tmp/analysis_env.yml && \
     conda clean -afy
