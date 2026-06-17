@@ -301,6 +301,7 @@ def get_structure_annotations_clustered_df(clustering):
     clustering_df = structure_annotations_combined_df.merge(
         clustering_df, on="smiles", how="inner"
     )
+    clustering_df.sort_values(by="cluster_label", inplace=True)
     return clustering_df
 
 
