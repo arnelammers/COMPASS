@@ -150,7 +150,7 @@ def get_query_neighbors_df(X, clustering, structure_annotations_clustered_df):
     # Filter clustered structure annotations to just have query clusters
     neighbors_df = structure_annotations_clustered_df[
         structure_annotations_clustered_df["cluster_label"].isin(query_clusters)
-    ]
+    ].copy()
     neighbors_df["query_min_distance"] = min_distances
     neighbors_df["query_closest_compound"] = (
         query_df["compound_name"].iloc[closest_indices].values
