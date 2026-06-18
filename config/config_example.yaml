@@ -31,6 +31,11 @@ datasets:
       bioactivity:
         cc_spaces: ["C3", "C4", "D2", "D3"]
         query: "op"
+        clusterable_embedding_umap_n_neighbors: 15
+        clusterable_embedding_umap_min_dist: 0.0
+        clusterable_embedding_umap_n_components: 5
+        hdbdscan_min_samples: 5
+        hdbscan_min_cluster_size: 10
       differential:
         condition_columns: ["fraction", "day_type"]
 spectral_libraries:

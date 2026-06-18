@@ -145,6 +145,21 @@
                                     },
                                     "query": {
                                         "type": "string"
+                                    },
+                                    "clusterable_embedding_umap_n_neighbors": {
+                                        "type": "integer"
+                                    },
+                                    "clusterable_embedding_umap_min_dist": {
+                                        "type": "number"
+                                    },
+                                    "clusterable_embedding_umap_n_components": {
+                                        "type": "integer"
+                                    },
+                                    "hdbdscan_min_samples": {
+                                        "type": "integer"
+                                    },
+                                    "hdbscan_min_cluster_size": {
+                                        "type": "integer"
                                     }
                                 },
                                 "additionalProperties": false
