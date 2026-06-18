@@ -36,14 +36,14 @@ if bad_cols:
     )
 
 
-def get_area_columns_samples():
+def get_feature_state_columns_samples():
     # Get all filenames
     files = metadata_df.loc[
         (metadata_df["type"] == "sample"),
         "filename",
     ].tolist()
-    # map filennames to get area columns
-    mapped_files = [f"datafile:{x}:area" for x in files]
+    # map filennames to get feature state columns
+    mapped_files = [f"datafile:{x}:feature_state" for x in files]
     return mapped_files
 
 
@@ -65,8 +65,8 @@ def get_foldchanges_df():
         feature_table_df["id"].isin(formula_annotations_df["id"])
         | feature_table_df["id"].isin(structure_annotations_df["id"])
     ].copy()
-    df_filtered["da:nonzero_rate"] = (
-        np.abs(df_filtered[get_area_columns_samples()]) > 1e-9
+    df_filtered["da:detected_rate"] = (
+        df_filtered[get_feature_state_columns_samples()] == "DETECTED"
     ).mean(axis=1)
 
     # Do comparison for each column
@@ -124,7 +124,7 @@ def get_foldchanges_df():
         "compound_name",
         "smiles",
         "molecularFormula",
-        "da:nonzero_rate",
+        "da:detected_rate",
     ]
 
     fc_df = fc_df[front_cols + [c for c in fc_df.columns if c not in front_cols]]
