@@ -7,13 +7,13 @@ import networkx as nx
 import numpy as np
 import pandas as pd
 import umap
-from adjustText import adjust_text
 from matplotlib import pyplot as plt
 from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE
 from sklearn.preprocessing import StandardScaler
 
 from lib.fingerprints import get_op_fingerprint
+from lib.molnet import get_annotated_molecular_network
 
 if TYPE_CHECKING:
     from snakemake.iocontainers import snakemake
@@ -197,8 +197,11 @@ def get_umap_figure(X, clustering):
     return fig
 
 
-def get_molecular_network_figure_query_neighbors(
-    graphml, query_neighbors: pd.DataFrame
+def get_query_neighbors_molecular_network(
+    graphml,
+    query_neighbors: pd.DataFrame,
+    structure_df: pd.DataFrame,
+    formula_df: pd.DataFrame,
 ):
     G = nx.read_graphml(graphml)
 
@@ -218,79 +221,9 @@ def get_molecular_network_figure_query_neighbors(
     # filter graph
     G_filtered = G.subgraph(nodes_to_keep).copy()
 
-    # Color clustered compounds red
-    node_colors = [
-        "red" if int(n) in valid_ids else "lightgray"
-        for n, attrs in G_filtered.nodes(data=True)
-    ]
-    return get_molecular_network_figure(G_filtered, node_colors)
+    G_annotated = get_annotated_molecular_network(G_filtered, structure_df, formula_df)
 
-
-def get_molecular_network_figure(G, node_colors):
-    fig, ax = plt.subplots(figsize=(12, 12), constrained_layout=True)
-
-    # Make nodes more seperate
-    pos = nx.spring_layout(
-        G,
-        seed=42,
-        k=1.5 / np.sqrt(len(G.nodes())),
-    )
-
-    # Draw nodes and edges
-    nx.draw(
-        G,
-        pos,
-        ax=ax,
-        node_color=node_colors,
-        node_size=50,
-        edge_color="gray",
-        width=0.5,
-        with_labels=False,
-    )
-
-    # Get dict that map id to smiles/mol formula
-    structure_id_to_name = (
-        structure_annotations_df.set_index("sirius_id")
-        .apply(
-            lambda r: (
-                f"{r['compound_name']} [{r['molecularFormula']}] ({r['annotation_type']})"
-            ),
-            axis=1,
-        )
-        .to_dict()
-    )
-
-    formula_id_to_formula = (
-        formula_annotations_df.set_index("sirius_id")
-        .apply(lambda r: f"{r['molecularFormula']} (formula)", axis=1)
-        .to_dict()
-    )
-
-    # Determine labels of nodes
-    labels = {
-        n: structure_id_to_name.get(int(n)) or formula_id_to_formula.get(int(n)) or "?"
-        for n in G.nodes()
-    }
-
-    # Get texts
-    texts = [ax.text(x, y, labels[n], fontsize=6) for n, (x, y) in pos.items()]
-
-    # Use adjust text to prevent nodes colliding
-    adjust_text(
-        texts,
-        ax=ax,
-        expand_points=(1.2, 1.4),
-        arrowprops=dict(
-            arrowstyle="-",
-            lw=0.3,
-            color="gray",
-            shrinkA=10,
-            shrinkB=5,
-            linestyle=(0, (2, 2)),
-        ),
-    )
-
-    return fig
+    return G_annotated
 
 
 def get_structure_annotations_clustered_df(clustering):
@@ -363,11 +296,14 @@ query_neighbors_df.to_csv(snakemake.output["query_neighbors"], index=False)
 umapfig = get_umap_figure(X, clustering)
 umapfig.savefig(snakemake.output["umap"], dpi=300)
 
-similarity_methods = ["cosine", "modcosine", "spec2vec", "ms2deepscore"]
-for similarity_method in similarity_methods:
-    molnet_query = get_molecular_network_figure_query_neighbors(
-        snakemake.input["graphml_" + similarity_method], query_neighbors_df
+similarity_measures = ["cosine", "modcosine", "spec2vec", "ms2deepscore"]
+for similarity_measure in similarity_measures:
+    molnet_query = get_query_neighbors_molecular_network(
+        snakemake.input["graphml_" + similarity_measure],
+        query_neighbors_df,
+        annot_cluster_df,
+        formula_annotations_df,
     )
-    molnet_query.savefig(
-        snakemake.output["molnet_query_neighbors_" + similarity_method], dpi=300
+    nx.write_graphml(
+        molnet_query, snakemake.output["molnet_query_neighbors_" + similarity_measure]
     )

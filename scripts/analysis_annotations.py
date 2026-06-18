@@ -4,6 +4,8 @@ from typing import TYPE_CHECKING
 import networkx as nx
 import pandas as pd
 
+from lib.molnet import get_annotated_molecular_network
+
 if TYPE_CHECKING:
     from snakemake.iocontainers import snakemake
 
@@ -192,35 +194,6 @@ def filter_formula_annotations(annotations_df: pd.DataFrame):
     return annotations_df
 
 
-def save_annotated_graphml(input, output, structure_df, formula_df):
-    # Load graphml file
-    G = nx.read_graphml(input)
-
-    # Filter formula annotation to not contain rows that have strcuture annotation
-    formula_filtered_df = formula_df[
-        ~formula_df["sirius_id"].isin(structure_df["sirius_id"])
-    ]
-
-    # Merge annotations
-    combined_df = pd.concat([structure_df, formula_filtered_df], ignore_index=True)
-
-    # Fill NA
-    combined_df = combined_df.fillna("")
-
-    # Match types
-    sample_node = list(G.nodes())[0]
-    combined_df["sirius_id"] = combined_df["sirius_id"].astype(type(sample_node))
-
-    # Get dict per sirius id
-    node_attributes = combined_df.set_index("sirius_id").to_dict("index")
-
-    # Annotate the graph's nodes
-    nx.set_node_attributes(G, node_attributes)
-
-    # Save the updated graph back to GraphML
-    nx.write_graphml(G, output)
-
-
 def get_number_of_spectral_matches(annotations_df: pd.DataFrame):
     return len(annotations_df[annotations_df["annotation_type"] == "spectral_match"])
 
@@ -256,11 +229,16 @@ formula_df.to_csv(snakemake.output["formula_annotations"], index=False)
 # Save annotated molecular network
 similarity_measures = ["cosine", "modcosine", "spec2vec", "ms2deepscore"]
 for similarity_measure in similarity_measures:
-    save_annotated_graphml(
-        snakemake.input["graphml_" + similarity_measure],
-        snakemake.output["molnet_annotated_" + similarity_measure],
+    # Load graphml file
+    molnet = nx.read_graphml(snakemake.input["graphml_" + similarity_measure])
+    # Annotate network
+    molnet_annotated = get_annotated_molecular_network(
+        molnet,
         structure_df,
         formula_df,
+    )
+    nx.write_graphml(
+        molnet_annotated, snakemake.output["molnet_annotated_" + similarity_measure]
     )
 
 ## Stats
