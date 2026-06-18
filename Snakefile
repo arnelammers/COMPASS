@@ -44,6 +44,22 @@ rule all:
             dataset=DATASETS,
         ),
         expand("results/{dataset}/analysis/annotations/stats.json", dataset=DATASETS),
+        expand(
+            "results/{dataset}/analysis/annotations/molnet_annotated_cosine.graphml",
+            dataset=DATASETS,
+        ),
+        expand(
+            "results/{dataset}/analysis/annotations/molnet_annotated_modcosine.graphml",
+            dataset=DATASETS,
+        ),
+        expand(
+            "results/{dataset}/analysis/annotations/molnet_annotated_spec2vec.graphml",
+            dataset=DATASETS,
+        ),
+        expand(
+            "results/{dataset}/analysis/annotations/molnet_annotated_ms2deepscore.graphml",
+            dataset=DATASETS,
+        ),
         expand("results/{dataset}/analysis/bioactivity/signatures.h5", dataset=DATASETS),
         expand("results/{dataset}/analysis/bioactivity/tsne.png", dataset=DATASETS),
         expand(
@@ -273,10 +289,18 @@ rule analysis_annotations:
         sirius_formula_identifications="results/{dataset}/sirius/summaries/formula_identifications.tsv",
         sirius_structure_identifications="results/{dataset}/sirius/summaries/structure_identifications.tsv",
         sirius_denovo_structure_identifications="results/{dataset}/sirius/summaries/denovo_structure_identifications.tsv",
+        graphml_cosine="results/{dataset}/specreboot/Reboot_bootstrap_threshold_Cosine.graphml",
+        graphml_modcosine="results/{dataset}/specreboot/Reboot_bootstrap_threshold_ModCosine.graphml",
+        graphml_spec2vec="results/{dataset}/specreboot/Reboot_bootstrap_threshold_Spec2Vec.graphml",
+        graphml_ms2deepscore="results/{dataset}/specreboot/Reboot_bootstrap_threshold_MS2DeepScore.graphml",
     output:
         structure_annotations="results/{dataset}/analysis/annotations/structure_annotations.csv",
         formula_annotations="results/{dataset}/analysis/annotations/formula_annotations.csv",
         stats="results/{dataset}/analysis/annotations/stats.json",
+        molnet_annotated_cosine="results/{dataset}/analysis/annotations/molnet_annotated_cosine.graphml",
+        molnet_annotated_modcosine="results/{dataset}/analysis/annotations/molnet_annotated_modcosine.graphml",
+        molnet_annotated_spec2vec="results/{dataset}/analysis/annotations/molnet_annotated_spec2vec.graphml",
+        molnet_annotated_ms2deepscore="results/{dataset}/analysis/annotations/molnet_annotated_ms2deepscore.graphml",
     params:
         config=lambda wc: config["datasets"][wc.dataset]["analysis"]["annotations"],
     script:
