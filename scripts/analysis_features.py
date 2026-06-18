@@ -264,7 +264,7 @@ def get_da_df():
     cols = [
         c
         for c in da_df.columns
-        if c == "id"
+        if c in ["id", "rt", "mz", "area", "height"]
         or c == "detected_rate"
         or c.startswith("log2FC:")
         or c.startswith("mean_area:")
