@@ -12,7 +12,7 @@ from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE
 from sklearn.preprocessing import StandardScaler
 
-from lib.fingerprints import get_op_fingerprint
+from lib.fingerprints import find_max_cosines, get_op_fingerprint
 from lib.molnet import get_annotated_molecular_network
 
 if TYPE_CHECKING:
@@ -96,7 +96,12 @@ def get_clusters_df(clustering):
     return clusters_df
 
 
-def get_structure_annotations_clustered_df(clustering):
+def get_structure_annotations_clustered_df(X, clustering):
+    # Get cosine scores
+    X_dataset = X[~query_mask]
+    X_query = X[query_mask]
+    max_cosines, best_match_indices = find_max_cosines(X_dataset, X_query)
+
     labels = clustering.labels_
     clustering_df = pd.DataFrame(
         {
@@ -104,6 +109,10 @@ def get_structure_annotations_clustered_df(clustering):
             "cluster_label": labels[~query_mask],
             "cluster_membership_probability": clustering.probabilities_[~query_mask],
             "cluster_outlier_score": clustering.outlier_scores_[~query_mask],
+            "query_max_cosine": max_cosines,
+            "query_closest_compound": query_df["compound_name"]
+            .iloc[best_match_indices]
+            .values,
         }
     )
     # Sort to place highest probabilities first, then drop duplicate smiles
@@ -136,23 +145,8 @@ def get_query_neighbors_df(clustering, structure_annotations_clustered_df):
         structure_annotations_clustered_df["cluster_label"].isin(query_clusters)
     ]
 
-    query_label_df = query_df.copy()
-    query_label_df["cluster_label"] = labels[query_mask]
-
-    label_to_query_names = (
-        query_label_df.groupby("cluster_label")["compound_name"]
-        .apply(lambda x: ";".join(list(x.dropna().unique())))
-        .to_dict()
-    )
-    # Show which which query compounds it clusters
-    neighbors_df["query_compounds"] = neighbors_df["cluster_label"].map(
-        label_to_query_names
-    )
-
     # Sort by membershop probability
-    neighbors_df.sort_values(
-        by="cluster_membership_probability", ascending=False, inplace=True
-    )
+    neighbors_df.sort_values(by="query_max_cosine", ascending=False, inplace=True)
 
     return neighbors_df
 
@@ -279,7 +273,7 @@ clusters_df.to_csv(snakemake.output["clusters"], index=False)
 
 
 # Get annoytations with cluster label
-annot_cluster_df = get_structure_annotations_clustered_df(clustering)
+annot_cluster_df = get_structure_annotations_clustered_df(X, clustering)
 annot_cluster_df.to_csv(
     snakemake.output["structure_annotations_clustered"], index=False
 )
