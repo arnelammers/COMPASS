@@ -40,7 +40,9 @@ def merge_structure_annotations():
         columns={
             "compound_name": "compound_name",
             "smiles": "smiles",
-            "mol_formula": "molecularFormula",
+            "mol_formula": "molecular_formula",
+            "precursor_mz": "precursor_mz",
+            "rt": "rt",
             "score": "score",
         }
     ).assign(annotation_type="spectral_match")[
@@ -49,7 +51,9 @@ def merge_structure_annotations():
             "annotation_type",
             "compound_name",
             "smiles",
-            "molecularFormula",
+            "molecular_formula",
+            "precursor_mz",
+            "rt",
             "score",
         ]
     ]
@@ -59,7 +63,9 @@ def merge_structure_annotations():
             "alignedFeatureId": "sirius_id",
             "name": "compound_name",
             "smiles": "smiles",
-            "molecularFormula": "molecularFormula",
+            "molecularFormula": "molecular_formula",
+            "ionMass": "precursor_mz",
+            "retentionTimeInMinutes": "rt",
             "ConfidenceScoreExact": "score",
         }
     ).assign(annotation_type="structure_database")[
@@ -69,7 +75,9 @@ def merge_structure_annotations():
             "annotation_type",
             "compound_name",
             "smiles",
-            "molecularFormula",
+            "molecular_formula",
+            "precursor_mz",
+            "rt",
             "score",
         ]
     ]
@@ -79,7 +87,9 @@ def merge_structure_annotations():
             "alignedFeatureId": "sirius_id",
             "name": "compound_name",
             "smiles": "smiles",
-            "molecularFormula": "molecularFormula",
+            "molecularFormula": "molecular_formula",
+            "ionMass": "precursor_mz",
+            "retentionTimeInMinutes": "rt",
             "ModelScore": "score",
         }
     ).assign(annotation_type="denovo")[
@@ -89,7 +99,9 @@ def merge_structure_annotations():
             "annotation_type",
             "compound_name",
             "smiles",
-            "molecularFormula",
+            "molecular_formula",
+            "precursor_mz",
+            "rt",
             "score",
         ]
     ]
@@ -112,7 +124,9 @@ def merge_structure_annotations():
             "annotation_type",
             "compound_name",
             "smiles",
-            "molecularFormula",
+            "molecular_formula",
+            "precursor_mz",
+            "rt",
             "score",
         ]
     ]
@@ -169,14 +183,18 @@ def get_formula_annotations():
         columns={
             "mappingFeatureId": "id",
             "alignedFeatureId": "sirius_id",
-            "molecularFormula": "molecularFormula",
+            "molecularFormula": "molecular_formula",
+            "ionMass": "precursor_mz",
+            "retentionTimeInMinutes": "rt",
             "SiriusScoreNormalized": "score",
         }
     ).assign(annotation_type="structure_database")[
         [
             "id",
             "sirius_id",
-            "molecularFormula",
+            "molecular_formula",
+            "precursor_mz",
+            "rt",
             "score",
         ]
     ]
