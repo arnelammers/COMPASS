@@ -71,14 +71,14 @@
                         "required": [
                             "features",
                             "annotations",
-                            "bioactivity",
-                            "differential"
+                            "bioactivity"
                         ],
                         "properties": {
                             "features": {
                                 "type": "object",
                                 "required": [
-                                    "pca"
+                                    "pca",
+                                    "da_condition_columns"
                                 ],
                                 "properties": {
                                     "pca": {
@@ -102,6 +102,12 @@
                                             }
                                         },
                                         "additionalProperties": false
+                                    },
+                                    "da_condition_columns": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
                                     }
                                 },
                                 "additionalProperties": false
@@ -154,21 +160,6 @@
                                     },
                                     "hdbscan_min_cluster_size": {
                                         "type": "integer"
-                                    }
-                                },
-                                "additionalProperties": false
-                            },
-                            "differential": {
-                                "type": "object",
-                                "required": [
-                                    "condition_columns"
-                                ],
-                                "properties": {
-                                    "condition_columns": {
-                                        "type": "array",
-                                        "items": {
-                                            "type": "string"
-                                        }
                                     }
                                 },
                                 "additionalProperties": false

@@ -23,6 +23,7 @@ datasets:
         pca:
           samples_groupby: ["group", "fraction"]
           procedural_blanks_groupby: ["fraction"]
+        da_condition_columns: ["fraction", "day_type"]
       annotations:
         formula_identification_score_cutoff: 0.8
         spectral_library_match_score_cutoff: 0.8
@@ -36,8 +37,7 @@ datasets:
         clusterable_embedding_umap_n_components: 5
         hdbdscan_min_samples: 5
         hdbscan_min_cluster_size: 10
-      differential:
-        condition_columns: ["fraction", "day_type"]
+
 spectral_libraries:
   msnlib:
     zenodo_id: 16984129

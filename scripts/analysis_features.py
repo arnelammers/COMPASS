@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from matplotlib.colors import LinearSegmentedColormap
+from scipy.stats import ttest_ind
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
 
@@ -169,6 +170,114 @@ def generate_pca(pca: PCA, pca_df: pd.DataFrame):
     return fig
 
 
+def get_feature_state_columns_samples():
+    # Get all filenames
+    files = metadata_df.loc[
+        (metadata_df["type"] == "sample"),
+        "filename",
+    ].tolist()
+    # map filennames to get feature state columns
+    mapped_files = [f"datafile:{x}:feature_state" for x in files]
+    return mapped_files
+
+
+def get_feature_state_columns_samples_condition(condition_column, condition):
+    # Get all filenames with condition
+    files = metadata_df.loc[
+        (metadata_df[condition_column] == condition)
+        & (metadata_df["type"] == "sample"),
+        "filename",
+    ].tolist()
+    # map filennames to get area columns
+    mapped_files = [f"datafile:{x}:feature_state" for x in files]
+    return mapped_files
+
+
+def get_area_columns_samples_condition(condition_column, condition):
+    # Get all filenames with condition
+    files = metadata_df.loc[
+        (metadata_df[condition_column] == condition)
+        & (metadata_df["type"] == "sample"),
+        "filename",
+    ].tolist()
+    # map filennames to get area columns
+    mapped_files = [f"datafile:{x}:area" for x in files]
+    return mapped_files
+
+
+def get_da_df():
+    condition_columns = config["da_condition_columns"]
+
+    # Check whether all columns only have two different values
+    bad_cols = {
+        col: metadata_df[col].nunique(dropna=True)
+        for col in condition_columns
+        if metadata_df[col].nunique(dropna=True) != 2
+    }
+
+    if bad_cols:
+        raise ValueError(
+            "The following condition columns do NOT have exactly two unique values:\n"
+            + "\n".join([f"{col}: {n} unique values" for col, n in bad_cols.items()])
+        )
+
+    # Filter features that have annotations
+    da_df = feature_table_df.copy()
+    da_df["detected_rate"] = (
+        da_df[get_feature_state_columns_samples()] == "DETECTED"
+    ).mean(axis=1)
+
+    # Do comparison for each column
+    for condition_column in condition_columns:
+        # Get different condition values
+        conditions = metadata_df[condition_column].dropna().unique()
+        # Do for each condition
+        for condition in conditions:
+            # get area columns
+            area_columns = get_area_columns_samples_condition(
+                condition_column, condition
+            )
+            # fillna 0
+            da_df[area_columns] = da_df[area_columns].fillna(0)
+            # add mean values column
+            da_df["mean_area" + ":" + condition] = da_df[area_columns].mean(axis=1)
+        # combine conditions in name
+        conditions_combined = (
+            condition_column + ":" + conditions[0] + "_vs_" + conditions[1]
+        )
+        # set log2folchange
+        da_df["log2FC:" + conditions_combined] = np.log2(
+            da_df["mean_area:" + conditions[0]] / da_df["mean_area:" + conditions[1]]
+        )
+        # Get p-value
+        areas_condition1 = da_df[
+            get_area_columns_samples_condition(condition_column, conditions[0])
+        ]
+        areas_condition2 = da_df[
+            get_area_columns_samples_condition(condition_column, conditions[1])
+        ]
+
+        da_df["welch_p:" + conditions_combined] = [
+            ttest_ind(a, b, equal_var=False, nan_policy="omit").pvalue
+            for a, b in zip(areas_condition1.values, areas_condition2.values)
+        ]
+    cols = [
+        c
+        for c in da_df.columns
+        if c == "id"
+        or c == "detected_rate"
+        or c.startswith("log2FC:")
+        or c.startswith("mean_area:")
+        or c.startswith("welch_p:")
+    ]
+    da_df = da_df.loc[:, cols]
+
+    # order df
+    da_df = da_df.sort_values(by="id", ascending=True)
+
+    return da_df
+
+
 def get_number_of_features():
     return len(feature_table_df)
 
@@ -181,18 +290,6 @@ def get_number_of_ms2_features():
     return int((feature_table_df["fragment_scans"] != 0).sum())
 
 
-def get_feature_state_columns(condition_column, condition):
-    # Get all filenames with condition
-    files = metadata_df.loc[
-        (metadata_df[condition_column] == condition)
-        & (metadata_df["type"] == "sample"),
-        "filename",
-    ].tolist()
-    # map filennames to get area columns
-    mapped_files = [f"datafile:{x}:feature_state" for x in files]
-    return mapped_files
-
-
 def get_number_of_features_per_condition():
     numbers_per_condition = {}
     # Do comparison for each column
@@ -202,7 +299,7 @@ def get_number_of_features_per_condition():
         # Do for each condition
         for condition in conditions:
             # get feature state columns
-            feature_state_columns = get_feature_state_columns(
+            feature_state_columns = get_feature_state_columns_samples_condition(
                 condition_column, condition
             )
             numbers_per_condition[
@@ -234,6 +331,10 @@ pca, pca_df = extract_pca(area_df)
 # Generate PCA
 fig = generate_pca(pca, pca_df)
 fig.savefig(snakemake.output["pca"], dpi=300)
+
+# Differential analysis
+da_df = get_da_df()
+da_df.to_csv(snakemake.output["da"], index=False)
 
 ## Stats
 

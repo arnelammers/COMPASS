@@ -32,6 +32,10 @@ rule all:
         expand("results/{dataset}/analysis/features/pca.png", dataset=DATASETS),
         expand("results/{dataset}/analysis/features/stats.json", dataset=DATASETS),
         expand(
+            "results/{dataset}/analysis/features/da.csv",
+            dataset=DATASETS,
+        ),
+        expand(
             "results/{dataset}/analysis/annotations/structure_annotations.csv",
             dataset=DATASETS,
         ),
@@ -40,10 +44,6 @@ rule all:
             dataset=DATASETS,
         ),
         expand("results/{dataset}/analysis/annotations/stats.json", dataset=DATASETS),
-        expand(
-            "results/{dataset}/analysis/annotations/structure_annotations_da.csv",
-            dataset=DATASETS,
-        ),
         expand("results/{dataset}/analysis/bioactivity/signatures.h5", dataset=DATASETS),
         expand("results/{dataset}/analysis/bioactivity/tsne.png", dataset=DATASETS),
         expand(
@@ -259,6 +259,7 @@ rule analysis_features:
     output:
         pca="results/{dataset}/analysis/features/pca.png",
         stats="results/{dataset}/analysis/features/stats.json",
+        da="results/{dataset}/analysis/features/da.csv",
     params:
         config=lambda wc: config["datasets"][wc.dataset]["analysis"]["features"],
     script:
@@ -280,20 +281,6 @@ rule analysis_annotations:
         config=lambda wc: config["datasets"][wc.dataset]["analysis"]["annotations"],
     script:
         "scripts/analysis_annotations.py"
-
-
-rule analysis_annotations_differential:
-    input:
-        feature_table="results/{dataset}/mzmine/feature_table.csv",
-        metadata="data/{dataset}/metadata.csv",
-        structure_annotations="results/{dataset}/analysis/annotations/structure_annotations.csv",
-        formula_annotations="results/{dataset}/analysis/annotations/formula_annotations.csv",
-    output:
-        da="results/{dataset}/analysis/annotations/structure_annotations_da.csv",
-    params:
-        config=lambda wc: config["datasets"][wc.dataset]["analysis"]["differential"],
-    script:
-        "scripts/analysis_differential.py"
 
 
 rule compute_signatures:
