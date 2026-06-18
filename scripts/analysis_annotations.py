@@ -149,10 +149,10 @@ def filter_structure_annotations(annotations_df: pd.DataFrame):
 
     # Remove duplicates
     annotations_df = annotations_df.sort_values(
-        by=["smiles", "priority", "score"],
+        by=["id", "priority", "score"],
         ascending=[True, True, False],
     )
-    annotations_df = annotations_df.drop_duplicates(subset=["smiles"], keep="first")
+    annotations_df = annotations_df.drop_duplicates(subset=["id"], keep="first")
     annotations_df = annotations_df.drop(columns=["priority"])
     annotations_df = annotations_df.sort_values(
         by=["id"],
