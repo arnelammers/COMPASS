@@ -85,7 +85,7 @@ def get_hdbscan_clustering(X):
     return clustering
 
 
-def get_query_neighbors_df(clustering):
+def get_query_neighbors_df(clustering, structure_annotations_clustered_df):
     labels = clustering.labels_
     # Get labels of query compounds
     query_labels = labels[query_mask]
@@ -93,20 +93,10 @@ def get_query_neighbors_df(clustering):
     # Get labels of clusters, without noise cluster
     query_clusters = set(query_labels) - {-1}
 
-    # Get mask for clusters equal to query clusters
-    cluster_mask = np.isin(labels, list(query_clusters))
-
-    # Get mask from elements not in query
-    result_mask = cluster_mask & ~query_mask
-
-    neighbors_df = pd.DataFrame(
-        {
-            "smiles": all_smiles[result_mask],
-            "cluster_label": labels[result_mask],
-            "cluster_membership_probability": clustering.probabilities_[result_mask],
-            "cluster_outlier_score": clustering.outlier_scores_[result_mask],
-        }
-    )
+    # Filter clustered structure annotations to just have query clusters
+    neighbors_df = structure_annotations_clustered_df[
+        structure_annotations_clustered_df["cluster_label"].isin(query_clusters)
+    ]
 
     query_label_df = query_df.copy()
     query_label_df["cluster_label"] = labels[query_mask]
@@ -116,17 +106,17 @@ def get_query_neighbors_df(clustering):
         .apply(lambda x: ";".join(list(x.dropna().unique())))
         .to_dict()
     )
+    # Show which which query compounds it clusters
     neighbors_df["query_compounds"] = neighbors_df["cluster_label"].map(
         label_to_query_names
     )
 
-    merged_df = structure_annotations_df.merge(neighbors_df, on="smiles", how="inner")
-
-    merged_df.sort_values(
+    # Sort by membershop probability
+    neighbors_df.sort_values(
         by="cluster_membership_probability", ascending=False, inplace=True
     )
 
-    return merged_df
+    return neighbors_df
 
 
 def get_umap_figure(X, clustering):
@@ -289,7 +279,7 @@ annot_cluster_df.to_csv(
 )
 
 # Get compounds clustered with query
-query_neighbors_df = get_query_neighbors_df(clustering)
+query_neighbors_df = get_query_neighbors_df(clustering, annot_cluster_df)
 query_neighbors_df.to_csv(snakemake.output["query_neighbors"], index=False)
 
 # Create UMAP and save
