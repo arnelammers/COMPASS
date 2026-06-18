@@ -106,6 +106,12 @@ def get_structure_annotations_clustered_df(clustering):
             "cluster_outlier_score": clustering.outlier_scores_[~query_mask],
         }
     )
+    # Sort to place highest probabilities first, then drop duplicate smiles
+    clustering_df.sort_values(
+        by="cluster_membership_probability", ascending=False, inplace=True
+    )
+    clustering_df.drop_duplicates(subset=["smiles"], keep="first", inplace=True)
+
     clustering_df = structure_annotations_df.merge(
         clustering_df, on="smiles", how="inner"
     )
@@ -221,14 +227,14 @@ def get_umap_figure(X, clustering):
 
 def get_query_neighbors_molecular_network(
     graphml,
-    query_neighbors: pd.DataFrame,
+    query_neighbors_df: pd.DataFrame,
     structure_df: pd.DataFrame,
     formula_df: pd.DataFrame,
 ):
     G = nx.read_graphml(graphml)
 
     # Get list of ids that are clustered with query compounds
-    valid_ids = query_neighbors["sirius_id"].tolist()
+    valid_ids = query_neighbors_df["sirius_id"].tolist()
 
     # Get clusters that contain at least one id from query
     hit_clusters = {

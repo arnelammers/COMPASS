@@ -2,7 +2,9 @@ import networkx as nx
 import pandas as pd
 
 
-def get_annotated_molecular_network(G, structure_df, formula_df):
+def get_annotated_molecular_network(
+    G: nx.Graph, structure_df: pd.DataFrame, formula_df: pd.DataFrame
+):
     # Filter formula annotation to not contain rows that have strcuture annotation
     formula_filtered_df = formula_df[
         ~formula_df["sirius_id"].isin(structure_df["sirius_id"])
