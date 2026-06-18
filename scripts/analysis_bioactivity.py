@@ -8,11 +8,12 @@ import numpy as np
 import pandas as pd
 import umap
 from matplotlib import pyplot as plt
+from scipy.spatial.distance import cdist
 from sklearn.decomposition import PCA
 from sklearn.manifold import TSNE
 from sklearn.preprocessing import StandardScaler
 
-from lib.fingerprints import find_max_cosines, get_op_fingerprint
+from lib.fingerprints import get_op_fingerprint
 from lib.molnet import get_annotated_molecular_network
 
 if TYPE_CHECKING:
@@ -140,19 +141,23 @@ def get_query_neighbors_df(X, clustering, structure_annotations_clustered_df):
     # Get cosine scores
     X_dataset = X[result_mask]
     X_query = X[query_mask]
-    max_cosines, best_match_indices = find_max_cosines(X_dataset, X_query)
+
+    distance_matrix = cdist(X_dataset, X_query, metric="euclidean")
+
+    min_distances = np.min(distance_matrix, axis=1)
+    closest_indices = np.argmin(distance_matrix, axis=1)
 
     # Filter clustered structure annotations to just have query clusters
     neighbors_df = structure_annotations_clustered_df[
         structure_annotations_clustered_df["cluster_label"].isin(query_clusters)
     ]
-    neighbors_df["query_max_cosine"] = max_cosines
+    neighbors_df["query_min_distance"] = min_distances
     neighbors_df["query_closest_compound"] = (
-        query_df["compound_name"].iloc[best_match_indices].values
+        query_df["compound_name"].iloc[closest_indices].values
     )
 
     # Sort by membershop probability
-    neighbors_df.sort_values(by="query_max_cosine", ascending=False, inplace=True)
+    neighbors_df.sort_values(by="query_min_distance", ascending=True, inplace=True)
 
     return neighbors_df
 
