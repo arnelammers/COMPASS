@@ -121,17 +121,23 @@ def filter_structure_annotations(annotations_df: pd.DataFrame):
     # Remove below cutoff
     spectral_mask = ~(
         (annotations_df["annotation_type"] == "spectral_match")
-        & (annotations_df["score"] < config["spectral_library_match_score_cutoff"])
+        & (
+            annotations_df["score"]
+            < config.get("spectral_library_match_score_cutoff", 0.8)
+        )
     )
 
     structure_mask = ~(
         (annotations_df["annotation_type"] == "structure_database")
-        & (annotations_df["score"] < config["structure_database_confidence_cutoff"])
+        & (
+            annotations_df["score"]
+            < config.get("structure_database_confidence_cutoff", 0.8)
+        )
     )
 
     denovo_mask = ~(
         (annotations_df["annotation_type"] == "denovo")
-        & (annotations_df["score"] < config["msnovelist_score_cutoff"])
+        & (annotations_df["score"] < config.get("msnovelist_score_cutoff", -3))
     )
 
     annotations_df = annotations_df.loc[
@@ -177,7 +183,7 @@ def get_formula_annotations():
 def filter_formula_annotations(annotations_df: pd.DataFrame):
     # Remove below cutoff
     formula_mask = ~(
-        annotations_df["score"] < config["formula_identification_score_cutoff"]
+        annotations_df["score"] < config.get("formula_identification_score_cutoff", 0.8)
     )
 
     annotations_df = annotations_df.loc[formula_mask].copy()
