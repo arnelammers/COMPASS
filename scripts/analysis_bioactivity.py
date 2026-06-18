@@ -85,6 +85,38 @@ def get_hdbscan_clustering(X):
     return clustering
 
 
+def get_clusters_df(clustering):
+    clusters_df = pd.DataFrame(
+        {
+            "cluster_label": range(len(clustering.cluster_persistence_)),
+            "cluster_persistence": clustering.cluster_persistence_,
+        }
+    )
+
+    return clusters_df
+
+
+def get_structure_annotations_clustered_df(clustering):
+    labels = clustering.labels_
+    clustering_df = pd.DataFrame(
+        {
+            "smiles": all_smiles[~query_mask],
+            "cluster_label": labels[~query_mask],
+            "cluster_membership_probability": clustering.probabilities_[~query_mask],
+            "cluster_outlier_score": clustering.outlier_scores_[~query_mask],
+        }
+    )
+    clustering_df = structure_annotations_df.merge(
+        clustering_df, on="smiles", how="inner"
+    )
+    clustering_df.sort_values(
+        by=["cluster_label", "cluster_membership_probability"],
+        ascending=[True, False],
+        inplace=True,
+    )
+    return clustering_df
+
+
 def get_query_neighbors_df(clustering, structure_annotations_clustered_df):
     labels = clustering.labels_
     # Get labels of query compounds
@@ -214,38 +246,6 @@ def get_query_neighbors_molecular_network(
     G_annotated = get_annotated_molecular_network(G_filtered, structure_df, formula_df)
 
     return G_annotated
-
-
-def get_structure_annotations_clustered_df(clustering):
-    labels = clustering.labels_
-    clustering_df = pd.DataFrame(
-        {
-            "smiles": all_smiles[~query_mask],
-            "cluster_label": labels[~query_mask],
-            "cluster_membership_probability": clustering.probabilities_[~query_mask],
-            "cluster_outlier_score": clustering.outlier_scores_[~query_mask],
-        }
-    )
-    clustering_df = structure_annotations_df.merge(
-        clustering_df, on="smiles", how="inner"
-    )
-    clustering_df.sort_values(
-        by=["cluster_label", "cluster_membership_probability"],
-        ascending=[True, False],
-        inplace=True,
-    )
-    return clustering_df
-
-
-def get_clusters_df(clustering):
-    clusters_df = pd.DataFrame(
-        {
-            "cluster_label": range(len(clustering.cluster_persistence_)),
-            "cluster_persistence": clustering.cluster_persistence_,
-        }
-    )
-
-    return clusters_df
 
 
 # Compute signatures
