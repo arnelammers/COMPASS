@@ -3,8 +3,7 @@
     "$id": "file:///home/bio/workflow/config/schema.json",
     "type": "object",
     "required": [
-        "datasets",
-        "spectral_libraries"
+        "datasets"
     ],
     "properties": {
         "datasets": {
@@ -23,8 +22,7 @@
                             "retention_time_range",
                             "approximate_feature_fwhm",
                             "minimum_feature_height",
-                            "blank_subtraction",
-                            "spectral_library_files"
+                            "blank_subtraction"
                         ],
                         "properties": {
                             "template": {
@@ -55,13 +53,6 @@
                                     }
                                 },
                                 "additionalProperties": false
-                            },
-                            "spectral_library_files": {
-                                "type": "array",
-                                "items": {
-                                    "type": "string"
-                                },
-                                "minItems": 1
                             }
                         },
                         "additionalProperties": false
@@ -166,21 +157,6 @@
                             }
                         },
                         "additionalProperties": false
-                    }
-                },
-                "additionalProperties": false
-            }
-        },
-        "spectral_libraries": {
-            "type": "object",
-            "additionalProperties": {
-                "type": "object",
-                "required": [
-                    "zenodo_id"
-                ],
-                "properties": {
-                    "zenodo_id": {
-                        "type": "integer"
                     }
                 },
                 "additionalProperties": false

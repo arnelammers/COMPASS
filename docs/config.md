@@ -17,16 +17,6 @@ datasets:
       blank_subtraction:
         min_blank_presence: 3
         fold_change_threshold: 3
-      spectral_library_files:
-        - "msnlib/20250828_targetmol_hts_np_pos_ms2.json"
-        - "msnlib/20241003_mcebio_pos_ms2.json"
-        - "msnlib/20241003_otavapep_pos_ms2.json"
-        - "msnlib/20241003_enamdisc_pos_ms2.json"
-        - "msnlib/20241003_nihnp_pos_ms2.json"
-        - "msnlib/20241003_mcescaf_pos_ms2.json"
-        - "msnlib/20241003_mcedrug_pos_ms2.json"
-        - "msnlib/20241003_enammol_pos_ms2.json"
-        - "msnlib/20250828_mcediv_50k_sub_pos_ms2.json"
     analysis:
       features:
         pca:
@@ -46,9 +36,6 @@ datasets:
         clusterable_embedding_umap_n_components: 5
         hdbdscan_min_samples: 5
         hdbscan_min_cluster_size: 10
-spectral_libraries:
-  msnlib:
-    zenodo_id: 16984129
 ```
 
 ---
@@ -70,7 +57,6 @@ MZmine processing settings for a dataset.
 | `blank_subtraction` | object | Settings for filtering out background signals (see below). |
 | `blank_subtraction.min_blank_presence` | integer | Minimum number of blanks in which a feature must appear to be considered background. |
 | `blank_subtraction.fold_change_threshold` | number | Minimum fold-change between sample and blank intensity for a feature to be retained. |
-| `spectral_library_files` | string[] | Library files to use for annotation. Must be formatted as `{collection}/{filename}.json`, where `collection` matches a key in `spectral_libraries`. |
 
 ### `analysis`
 
@@ -104,13 +90,3 @@ Analysis settings for a dataset.
 | `clusterable_embedding_umap_n_components` | integer (default 10) | The dimension of the space to embed into for clusterable emedding.  |
 | `hdbdscan_min_samples` | integer (default 5) | The minimum size of clusters for HDBSCAN |
 | `hdbdscan_hdbscan_min_cluster_size` | integer (default 10) | The number of samples in a neighborhood for a point to be considered as a core point for HDBSCAN. |
-
----
-
-## `spectral_libraries`
-
-A map of named spectral library sources. Each key becomes a collection name that can be referenced in `spectral_library_files`.
-
-| Field | Type | Description |
-|---|---|---|
-| `zenodo_id` | integer | Zenodo record ID for this library. Used to download the library files. |

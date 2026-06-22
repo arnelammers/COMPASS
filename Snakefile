@@ -126,22 +126,6 @@ rule generate_mzmine_config:
         "scripts/generate_mzmine_config.py"
 
 
-rule download_spectral_library_file:
-    output:
-        "resources/spectral_libraries/{collection}/{filename}",
-    params:
-        zenodo_id=lambda wc: config["spectral_libraries"][wc.collection]["zenodo_id"],
-        url=lambda wc: (
-            f"https://zenodo.org/records/"
-            f"{config['spectral_libraries'][wc.collection]['zenodo_id']}"
-            f"/files/{wc.filename}?download=1"
-        ),
-    shell:
-        """
-        curl -fL "{params.url}" -o {output}
-        """
-
-
 rule run_mzmine:
     input:
         mzmls=lambda wildcards: expand(

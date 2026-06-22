@@ -15,8 +15,4 @@ def get_samples(dataset):
     return sorted(raw_samples | mzml_samples)
 
 
-def get_spectral_library_files(config, dataset):
-    """Returns local paths to spectral library files required by a dataset."""
-    libs = config["datasets"][dataset]["mzmine"]["spectral_library_files"]
 
-    return [f"resources/spectral_libraries/{lib}" for lib in libs]

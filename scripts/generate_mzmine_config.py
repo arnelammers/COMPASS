@@ -60,15 +60,6 @@ xml = xml.replace(
     str(snakemake.params.settings["blank_subtraction"]["fold_change_threshold"]),
 )
 
-# 5. Put spectral library files in batch file
-spectral_library_files = "\n\t\t\t".join(
-    [
-        f"<file>{Path('resources/spectral_libraries/' + f).resolve()}</file>"
-        for f in snakemake.params.settings["spectral_library_files"]
-    ]
-)
-xml = xml.replace("{spectral_library_files}", spectral_library_files)
-
 # Write batch file
 with open(output_mzbatch, "w") as f:
     f.write(xml)

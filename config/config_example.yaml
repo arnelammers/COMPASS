@@ -8,16 +8,6 @@ datasets:
       blank_subtraction:
         min_blank_presence: 3
         fold_change_threshold: 3
-      spectral_library_files:
-        - "msnlib/20250828_targetmol_hts_np_pos_ms2.json"
-        - "msnlib/20241003_mcebio_pos_ms2.json"
-        - "msnlib/20241003_otavapep_pos_ms2.json"
-        - "msnlib/20241003_enamdisc_pos_ms2.json"
-        - "msnlib/20241003_nihnp_pos_ms2.json"
-        - "msnlib/20241003_mcescaf_pos_ms2.json"
-        - "msnlib/20241003_mcedrug_pos_ms2.json"
-        - "msnlib/20241003_enammol_pos_ms2.json"
-        - "msnlib/20250828_mcediv_50k_sub_pos_ms2.json"
     analysis:
       features:
         pca:
@@ -37,7 +27,3 @@ datasets:
         clusterable_embedding_umap_n_components: 5
         hdbdscan_min_samples: 5
         hdbscan_min_cluster_size: 10
-
-spectral_libraries:
-  msnlib:
-    zenodo_id: 16984129
