@@ -107,7 +107,7 @@ rule convert_raw_to_mzml:
         dotnet /home/bio/tools/ThermoRawFileParser/ThermoRawFileParser.dll \
             -i {input.raw} \
             -o "$out_dir" \
-            -f 1 -p -g 2>&1 | tee {log}
+            -f 1 -p -g >{log} 2>&1
         """
 
 
@@ -119,10 +119,6 @@ rule generate_mzmine_config:
             sample=helpers.get_samples(wildcards.dataset),
         ),
         metadata_file="data/{dataset}/metadata.csv",
-        spectral_library_files=lambda wc: helpers.get_spectral_library_files(
-            config, wc.dataset
-        ),
-    output:
         mzbatch="results/{dataset}/mzmine/mzmine_config.mzbatch",
     params:
         settings=lambda wildcards: helpers.get_mzmine_params(config, wildcards),
@@ -165,7 +161,7 @@ rule run_mzmine:
         mem_mb=12000,
     shell:
         """
-        mzmine -b {input.mzbatch} 2>&1 | tee {log}
+        mzmine -b {input.mzbatch} >{log} 2>&1
         """
 
 
@@ -178,7 +174,7 @@ rule run_sirius:
         "logs/sirius/{dataset}.log",
     shell:
         """
-        sirius --input {input.mgf} --project {output.project} --mzmax=800 formulas -p orbitrap fingerprints classes structures denovo-structures 2>&1 | tee {log}
+        sirius --input {input.mgf} --project {output.project} --mzmax=800 formulas -p orbitrap fingerprints classes structures denovo-structures >{log} 2>&1
         """
 
 
@@ -194,7 +190,7 @@ rule sirius_export_summaries:
         "logs/sirius/{dataset}.export_summaries.log",
     shell:
         """
-        sirius --project {input.project} summaries -o results/{wildcards.dataset}/sirius/summaries 2>&1 | tee {log}
+        sirius --project {input.project} summaries -o results/{wildcards.dataset}/sirius/summaries >{log} 2>&1
         """
 
 
@@ -207,7 +203,7 @@ rule sirius_export_fbmn:
         "logs/sirius/{dataset}.export_fbmn.log",
     shell:
         """
-        sirius --project {input.project} mgf-export --merge-ms2 -o {output.mgf} 2>&1 | tee {log}
+        sirius --project {input.project} mgf-export --merge-ms2 -o {output.mgf} >{log} 2>&1
         """
 
 
@@ -261,7 +257,7 @@ rule run_specreboot:
             --spec2vec-model {input.spec2vec_model} \
             --outdir "results/{wildcards.dataset}/specreboot" \
             --prefix "Reboot" \
-            --B 30 2>&1 | tee {log}
+            --B 30 >{log} 2>&1
         """
 
 
