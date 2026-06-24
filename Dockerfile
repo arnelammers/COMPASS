@@ -55,9 +55,9 @@ RUN mkdir -p /home/bio/tools/mzmine && \
 ENV PATH="/home/bio/tools/mzmine/bin:$PATH"
 
 # Install SIRIUS
-RUN wget https://github.com/sirius-ms/sirius/releases/download/v6.3.4/sirius-6.3.4-linux-x64.zip && \
-    unzip sirius-6.3.4-linux-x64.zip -d /home/bio/tools/ && \
-    rm sirius-6.3.4-linux-x64.zip
+RUN wget https://github.com/sirius-ms/sirius/releases/download/v6.3.7/sirius-6.3.7-linux-x64.zip && \
+    unzip sirius-6.3.7-linux-x64.zip -d /home/bio/tools/ && \
+    rm sirius-6.3.7-linux-x64.zip
 ENV PATH="/home/bio/tools/sirius/bin:$PATH"
 
 # Install SpecReboot
