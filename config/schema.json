@@ -112,7 +112,7 @@
                                     "spectral_library_match_score_cutoff": {
                                         "type": "number"
                                     },
-                                    "structure_database_confidence_cutoff": {
+                                    "structure_database_match_confidence_cutoff": {
                                         "type": "number"
                                     },
                                     "msnovelist_score_cutoff": {

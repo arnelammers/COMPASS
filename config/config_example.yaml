@@ -17,7 +17,7 @@ datasets:
       annotations:
         formula_identification_score_cutoff: 0.8
         spectral_library_match_score_cutoff: 0.8
-        structure_database_confidence_cutoff: 0.8
+        structure_database_match_confidence_cutoff: 0.8
         msnovelist_score_cutoff: -3
       bioactivity:
         cc_spaces: ["C3", "C4", "D2", "D3"]

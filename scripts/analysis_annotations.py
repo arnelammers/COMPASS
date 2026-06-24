@@ -72,7 +72,7 @@ def merge_structure_annotations():
             "retentionTimeInMinutes": "rt",
             "ConfidenceScoreExact": "score",
         }
-    ).assign(annotation_type="structure_database")[
+    ).assign(annotation_type="structure_db_match")[
         [
             "id",
             "sirius_id",
@@ -139,10 +139,10 @@ def filter_structure_annotations(annotations_df: pd.DataFrame):
     )
 
     structure_mask = ~(
-        (annotations_df["annotation_type"] == "structure_database")
+        (annotations_df["annotation_type"] == "structure_db_match")
         & (
             annotations_df["score"]
-            < config.get("structure_database_confidence_cutoff", 0.8)
+            < config.get("structure_database_match_confidence_cutoff", 0.8)
         )
     )
 
@@ -155,7 +155,7 @@ def filter_structure_annotations(annotations_df: pd.DataFrame):
         spectral_mask & structure_mask & denovo_mask
     ].copy()
 
-    priority = {"spectral_match": 1, "structure_database": 2, "denovo": 3}
+    priority = {"spectral_match": 1, "structure_db_match": 2, "denovo": 3}
     annotations_df["priority"] = annotations_df["annotation_type"].map(priority)
 
     # Remove duplicates
@@ -182,7 +182,7 @@ def get_formula_annotations():
             "retentionTimeInMinutes": "rt",
             "SiriusScoreNormalized": "score",
         }
-    ).assign(annotation_type="structure_database")[
+    ).assign(annotation_type="structure_db_match")[
         [
             "id",
             "sirius_id",
@@ -212,7 +212,7 @@ def get_number_of_spectral_matches(annotations_df: pd.DataFrame):
 
 def get_number_of_structure_database_matches(annotations_df: pd.DataFrame):
     return len(
-        annotations_df[annotations_df["annotation_type"] == "structure_database"]
+        annotations_df[annotations_df["annotation_type"] == "structure_db_match"]
     )
 
 

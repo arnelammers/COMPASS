@@ -48,7 +48,7 @@ spectral_mask_dataset = structure_annotations_df["annotation_type"] == "spectral
 
 spectral_mask = np.concatenate([spectral_mask_dataset, [False] * len(smiles_query)])
 
-db_mask_dataset = structure_annotations_df["annotation_type"] == "structure_database"
+db_mask_dataset = structure_annotations_df["annotation_type"] == "structure_db_match"
 
 db_mask = np.concatenate([db_mask_dataset, [False] * len(smiles_query)])
 
@@ -78,7 +78,7 @@ def get_tsne_figure(X) -> plt.Figure:
         color="lightgrey",
         alpha=0.5,
         marker="^",
-        label="Spectral match",
+        label="Spectral library match",
     )
     ax.scatter(
         projection[db_mask, 0],
@@ -86,7 +86,7 @@ def get_tsne_figure(X) -> plt.Figure:
         color="lightgrey",
         alpha=0.5,
         marker="o",
-        label="Structure database",
+        label="Structure database match",
     )
     ax.scatter(
         projection[denovo_mask, 0],
@@ -94,7 +94,7 @@ def get_tsne_figure(X) -> plt.Figure:
         color="lightgrey",
         alpha=0.5,
         marker="s",
-        label="De novo",
+        label="De novo prediction",
     )
     ax.scatter(
         projection[:, 0][query_mask],
@@ -102,7 +102,7 @@ def get_tsne_figure(X) -> plt.Figure:
         color="red",
         alpha=0.25,
         marker="*",
-        label="Query",
+        label="Query compounds",
     )
 
     # Set axis titles
@@ -242,7 +242,6 @@ def get_umap_figure(X, clustering):
         c=colors[~query_mask & spectral_mask],
         alpha=0.3,
         marker="^",
-        label="Spectral match",
     )
     # dataset points (structure database)
     ax.scatter(
@@ -251,7 +250,6 @@ def get_umap_figure(X, clustering):
         c=colors[~query_mask & db_mask],
         alpha=0.3,
         marker="o",
-        label="Structure database",
     )
     # dataset points (denovo)
     ax.scatter(
@@ -260,7 +258,6 @@ def get_umap_figure(X, clustering):
         c=colors[~query_mask & denovo_mask],
         alpha=0.3,
         marker="s",
-        label="De novo",
     )
 
     # reference points
@@ -270,7 +267,6 @@ def get_umap_figure(X, clustering):
         c=colors[query_mask],
         marker="*",
         alpha=0.5,
-        label="Query",
     )
 
     # Set title
@@ -279,7 +275,12 @@ def get_umap_figure(X, clustering):
     # Add first legend
     handles_type = [
         plt.Line2D(
-            [], [], marker="^", color="gray", linestyle="None", label="Spectral match"
+            [],
+            [],
+            marker="^",
+            color="gray",
+            linestyle="None",
+            label="Spectral library match",
         ),
         plt.Line2D(
             [],
@@ -287,10 +288,19 @@ def get_umap_figure(X, clustering):
             marker="o",
             color="gray",
             linestyle="None",
-            label="Structure database",
+            label="Structure database match",
         ),
-        plt.Line2D([], [], marker="s", color="gray", linestyle="None", label="De novo"),
-        plt.Line2D([], [], marker="*", color="gray", linestyle="None", label="Query"),
+        plt.Line2D(
+            [],
+            [],
+            marker="s",
+            color="gray",
+            linestyle="None",
+            label="De novo prediction",
+        ),
+        plt.Line2D(
+            [], [], marker="*", color="gray", linestyle="None", label="Query compounds"
+        ),
     ]
     legend1 = ax.legend(handles=handles_type, title="Type")
 
