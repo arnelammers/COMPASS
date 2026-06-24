@@ -32,11 +32,29 @@ query_df = pd.read_csv(
     f"resources/bioactivity_queries/{config['query']}.csv", low_memory=False
 )
 
+# Get all smiles of dataset and query
+
 smiles_dataset = structure_annotations_df["smiles"].to_numpy()
 smiles_query = query_df["smiles"].to_numpy()
 all_smiles = np.concatenate([smiles_dataset, smiles_query])
 
-query_mask = np.isin(all_smiles, smiles_query)
+# Get mask of all smiles belonging to query
+
+query_mask = np.array([False] * len(smiles_dataset) + [True] * len(smiles_query))
+
+# Get masks of all structure annotation type
+
+spectral_mask_dataset = structure_annotations_df["annotation_type"] == "spectral_match"
+
+spectral_mask = np.concatenate([spectral_mask_dataset, [False] * len(smiles_query)])
+
+db_mask_dataset = structure_annotations_df["annotation_type"] == "structure_database"
+
+db_mask = np.concatenate([db_mask_dataset, [False] * len(smiles_query)])
+
+denovo_mask_dataset = structure_annotations_df["annotation_type"] == "denovo"
+
+denovo_mask = np.concatenate([denovo_mask_dataset, [False] * len(smiles_query)])
 
 
 def read_signatures():
@@ -52,21 +70,54 @@ def get_tsne_figure(X) -> plt.Figure:
 
     projection = TSNE(n_components=2).fit_transform(transformed)
 
-    fig, ax = plt.subplots(figsize=(8, 6), constrained_layout=True)
+    fig, ax = plt.subplots(figsize=(8, 6))
 
-    ax.scatter(projection[:, 0], projection[:, 1], color="lightgrey", alpha=0.5)
+    ax.scatter(
+        projection[spectral_mask, 0],
+        projection[spectral_mask, 1],
+        color="lightgrey",
+        alpha=0.5,
+        marker="^",
+        label="Spectral match",
+    )
+    ax.scatter(
+        projection[db_mask, 0],
+        projection[db_mask, 1],
+        color="lightgrey",
+        alpha=0.5,
+        marker="o",
+        label="Structure database",
+    )
+    ax.scatter(
+        projection[denovo_mask, 0],
+        projection[denovo_mask, 1],
+        color="lightgrey",
+        alpha=0.5,
+        marker="s",
+        label="De novo",
+    )
     ax.scatter(
         projection[:, 0][query_mask],
         projection[:, 1][query_mask],
         color="red",
         alpha=0.25,
+        marker="*",
+        label="Query",
     )
 
+    # Set axis titles
+    ax.set_xlabel("Component 1")
+    ax.set_ylabel("Component 2")
+
+    # Set title
     ax.set_title(
         f"t-SNE visualization of PCA-reduced data (PCA 85% variance retained: {n_components} components)"
     )
-    ax.set_xlabel("Component 1")
-    ax.set_ylabel("Component 2")
+
+    # Add legend
+    ax.legend(title="Type")
+
+    plt.tight_layout()
     return fig
 
 
@@ -166,51 +217,104 @@ def get_umap_figure(X, clustering):
     labels = clustering.labels_
     standard_embedding = umap.UMAP(random_state=42).fit_transform(X)
 
-    clustered = labels >= 0
+    fig, ax = plt.subplots(figsize=(12, 9))
 
-    fig, ax = plt.subplots(figsize=(6, 6), constrained_layout=True)
+    # Get helper mask to determine which labels determine clusters
+    is_noise = labels == -1
+    is_cluster = ~is_noise
 
+    # Get cluster labels
+    cluster_labels = labels[is_cluster]
+
+    # Init color array with colors of each label
+    colors = np.empty((len(labels), 4))
+
+    # tab10 will be used for cluster labels
     cmap = mpl.colormaps["tab10"]
+    colors[is_cluster] = [cmap(l % cmap.N) for l in cluster_labels]
+    # Assign light grey to noise
+    colors[is_noise] = (0.8, 0.8, 0.8, 1.0)  # lightgrey
 
-    # background points
+    # dataset points (spectral)
     ax.scatter(
-        standard_embedding[~clustered, 0],
-        standard_embedding[~clustered, 1],
-        color=(0.5, 0.5, 0.5),
-        s=5,
-        alpha=0.5,
+        standard_embedding[:, 0][~query_mask & spectral_mask],
+        standard_embedding[:, 1][~query_mask & spectral_mask],
+        c=colors[~query_mask & spectral_mask],
+        alpha=0.3,
+        marker="^",
+        label="Spectral match",
     )
-
-    # clustered points
-    colors_mapped = [cmap(lbl % cmap.N) for lbl in labels[clustered]]
+    # dataset points (structure database)
     ax.scatter(
-        standard_embedding[clustered, 0],
-        standard_embedding[clustered, 1],
-        c=colors_mapped,
-        s=5,
-        alpha=0.5,
+        standard_embedding[:, 0][~query_mask & db_mask],
+        standard_embedding[:, 1][~query_mask & db_mask],
+        c=colors[~query_mask & db_mask],
+        alpha=0.3,
+        marker="o",
+        label="Structure database",
+    )
+    # dataset points (denovo)
+    ax.scatter(
+        standard_embedding[:, 0][~query_mask & denovo_mask],
+        standard_embedding[:, 1][~query_mask & denovo_mask],
+        c=colors[~query_mask & denovo_mask],
+        alpha=0.3,
+        marker="s",
+        label="De novo",
     )
 
     # reference points
     ax.scatter(
         standard_embedding[:, 0][query_mask],
         standard_embedding[:, 1][query_mask],
-        c="red",
-        marker="x",
-        s=20,
-        linewidths=1,
-        alpha=0.25,
+        c=colors[query_mask],
+        marker="*",
+        alpha=0.5,
+        label="Query",
     )
 
-    unique_labels = np.unique(labels[clustered])
+    # Set title
+    ax.set_title("UMAP")
 
-    handles = [
+    # Add first legend
+    handles_type = [
+        plt.Line2D(
+            [], [], marker="^", color="gray", linestyle="None", label="Spectral match"
+        ),
+        plt.Line2D(
+            [],
+            [],
+            marker="o",
+            color="gray",
+            linestyle="None",
+            label="Structure database",
+        ),
+        plt.Line2D([], [], marker="s", color="gray", linestyle="None", label="De novo"),
+        plt.Line2D([], [], marker="*", color="gray", linestyle="None", label="Query"),
+    ]
+    legend1 = ax.legend(handles=handles_type, title="Type")
+
+    # Set color to black
+    for h in legend1.legend_handles:
+        h.set_color("grey")
+        h.set_markerfacecolor("grey")
+        h.set_markeredgecolor("grey")
+
+    ax.add_artist(legend1)
+
+    # Add label legend
+    unique_labels = np.unique(labels)
+
+    # Get mapping of label to color
+    label_to_color = {lbl: colors[labels == lbl][0] for lbl in unique_labels}
+
+    handles_labels = [
         plt.Line2D(
             [0],
             [0],
             marker="o",
             linestyle="",
-            markerfacecolor=cmap(lbl % cmap.N),
+            markerfacecolor=label_to_color[lbl],
             markeredgecolor="none",
             markersize=6,
             label=str(lbl),
@@ -218,15 +322,19 @@ def get_umap_figure(X, clustering):
         for lbl in unique_labels
     ]
 
-    ax.legend(
+    legend2 = ax.legend(
+        handles=handles_labels,
         bbox_to_anchor=(1.05, 1),
         loc="upper left",
         fontsize=8,
-        handles=handles,
-        title="Labels",
+        title="Clusters",
     )
 
-    ax.set_title("UMAP")
+    ax.add_artist(legend2)
+
+    plt.tight_layout()
+    plt.subplots_adjust(right=0.8)
+
     return fig
 
 

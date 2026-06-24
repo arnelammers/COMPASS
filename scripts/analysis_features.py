@@ -78,15 +78,8 @@ def generate_pca(pca: PCA, pca_df: pd.DataFrame):
     samples_groupby = config["pca"]["samples_groupby"]
     procedural_blanks_groupby = config["pca"]["procedural_blanks_groupby"]
 
-    # Map type to marker shapes
-    type_markers = {
-        "sample": "o",
-        "instrumental_blank": "s",
-        "procedural_blank": "^",
-    }
-
     # Set figure size
-    fig, ax = plt.subplots(figsize=(7, 5), constrained_layout=True)
+    fig, ax = plt.subplots(figsize=(7, 5))
 
     # --- Samples ---
     samples = pca_df[pca_df["type"] == "sample"].copy()
@@ -98,7 +91,7 @@ def generate_pca(pca: PCA, pca_df: pd.DataFrame):
     )
 
     # Assign colors using palette
-    cmap = mpl.colormaps["tab20"]
+    cmap = mpl.colormaps["Paired"]
 
     samples_palette = [cmap(i) for i in np.linspace(0, 1, len(samples_unique_groupby))]
 
@@ -111,7 +104,7 @@ def generate_pca(pca: PCA, pca_df: pd.DataFrame):
             subset["PC1"],
             subset["PC2"],
             color=samples_color_mapping[sample_groupby],
-            marker=type_markers["sample"],
+            marker="o",
             label=f"Sample: {sample_groupby}",
         )
 
@@ -147,7 +140,7 @@ def generate_pca(pca: PCA, pca_df: pd.DataFrame):
             subset["PC1"],
             subset["PC2"],
             color=procedural_blanks_color_mapping[procedural_blank_groupby],
-            marker=type_markers["procedural_blank"],
+            marker="^",
             label=f"Procedural blank: {procedural_blank_groupby}",
         )
 
@@ -157,15 +150,21 @@ def generate_pca(pca: PCA, pca_df: pd.DataFrame):
         instrumental_blanks["PC1"],
         instrumental_blanks["PC2"],
         color="black",
-        marker=type_markers["instrumental_blank"],
+        marker="s",
         label="Instrumental blank",
     )
 
+    # Set axis labels
     ax.set_xlabel(f"PC1 ({pca.explained_variance_ratio_[0] * 100:.2f}%)")
     ax.set_ylabel(f"PC2 ({pca.explained_variance_ratio_[1] * 100:.2f}%)")
+
+    # Set title
     ax.set_title(f"PCA: Colored by {'+'.join(samples_groupby)}, shape by type")
+
+    # Add legend
     ax.legend(bbox_to_anchor=(1.05, 1), loc="upper left", fontsize=8)
-    ax.grid(True)
+
+    plt.tight_layout()
 
     return fig
 
