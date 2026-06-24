@@ -12,8 +12,11 @@ if TYPE_CHECKING:
 config = snakemake.params["config"]
 
 feature_table_df = pd.read_csv(snakemake.input["feature_table"], low_memory=False)
-mzmine_annotations_df = pd.read_csv(
-    snakemake.input["mzmine_annotations"], low_memory=False
+sirius_spectral_matches_df = pd.read_csv(
+    snakemake.input["sirius_spectral_matches"],
+    delimiter="\t",
+    dtype={"alignedFeatureId": "Int64"},
+    low_memory=False,
 )
 sirius_formula_identifications_df = pd.read_csv(
     snakemake.input["sirius_formula_identifications"],
@@ -36,22 +39,23 @@ sirius_denovo_structure_identifications_df = pd.read_csv(
 
 
 def merge_structure_annotations():
-    spectral = mzmine_annotations_df.rename(
+    spectral = sirius_spectral_matches_df.rename(
         columns={
-            "compound_name": "compound_name",
-            "smiles": "smiles",
-            "mol_formula": "molecular_formula",
-            "precursor_mz": "precursor_mz",
-            "rt": "rt",
-            "score": "score",
+            "mappingFeatureId": "id",
+            "alignedFeatureId": "sirius_id",
+            "referenceName": "compound_name",
+            "referenceSmiles": "smiles",
+            "ionMass": "precursor_mz",
+            "retentionTimeInMinutes": "rt",
+            "similarity": "score",
         }
     ).assign(annotation_type="spectral_match")[
         [
             "id",
+            "sirius_id",
             "annotation_type",
             "compound_name",
             "smiles",
-            "molecular_formula",
             "precursor_mz",
             "rt",
             "score",
@@ -106,18 +110,8 @@ def merge_structure_annotations():
         ]
     ]
 
-    # Merge sirius annotations
-    sirius_all = pd.concat([db, denovo])
-
-    # Add sirius_id to spectral annotations by creating lookup
-    sirius_lookup = pd.concat([db, denovo])[["id", "sirius_id"]].drop_duplicates("id")
-    spectral = spectral.merge(sirius_lookup, on="id", how="left")
-
     # Combine dataframes
-    combined = pd.concat(
-        [spectral, sirius_all],
-        ignore_index=True,
-    )[
+    combined = pd.concat([spectral, db, denovo])[
         [
             "id",
             "sirius_id",

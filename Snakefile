@@ -137,7 +137,6 @@ rule run_mzmine:
     output:
         feature_table="results/{dataset}/mzmine/feature_table.csv",
         feature_table_before_subtraction="results/{dataset}/mzmine/feature_table_before_subtraction.csv",
-        annotations="results/{dataset}/mzmine/annotations.csv",
         export_sirius="results/{dataset}/mzmine/export_sirius.mgf",
     log:
         "logs/mzmine/{dataset}.log",
@@ -158,7 +157,8 @@ rule run_sirius:
         "logs/sirius/{dataset}.log",
     shell:
         """
-        sirius --input {input.mgf} --project {output.project} --mzmax=800 formulas -p orbitrap fingerprints classes structures denovo-structures >{log} 2>&1
+        sirius --input {input.mgf} --project {output.project} spectra-search >{log} 2>&1
+        sirius --project {output.project} --mzmax=800 formulas -p orbitrap fingerprints classes structures denovo-structures >>{log} 2>&1
         """
 
 
@@ -249,7 +249,6 @@ rule analysis_features:
     input:
         feature_table="results/{dataset}/mzmine/feature_table.csv",
         feature_table_before_subtraction="results/{dataset}/mzmine/feature_table_before_subtraction.csv",
-        annotations="results/{dataset}/mzmine/annotations.csv",
         export_sirius="results/{dataset}/mzmine/export_sirius.mgf",
         metadata="data/{dataset}/metadata.csv",
     output:
@@ -265,7 +264,7 @@ rule analysis_features:
 rule analysis_annotations:
     input:
         feature_table="results/{dataset}/mzmine/feature_table.csv",
-        mzmine_annotations="results/{dataset}/mzmine/annotations.csv",
+        sirius_spectral_matches="results/{dataset}/sirius/summaries/spectral_matches.tsv",
         sirius_formula_identifications="results/{dataset}/sirius/summaries/formula_identifications.tsv",
         sirius_structure_identifications="results/{dataset}/sirius/summaries/structure_identifications.tsv",
         sirius_denovo_structure_identifications="results/{dataset}/sirius/summaries/denovo_structure_identifications.tsv",

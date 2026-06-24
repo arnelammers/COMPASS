@@ -77,6 +77,11 @@ mzmine -login-console
 sirius login -u  -p 
 ```
 
+Also make sure to download the spectral libraries:
+```bash
+sirius custom-db-downloader --destination=resources/spectral_libraries/public_spectra_2506.siriusdb --db=public_spectra_2506
+```
+
 Then run the pipeline in the container:
 
 ```bash
