@@ -28,7 +28,8 @@
                 "ms-python.vscode-pylance",
                 "charliermarsh.ruff",
                 "tfehlmann.snakefmt",
-                "redhat.vscode-yaml"
+                "redhat.vscode-yaml",
+                "mechatroner.rainbow-csv"
             ]
         }
     }
