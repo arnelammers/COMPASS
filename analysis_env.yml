@@ -8,12 +8,12 @@ dependencies:
   - python=3.12
 
   # core scientific stack (modern, stable line)
-  - numpy=2.1.*
+  - numpy=1.26.*
   - scipy=1.14.*
   - pandas=2.2.*
 
   # ML stack
-  - scikit-learn=1.5.*
+  - scikit-learn=1.6.*
   - statsmodels=0.14.*
 
   # chemistry / bio
