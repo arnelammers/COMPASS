@@ -8,6 +8,8 @@ ROOT_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
 docker run -it --rm \
   --memory=14g --shm-size=8g \
+  --dns=1.1.1.1 \
+  --dns=8.8.8.8 \
   -e JAVA_TOOL_OPTIONS="-Xmx10g" \
   -u "$(id -u):$(id -g)" \
   -v "$ROOT_DIR":/home/bio/workflow \

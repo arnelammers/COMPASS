@@ -14,7 +14,9 @@
         "--user",
         "1000:1000",
         "--memory=14g",
-        "--shm-size=8g"
+        "--shm-size=8g",
+        "--dns=1.1.1.1",
+        "--dns=8.8.8.8"
     ],
     "containerEnv": {
         "JAVA_TOOL_OPTIONS": "-Xmx10g"
