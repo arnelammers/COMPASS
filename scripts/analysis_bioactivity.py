@@ -131,7 +131,7 @@ def get_hdbscan_clustering(X):
 
     clustering = hdbscan.HDBSCAN(
         min_samples=config.get("hdbscan_min_samples", 5),
-        min_cluster_size=config.get("hdbscan_cluster_size", 10),
+        min_cluster_size=config.get("hdbscan_min_cluster_size", 10),
     ).fit(clusterable_embedding)
 
     return clustering
