@@ -146,7 +146,7 @@
                                     "clusterable_embedding_umap_n_components": {
                                         "type": "integer"
                                     },
-                                    "hdbdscan_min_samples": {
+                                    "hdbscan_min_samples": {
                                         "type": "integer"
                                     },
                                     "hdbscan_min_cluster_size": {

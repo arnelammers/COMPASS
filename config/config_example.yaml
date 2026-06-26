@@ -25,5 +25,5 @@ datasets:
         clusterable_embedding_umap_n_neighbors: 15
         clusterable_embedding_umap_min_dist: 0.0
         clusterable_embedding_umap_n_components: 5
-        hdbdscan_min_samples: 5
+        hdbscan_min_samples: 5
         hdbscan_min_cluster_size: 10

@@ -34,7 +34,7 @@ datasets:
         clusterable_embedding_umap_n_neighbors: 15
         clusterable_embedding_umap_min_dist: 0.0
         clusterable_embedding_umap_n_components: 5
-        hdbdscan_min_samples: 5
+        hdbscan_min_samples: 5
         hdbscan_min_cluster_size: 10
 ```
 
@@ -88,5 +88,5 @@ Analysis settings for a dataset.
 | `clusterable_embedding_umap_n_neighbors` | integer (default 15) | The size of local neighborhood used for manifold approximation for clusterable emedding. |
 | `clusterable_embedding_umap_min_dist` | float (default 0.0) | The effective minimum distance between embedded points for clusterable emedding. |
 | `clusterable_embedding_umap_n_components` | integer (default 10) | The dimension of the space to embed into for clusterable emedding.  |
-| `hdbdscan_min_samples` | integer (default 5) | The minimum size of clusters for HDBSCAN |
-| `hdbdscan_hdbscan_min_cluster_size` | integer (default 10) | The number of samples in a neighborhood for a point to be considered as a core point for HDBSCAN. |
+| `hdbscan_min_samples` | integer (default 5) | The minimum size of clusters for HDBSCAN |
+| `hdbscan_hdbscan_min_cluster_size` | integer (default 10) | The number of samples in a neighborhood for a point to be considered as a core point for HDBSCAN. |
