@@ -233,6 +233,14 @@ def get_da_df():
         # Do for each condition
         for condition in conditions:
             # get area columns
+            fs_columns = get_feature_state_columns_samples_condition(
+                condition_column, condition
+            )
+            # add mean values column
+            da_df["detected" + ":" + condition] = (da_df[fs_columns] == "DETECTED").any(
+                axis=1
+            )
+            # get area columns
             area_columns = get_area_columns_samples_condition(
                 condition_column, condition
             )
@@ -289,36 +297,6 @@ def get_number_of_ms2_features():
     return int((feature_table_df["fragment_scans"] != 0).sum())
 
 
-def get_number_of_features_per_condition():
-    numbers_per_condition = {}
-    # Do comparison for each column
-    for condition_column in config["pca"]["samples_groupby"]:
-        # Get different condition values
-        conditions = metadata_df[condition_column].dropna().unique()
-        # Do for each condition
-        for condition in conditions:
-            # get feature state columns
-            feature_state_columns = get_feature_state_columns_samples_condition(
-                condition_column, condition
-            )
-            numbers_per_condition[
-                f"# Features after subtraction ({condition_column},{condition})"
-            ] = int(
-                (feature_table_df[feature_state_columns] == "DETECTED")
-                .any(axis=1)
-                .sum()
-            )
-            numbers_per_condition[
-                f"# Features after subtraction with MS2 ({condition_column},{condition})"
-            ] = int(
-                (
-                    (feature_table_df[feature_state_columns] == "DETECTED").any(axis=1)
-                    & (feature_table_df["fragment_scans"] != 0)
-                ).sum()
-            )
-    return numbers_per_condition
-
-
 ## PCA
 
 # Extract the area dataframe during initialization
@@ -341,7 +319,6 @@ stats = {
     "# Features before subtraction": get_number_of_features_before_subtraction(),
     "# Features after subtraction": get_number_of_features(),
     "# Features after subtraction with MS2": get_number_of_ms2_features(),
-    **get_number_of_features_per_condition(),
 }
 
 with open(snakemake.output["stats"], "w") as f:
