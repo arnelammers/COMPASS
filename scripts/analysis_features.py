@@ -9,6 +9,7 @@ from matplotlib.colors import LinearSegmentedColormap
 from scipy.stats import ttest_ind
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import StandardScaler
+from statsmodels.stats.multitest import multipletests
 
 if TYPE_CHECKING:
     from snakemake.iocontainers import snakemake
@@ -265,10 +266,21 @@ def get_da_df():
             get_area_columns_samples_condition(condition_column, conditions[1])
         ]
 
-        da_df["welch_p:" + conditions_combined] = [
-            ttest_ind(a, b, equal_var=False, nan_policy="omit").pvalue
-            for a, b in zip(areas_condition1.values, areas_condition2.values)
-        ]
+        pvals = np.array(
+            [
+                ttest_ind(a, b, equal_var=False, nan_policy="omit").pvalue
+                for a, b in zip(areas_condition1.values, areas_condition2.values)
+            ]
+        )
+        da_df["welch_p:" + conditions_combined] = pvals
+
+        mask = np.isfinite(pvals)
+
+        qvals = np.full(pvals.shape, np.nan)
+        _, qvals_valid, _, _ = multipletests(pvals[mask], method="fdr_bh")
+        qvals[mask] = qvals_valid
+
+        da_df["welch_q:" + conditions_combined] = qvals
     cols = [
         c
         for c in da_df.columns
@@ -277,6 +289,7 @@ def get_da_df():
         or c.startswith("log2FC:")
         or c.startswith("mean_area:")
         or c.startswith("welch_p:")
+        or c.startswith("welch_q:")
     ]
     da_df = da_df.loc[:, cols]
 
