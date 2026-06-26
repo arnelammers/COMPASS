@@ -158,9 +158,6 @@ def generate_pca(pca: PCA, pca_df: pd.DataFrame):
     ax.set_xlabel(f"PC1 ({pca.explained_variance_ratio_[0] * 100:.2f}%)")
     ax.set_ylabel(f"PC2 ({pca.explained_variance_ratio_[1] * 100:.2f}%)")
 
-    # Set title
-    ax.set_title(f"PCA: Colored by {'+'.join(samples_groupby)}, shape by type")
-
     # Add legend
     ax.legend(bbox_to_anchor=(1.05, 1), loc="upper left", fontsize=8)
 

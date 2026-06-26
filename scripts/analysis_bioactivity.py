@@ -109,11 +109,6 @@ def get_tsne_figure(X) -> plt.Figure:
     ax.set_xlabel("Component 1")
     ax.set_ylabel("Component 2")
 
-    # Set title
-    ax.set_title(
-        f"t-SNE visualization of PCA-reduced data (PCA 85% variance retained: {n_components} components)"
-    )
-
     # Add legend
     ax.legend(title="Type")
 
@@ -268,9 +263,6 @@ def get_umap_figure(X, clustering):
         marker="*",
         alpha=0.5,
     )
-
-    # Set title
-    ax.set_title("UMAP")
 
     # Add first legend
     handles_type = [
