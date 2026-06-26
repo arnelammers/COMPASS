@@ -1,0 +1,5 @@
+id,sirius_id,annotation_type,compound_name,smiles,molecular_formula,precursor_mz,rt,score,cluster_label,cluster_membership_probability,cluster_outlier_score,query_min_distance,query_closest_compound
+27132,857336480953292552,spectral_match,Campathecin,CCC1(C2=C(COC1=O)C(=O)N3CC4=CC5=CC=CC=C5N=C4C3=C2)O,,371.101,23.562,0.84745747,2,1.0,0.0,37.21737124073825,acenaphthenequinone
+12766,857336458228551808,spectral_match,Indigo J,C1=CC=C2C(=C1)C(=O)C(=C3C(=O)C4=CC=CC=C4N3)N2,,263.082,11.483,0.8020742,2,1.0,0.0,42.724512016726464,Phenanthrene
+16463,857336466394862260,structure_db_match,2-Phenylbenzothiazole,C1=CC=C(C=C1)C2=NC3=CC=CC=C3S2,C13H9NS,212.053,14.31,0.845,2,0.7909425233588993,0.2090574766411008,48.42027592775246,"5,12-naphthacenequinone"
+7229,857336446534831488,spectral_match,benzothiazolol,C1=CC=C2C(=C1)NC(=O)S2,,152.017,7.45,0.95281935,2,0.5510081691121163,0.4489918308878838,61.6450494908378,"benzo[a]pyrene-3,6-quinone"
