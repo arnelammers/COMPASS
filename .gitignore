@@ -26,9 +26,6 @@ envs/
 .DS_Store
 Thumbs.db
 
-# Notebooks
-notebooks/*.ipynb
-
 # snakemake
 .snakemake
 
