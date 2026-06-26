@@ -235,9 +235,9 @@ def get_da_df():
                 condition_column, condition
             )
             # add mean values column
-            da_df["detected" + ":" + condition] = (da_df[fs_columns] == "DETECTED").any(
-                axis=1
-            )
+            da_df["detected" + ":" + condition_column + ":" + condition] = (
+                da_df[fs_columns] == "DETECTED"
+            ).any(axis=1)
             # get area columns
             area_columns = get_area_columns_samples_condition(
                 condition_column, condition
@@ -245,14 +245,17 @@ def get_da_df():
             # fillna 0
             da_df[area_columns] = da_df[area_columns].fillna(0)
             # add mean values column
-            da_df["mean_area" + ":" + condition] = da_df[area_columns].mean(axis=1)
+            da_df["mean_area" + ":" + condition_column + ":" + condition] = da_df[
+                area_columns
+            ].mean(axis=1)
         # combine conditions in name
         conditions_combined = (
             condition_column + ":" + conditions[0] + "_vs_" + conditions[1]
         )
         # set log2folchange
         da_df["log2FC:" + conditions_combined] = np.log2(
-            da_df["mean_area:" + conditions[0]] / da_df["mean_area:" + conditions[1]]
+            da_df["mean_area:" + condition_column + ":" + conditions[0]]
+            / da_df["mean_area:" + condition_column + ":" + conditions[1]]
         )
         # Get p-value
         areas_condition1 = da_df[
