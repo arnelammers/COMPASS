@@ -2,12 +2,12 @@
 <graphml xmlns="http://graphml.graphdrawing.org/xmlns" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
   <key id="d16" for="edge" attr.name="bootstrap_support" attr.type="double" />
   <key id="d15" for="edge" attr.name="weight" attr.type="double" />
-  <key id="d14" for="node" attr.name="cluster_outlier_score" attr.type="double" />
-  <key id="d13" for="node" attr.name="cluster_membership_probability" attr.type="double" />
-  <key id="d12" for="node" attr.name="cluster_label" attr.type="double" />
-  <key id="d11" for="node" attr.name="cluster_outlier_score" attr.type="string" />
-  <key id="d10" for="node" attr.name="cluster_membership_probability" attr.type="string" />
-  <key id="d9" for="node" attr.name="cluster_label" attr.type="string" />
+  <key id="d14" for="node" attr.name="cluster_outlier_score" attr.type="string" />
+  <key id="d13" for="node" attr.name="cluster_membership_probability" attr.type="string" />
+  <key id="d12" for="node" attr.name="cluster_label" attr.type="string" />
+  <key id="d11" for="node" attr.name="cluster_outlier_score" attr.type="double" />
+  <key id="d10" for="node" attr.name="cluster_membership_probability" attr.type="double" />
+  <key id="d9" for="node" attr.name="cluster_label" attr.type="double" />
   <key id="d8" for="node" attr.name="score" attr.type="double" />
   <key id="d7" for="node" attr.name="rt" attr.type="double" />
   <key id="d6" for="node" attr.name="precursor_mz" attr.type="double" />
@@ -21,54 +21,6 @@
     <node id="857336480907155204">
       <data key="d0">28</data>
     </node>
-    <node id="857336456135593976">
-      <data key="d0">97</data>
-    </node>
-    <node id="857336482027034468">
-      <data key="d0">28</data>
-      <data key="d1">29589</data>
-      <data key="d2" />
-      <data key="d3" />
-      <data key="d4" />
-      <data key="d5">C12H36O6Si6</data>
-      <data key="d6">445.12</data>
-      <data key="d7">27.908</data>
-      <data key="d8">0.939</data>
-      <data key="d9" />
-      <data key="d10" />
-      <data key="d11" />
-    </node>
-    <node id="857336446534831488">
-      <data key="d0">167</data>
-      <data key="d1">7229</data>
-      <data key="d2">spectral_match</data>
-      <data key="d3">benzothiazolol</data>
-      <data key="d4">C1=CC=C2C(=C1)NC(=O)S2</data>
-      <data key="d5" />
-      <data key="d6">152.017</data>
-      <data key="d7">7.45</data>
-      <data key="d8">0.95281935</data>
-      <data key="d12">2.0</data>
-      <data key="d13">0.5510081691121163</data>
-      <data key="d14">0.4489918308878838</data>
-    </node>
-    <node id="857336466394862260">
-      <data key="d0">230</data>
-      <data key="d1">16463</data>
-      <data key="d2">structure_db_match</data>
-      <data key="d3">2-Phenylbenzothiazole</data>
-      <data key="d4">C1=CC=C(C=C1)C2=NC3=CC=CC=C3S2</data>
-      <data key="d5">C13H9NS</data>
-      <data key="d6">212.053</data>
-      <data key="d7">14.31</data>
-      <data key="d8">0.845</data>
-      <data key="d12">2.0</data>
-      <data key="d13">0.7909425233588993</data>
-      <data key="d14">0.2090574766411008</data>
-    </node>
-    <node id="857336481053955856">
-      <data key="d0">28</data>
-    </node>
     <node id="857336480953292552">
       <data key="d0">28</data>
       <data key="d1">27132</data>
@@ -79,11 +31,11 @@
       <data key="d6">371.101</data>
       <data key="d7">23.562</data>
       <data key="d8">0.84745747</data>
-      <data key="d12">2.0</data>
-      <data key="d13">1.0</data>
-      <data key="d14">0.0</data>
+      <data key="d9">2.0</data>
+      <data key="d10">1.0</data>
+      <data key="d11">0.0</data>
     </node>
-    <node id="857336480856823552">
+    <node id="857336481053955856">
       <data key="d0">28</data>
     </node>
     <node id="857336458228551808">
@@ -96,9 +48,57 @@
       <data key="d6">263.082</data>
       <data key="d7">11.483</data>
       <data key="d8">0.8020742</data>
-      <data key="d12">2.0</data>
-      <data key="d13">1.0</data>
-      <data key="d14">0.0</data>
+      <data key="d9">2.0</data>
+      <data key="d10">1.0</data>
+      <data key="d11">0.0</data>
+    </node>
+    <node id="857336456135593976">
+      <data key="d0">97</data>
+    </node>
+    <node id="857336480856823552">
+      <data key="d0">28</data>
+    </node>
+    <node id="857336446534831488">
+      <data key="d0">167</data>
+      <data key="d1">7229</data>
+      <data key="d2">spectral_match</data>
+      <data key="d3">benzothiazolol</data>
+      <data key="d4">C1=CC=C2C(=C1)NC(=O)S2</data>
+      <data key="d5" />
+      <data key="d6">152.017</data>
+      <data key="d7">7.45</data>
+      <data key="d8">0.95281935</data>
+      <data key="d9">2.0</data>
+      <data key="d10">0.5510081691121163</data>
+      <data key="d11">0.4489918308878838</data>
+    </node>
+    <node id="857336482027034468">
+      <data key="d0">28</data>
+      <data key="d1">29589</data>
+      <data key="d2" />
+      <data key="d3" />
+      <data key="d4" />
+      <data key="d5">C12H36O6Si6</data>
+      <data key="d6">445.12</data>
+      <data key="d7">27.908</data>
+      <data key="d8">0.939</data>
+      <data key="d12" />
+      <data key="d13" />
+      <data key="d14" />
+    </node>
+    <node id="857336466394862260">
+      <data key="d0">230</data>
+      <data key="d1">16463</data>
+      <data key="d2">structure_db_match</data>
+      <data key="d3">2-Phenylbenzothiazole</data>
+      <data key="d4">C1=CC=C(C=C1)C2=NC3=CC=CC=C3S2</data>
+      <data key="d5">C13H9NS</data>
+      <data key="d6">212.053</data>
+      <data key="d7">14.31</data>
+      <data key="d8">0.845</data>
+      <data key="d9">2.0</data>
+      <data key="d10">0.7909425233588993</data>
+      <data key="d11">0.2090574766411008</data>
     </node>
     <edge source="857336480907155204" target="857336480856823552">
       <data key="d15">0.9108552353305143</data>
@@ -116,29 +116,29 @@
       <data key="d15">0.8552769710066793</data>
       <data key="d16">0.9</data>
     </edge>
-    <edge source="857336456135593976" target="857336458228551808">
-      <data key="d15">0.9484213742805548</data>
-      <data key="d16">1.0</data>
-    </edge>
-    <edge source="857336482027034468" target="857336480856823552">
-      <data key="d15">0.9795941253861894</data>
-      <data key="d16">1.0</data>
-    </edge>
-    <edge source="857336482027034468" target="857336480953292552">
-      <data key="d15">0.8642576494958616</data>
+    <edge source="857336480953292552" target="857336481053955856">
+      <data key="d15">0.846768038629531</data>
       <data key="d16">0.8</data>
     </edge>
-    <edge source="857336482027034468" target="857336481053955856">
-      <data key="d15">0.9850555233918061</data>
-      <data key="d16">1.0</data>
+    <edge source="857336480953292552" target="857336482027034468">
+      <data key="d15">0.8642576494958616</data>
+      <data key="d16">0.8</data>
     </edge>
     <edge source="857336481053955856" target="857336480856823552">
       <data key="d15">0.9905946726997262</data>
       <data key="d16">1.0</data>
     </edge>
-    <edge source="857336481053955856" target="857336480953292552">
-      <data key="d15">0.846768038629531</data>
-      <data key="d16">0.8</data>
+    <edge source="857336481053955856" target="857336482027034468">
+      <data key="d15">0.9850555233918061</data>
+      <data key="d16">1.0</data>
+    </edge>
+    <edge source="857336458228551808" target="857336456135593976">
+      <data key="d15">0.9484213742805548</data>
+      <data key="d16">1.0</data>
+    </edge>
+    <edge source="857336480856823552" target="857336482027034468">
+      <data key="d15">0.9795941253861894</data>
+      <data key="d16">1.0</data>
     </edge>
   </graph>
 </graphml>

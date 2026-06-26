@@ -18,6 +18,20 @@
   <key id="d1" for="node" attr.name="id" attr.type="long" />
   <key id="d0" for="node" attr.name="component" attr.type="long" />
   <graph edgedefault="undirected">
+    <node id="857316087022776199">
+      <data key="d0">67</data>
+      <data key="d1">11016</data>
+      <data key="d2">spectral_match</data>
+      <data key="d3">benzothiazolyl-cyclohexyl-amine</data>
+      <data key="d4">C1CCC(CC1)NC2=NC3=CC=CC=C3S2</data>
+      <data key="d5" />
+      <data key="d6">233.111</data>
+      <data key="d7">8.513</data>
+      <data key="d8">0.97385085</data>
+      <data key="d9">6.0</data>
+      <data key="d10">0.4035494651403118</data>
+      <data key="d11">0.5964505348596882</data>
+    </node>
     <node id="857316107931383399">
       <data key="d0">67</data>
       <data key="d1">30795</data>
@@ -32,47 +46,19 @@
       <data key="d10">0.7051743570156886</data>
       <data key="d11">0.29482564298431135</data>
     </node>
-    <node id="857316076109196463">
-      <data key="d0">88</data>
-      <data key="d1">3929</data>
-      <data key="d2" />
-      <data key="d3" />
-      <data key="d4" />
-      <data key="d5">C8H8N2</data>
-      <data key="d6">133.076</data>
-      <data key="d7">3.974</data>
-      <data key="d8">0.981</data>
-      <data key="d12" />
-      <data key="d13" />
-      <data key="d14" />
-    </node>
-    <node id="857316067070470955">
-      <data key="d0">88</data>
-      <data key="d1">1789</data>
-      <data key="d2">denovo</data>
-      <data key="d3">5-Methylbenzimidazole</data>
-      <data key="d4">CC1=CC2=C(C=C1)N=CN2</data>
-      <data key="d5">C8H8N2</data>
-      <data key="d6">133.076</data>
-      <data key="d7">0.98</data>
-      <data key="d8">-0.434</data>
-      <data key="d9">6.0</data>
-      <data key="d10">0.4035494651403118</data>
-      <data key="d11">0.5964505348596882</data>
-    </node>
-    <node id="857316087022776199">
-      <data key="d0">67</data>
-      <data key="d1">11016</data>
+    <node id="857316094442500587">
+      <data key="d0">244</data>
+      <data key="d1">17832</data>
       <data key="d2">spectral_match</data>
-      <data key="d3">benzothiazolyl-cyclohexyl-amine</data>
-      <data key="d4">C1CCC(CC1)NC2=NC3=CC=CC=C3S2</data>
+      <data key="d3">Benzoanthrone</data>
+      <data key="d4">C1=CC=C2C(=C1)C3=CC=CC4=C3C(=CC=C4)C2=O</data>
       <data key="d5" />
-      <data key="d6">233.111</data>
-      <data key="d7">8.513</data>
-      <data key="d8">0.97385085</data>
+      <data key="d6">231.081</data>
+      <data key="d7">13.88</data>
+      <data key="d8">0.8900443</data>
       <data key="d9">6.0</data>
-      <data key="d10">0.4035494651403118</data>
-      <data key="d11">0.5964505348596882</data>
+      <data key="d10">0.9779454085430259</data>
+      <data key="d11">0.022054591456974065</data>
     </node>
     <node id="857316108157875835">
       <data key="d0">67</data>
@@ -102,6 +88,34 @@
       <data key="d10">0.5515727364192332</data>
       <data key="d11">0.4484272635807668</data>
     </node>
+    <node id="857316089233174583">
+      <data key="d0">208</data>
+      <data key="d1">12699</data>
+      <data key="d2">denovo</data>
+      <data key="d3">9-Fluorenone-2-carboxylic acid</data>
+      <data key="d4">C1=CC=C2C(=C1)C3=C(C2=O)C=C(C=C3)C(=O)O</data>
+      <data key="d5">C14H8O3</data>
+      <data key="d6">225.055</data>
+      <data key="d7">10.074</data>
+      <data key="d8">-1.717</data>
+      <data key="d9">6.0</data>
+      <data key="d10">1.0</data>
+      <data key="d11">0.0</data>
+    </node>
+    <node id="857316067070470955">
+      <data key="d0">88</data>
+      <data key="d1">1789</data>
+      <data key="d2">denovo</data>
+      <data key="d3">5-Methylbenzimidazole</data>
+      <data key="d4">CC1=CC2=C(C=C1)N=CN2</data>
+      <data key="d5">C8H8N2</data>
+      <data key="d6">133.076</data>
+      <data key="d7">0.98</data>
+      <data key="d8">-0.434</data>
+      <data key="d9">6.0</data>
+      <data key="d10">0.4035494651403118</data>
+      <data key="d11">0.5964505348596882</data>
+    </node>
     <node id="857316092110467359">
       <data key="d0">228</data>
       <data key="d1">14572</data>
@@ -116,33 +130,19 @@
       <data key="d10">1.0</data>
       <data key="d11">0.0</data>
     </node>
-    <node id="857316094442500587">
-      <data key="d0">244</data>
-      <data key="d1">17832</data>
-      <data key="d2">spectral_match</data>
-      <data key="d3">Benzoanthrone</data>
-      <data key="d4">C1=CC=C2C(=C1)C3=CC=CC4=C3C(=CC=C4)C2=O</data>
-      <data key="d5" />
-      <data key="d6">231.081</data>
-      <data key="d7">13.88</data>
-      <data key="d8">0.8900443</data>
-      <data key="d9">6.0</data>
-      <data key="d10">0.9779454085430259</data>
-      <data key="d11">0.022054591456974065</data>
-    </node>
-    <node id="857316089233174583">
-      <data key="d0">208</data>
-      <data key="d1">12699</data>
-      <data key="d2">denovo</data>
-      <data key="d3">9-Fluorenone-2-carboxylic acid</data>
-      <data key="d4">C1=CC=C2C(=C1)C3=C(C2=O)C=C(C=C3)C(=O)O</data>
-      <data key="d5">C14H8O3</data>
-      <data key="d6">225.055</data>
-      <data key="d7">10.074</data>
-      <data key="d8">-1.717</data>
-      <data key="d9">6.0</data>
-      <data key="d10">1.0</data>
-      <data key="d11">0.0</data>
+    <node id="857316076109196463">
+      <data key="d0">88</data>
+      <data key="d1">3929</data>
+      <data key="d2" />
+      <data key="d3" />
+      <data key="d4" />
+      <data key="d5">C8H8N2</data>
+      <data key="d6">133.076</data>
+      <data key="d7">3.974</data>
+      <data key="d8">0.981</data>
+      <data key="d12" />
+      <data key="d13" />
+      <data key="d14" />
     </node>
     <node id="857316092878025059">
       <data key="d0">234</data>
@@ -158,17 +158,17 @@
       <data key="d10">0.3834674508162693</data>
       <data key="d11">0.6165325491837307</data>
     </node>
+    <edge source="857316087022776199" target="857316108157875835">
+      <data key="d15">0.7203442652031379</data>
+      <data key="d16">0.5</data>
+    </edge>
     <edge source="857316107931383399" target="857316108157875835">
       <data key="d15">0.8535931228279299</data>
       <data key="d16">0.6</data>
     </edge>
-    <edge source="857316076109196463" target="857316067070470955">
+    <edge source="857316067070470955" target="857316076109196463">
       <data key="d15">0.9846564885643065</data>
       <data key="d16">1.0</data>
-    </edge>
-    <edge source="857316087022776199" target="857316108157875835">
-      <data key="d15">0.7203442652031379</data>
-      <data key="d16">0.5</data>
     </edge>
   </graph>
 </graphml>
