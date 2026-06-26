@@ -225,6 +225,7 @@ def get_da_df():
     da_df["detected_rate"] = (
         da_df[get_feature_state_columns_samples()] == "DETECTED"
     ).mean(axis=1)
+    da_df["has_ms2"] = da_df["fragment_scans"] != 0
 
     # Do comparison for each column
     for condition_column in condition_columns:
@@ -271,8 +272,7 @@ def get_da_df():
     cols = [
         c
         for c in da_df.columns
-        if c in ["id", "rt", "mz", "area", "height"]
-        or c == "detected_rate"
+        if c in ["id", "rt", "mz", "area", "height", "has_ms2", "detected_rate"]
         or c.startswith("detected:")
         or c.startswith("log2FC:")
         or c.startswith("mean_area:")
