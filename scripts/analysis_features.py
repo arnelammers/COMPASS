@@ -273,6 +273,7 @@ def get_da_df():
         for c in da_df.columns
         if c in ["id", "rt", "mz", "area", "height"]
         or c == "detected_rate"
+        or c.startswith("detected:")
         or c.startswith("log2FC:")
         or c.startswith("mean_area:")
         or c.startswith("welch_p:")
