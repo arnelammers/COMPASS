@@ -230,6 +230,18 @@ def get_umap_figure(X, clustering):
     # Assign light grey to noise
     colors[is_noise] = (0.8, 0.8, 0.8, 1.0)  # lightgrey
 
+    # reference points
+    ax.scatter(
+        standard_embedding[:, 0][query_mask],
+        standard_embedding[:, 1][query_mask],
+        c=colors[query_mask],
+        marker="*",
+        alpha=0.5,
+        s=150,
+        edgecolors="black",
+        linewidths=0.5,
+    )
+
     # dataset points (spectral)
     ax.scatter(
         standard_embedding[:, 0][~query_mask & spectral_mask],
@@ -237,6 +249,9 @@ def get_umap_figure(X, clustering):
         c=colors[~query_mask & spectral_mask],
         alpha=0.3,
         marker="^",
+        s=100,
+        edgecolors="black",
+        linewidths=0.5,
     )
     # dataset points (structure database)
     ax.scatter(
@@ -245,6 +260,9 @@ def get_umap_figure(X, clustering):
         c=colors[~query_mask & db_mask],
         alpha=0.3,
         marker="o",
+        s=100,
+        edgecolors="black",
+        linewidths=0.5,
     )
     # dataset points (denovo)
     ax.scatter(
@@ -253,15 +271,9 @@ def get_umap_figure(X, clustering):
         c=colors[~query_mask & denovo_mask],
         alpha=0.3,
         marker="s",
-    )
-
-    # reference points
-    ax.scatter(
-        standard_embedding[:, 0][query_mask],
-        standard_embedding[:, 1][query_mask],
-        c=colors[query_mask],
-        marker="*",
-        alpha=0.5,
+        s=100,
+        edgecolors="black",
+        linewidths=0.5,
     )
 
     # Add first legend

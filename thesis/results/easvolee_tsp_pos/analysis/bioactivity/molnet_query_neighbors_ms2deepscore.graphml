@@ -15,19 +15,22 @@
   <key id="d1" for="node" attr.name="id" attr.type="long" />
   <key id="d0" for="node" attr.name="component" attr.type="long" />
   <graph edgedefault="undirected">
-    <node id="857336480953292552">
-      <data key="d0">272</data>
-      <data key="d1">27132</data>
-      <data key="d2">spectral_match</data>
-      <data key="d3">Campathecin</data>
-      <data key="d4">CCC1(C2=C(COC1=O)C(=O)N3CC4=CC5=CC=CC=C5N=C4C3=C2)O</data>
-      <data key="d5" />
-      <data key="d6">371.101</data>
-      <data key="d7">23.562</data>
-      <data key="d8">0.84745747</data>
+    <node id="857336466394862260">
+      <data key="d0">71</data>
+      <data key="d1">16463</data>
+      <data key="d2">structure_db_match</data>
+      <data key="d3">2-Phenylbenzothiazole</data>
+      <data key="d4">C1=CC=C(C=C1)C2=NC3=CC=CC=C3S2</data>
+      <data key="d5">C13H9NS</data>
+      <data key="d6">212.053</data>
+      <data key="d7">14.31</data>
+      <data key="d8">0.845</data>
       <data key="d9">2.0</data>
-      <data key="d10">1.0</data>
-      <data key="d11">0.0</data>
+      <data key="d10">0.7909425233588993</data>
+      <data key="d11">0.2090574766411008</data>
+    </node>
+    <node id="857336456135593976">
+      <data key="d0">86</data>
     </node>
     <node id="857336458228551808">
       <data key="d0">86</data>
@@ -43,8 +46,8 @@
       <data key="d10">1.0</data>
       <data key="d11">0.0</data>
     </node>
-    <node id="857336456135593976">
-      <data key="d0">86</data>
+    <node id="857336431833795340">
+      <data key="d0">71</data>
     </node>
     <node id="857336446534831488">
       <data key="d0">142</data>
@@ -60,30 +63,27 @@
       <data key="d10">0.5510081691121163</data>
       <data key="d11">0.4489918308878838</data>
     </node>
-    <node id="857336431833795340">
-      <data key="d0">71</data>
-    </node>
-    <node id="857336466394862260">
-      <data key="d0">71</data>
-      <data key="d1">16463</data>
-      <data key="d2">structure_db_match</data>
-      <data key="d3">2-Phenylbenzothiazole</data>
-      <data key="d4">C1=CC=C(C=C1)C2=NC3=CC=CC=C3S2</data>
-      <data key="d5">C13H9NS</data>
-      <data key="d6">212.053</data>
-      <data key="d7">14.31</data>
-      <data key="d8">0.845</data>
+    <node id="857336480953292552">
+      <data key="d0">272</data>
+      <data key="d1">27132</data>
+      <data key="d2">spectral_match</data>
+      <data key="d3">Campathecin</data>
+      <data key="d4">CCC1(C2=C(COC1=O)C(=O)N3CC4=CC5=CC=CC=C5N=C4C3=C2)O</data>
+      <data key="d5" />
+      <data key="d6">371.101</data>
+      <data key="d7">23.562</data>
+      <data key="d8">0.84745747</data>
       <data key="d9">2.0</data>
-      <data key="d10">0.7909425233588993</data>
-      <data key="d11">0.2090574766411008</data>
+      <data key="d10">1.0</data>
+      <data key="d11">0.0</data>
     </node>
-    <edge source="857336458228551808" target="857336456135593976">
-      <data key="d12">0.8860956948963943</data>
-      <data key="d13">1.0</data>
-    </edge>
-    <edge source="857336431833795340" target="857336466394862260">
+    <edge source="857336466394862260" target="857336431833795340">
       <data key="d12">0.8102336583596997</data>
       <data key="d13">0.8</data>
+    </edge>
+    <edge source="857336456135593976" target="857336458228551808">
+      <data key="d12">0.8860956948963943</data>
+      <data key="d13">1.0</data>
     </edge>
   </graph>
 </graphml>
