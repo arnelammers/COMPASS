@@ -46,19 +46,19 @@
       <data key="d10">0.9779454085430259</data>
       <data key="d11">0.022054591456974065</data>
     </node>
-    <node id="857316086980833155">
-      <data key="d0">191</data>
-      <data key="d1">11015</data>
-      <data key="d2">denovo</data>
-      <data key="d3">1H,3H-naphtho[2,3-c]furan-1,3-dione</data>
-      <data key="d4">C1=CC=C2C=C3C(=CC2=C1)C(=O)OC3=O</data>
-      <data key="d5">C12H6O3</data>
-      <data key="d6">199.039</data>
-      <data key="d7">8.511</data>
-      <data key="d8">-0.162</data>
+    <node id="857316092110467359">
+      <data key="d0">228</data>
+      <data key="d1">14572</data>
+      <data key="d2">spectral_match</data>
+      <data key="d3">Indigo J</data>
+      <data key="d4">C1=CC=C2C(=C1)C(=O)C(=C3C(=O)C4=CC=CC=C4N3)N2</data>
+      <data key="d5" />
+      <data key="d6">263.082</data>
+      <data key="d7">11.473</data>
+      <data key="d8">0.8037814</data>
       <data key="d9">6.0</data>
-      <data key="d10">0.5515727364192332</data>
-      <data key="d11">0.4484272635807668</data>
+      <data key="d10">1.0</data>
+      <data key="d11">0.0</data>
     </node>
     <node id="857316076109196463">
       <data key="d0">88</data>
@@ -74,33 +74,19 @@
       <data key="d13" />
       <data key="d14" />
     </node>
-    <node id="857316092110467359">
-      <data key="d0">228</data>
-      <data key="d1">14572</data>
-      <data key="d2">spectral_match</data>
-      <data key="d3">Indigo J</data>
-      <data key="d4">C1=CC=C2C(=C1)C(=O)C(=C3C(=O)C4=CC=CC=C4N3)N2</data>
-      <data key="d5" />
-      <data key="d6">263.082</data>
-      <data key="d7">11.473</data>
-      <data key="d8">0.8037814</data>
-      <data key="d9">6.0</data>
-      <data key="d10">1.0</data>
-      <data key="d11">0.0</data>
-    </node>
-    <node id="857316107931383399">
-      <data key="d0">67</data>
-      <data key="d1">30795</data>
+    <node id="857316086980833155">
+      <data key="d0">191</data>
+      <data key="d1">11015</data>
       <data key="d2">denovo</data>
-      <data key="d3">docosanamide</data>
-      <data key="d4">CCCCCCCCCCCCCCCCCCCCCC(=O)N</data>
-      <data key="d5">C22H45NO</data>
-      <data key="d6">340.357</data>
-      <data key="d7">22.793</data>
-      <data key="d8">-1.174</data>
-      <data key="d9">3.0</data>
-      <data key="d10">0.7051743570156886</data>
-      <data key="d11">0.29482564298431135</data>
+      <data key="d3">1H,3H-naphtho[2,3-c]furan-1,3-dione</data>
+      <data key="d4">C1=CC=C2C=C3C(=CC2=C1)C(=O)OC3=O</data>
+      <data key="d5">C12H6O3</data>
+      <data key="d6">199.039</data>
+      <data key="d7">8.511</data>
+      <data key="d8">-0.162</data>
+      <data key="d9">6.0</data>
+      <data key="d10">0.5515727364192332</data>
+      <data key="d11">0.4484272635807668</data>
     </node>
     <node id="857316067070470955">
       <data key="d0">88</data>
@@ -112,6 +98,20 @@
       <data key="d6">133.076</data>
       <data key="d7">0.98</data>
       <data key="d8">-0.434</data>
+      <data key="d9">6.0</data>
+      <data key="d10">0.4035494651403118</data>
+      <data key="d11">0.5964505348596882</data>
+    </node>
+    <node id="857316087022776199">
+      <data key="d0">67</data>
+      <data key="d1">11016</data>
+      <data key="d2">spectral_match</data>
+      <data key="d3">benzothiazolyl-cyclohexyl-amine</data>
+      <data key="d4">C1CCC(CC1)NC2=NC3=CC=CC=C3S2</data>
+      <data key="d5" />
+      <data key="d6">233.111</data>
+      <data key="d7">8.513</data>
+      <data key="d8">0.97385085</data>
       <data key="d9">6.0</data>
       <data key="d10">0.4035494651403118</data>
       <data key="d11">0.5964505348596882</data>
@@ -130,20 +130,6 @@
       <data key="d10">1.0</data>
       <data key="d11">0.0</data>
     </node>
-    <node id="857316087022776199">
-      <data key="d0">67</data>
-      <data key="d1">11016</data>
-      <data key="d2">spectral_match</data>
-      <data key="d3">benzothiazolyl-cyclohexyl-amine</data>
-      <data key="d4">C1CCC(CC1)NC2=NC3=CC=CC=C3S2</data>
-      <data key="d5" />
-      <data key="d6">233.111</data>
-      <data key="d7">8.513</data>
-      <data key="d8">0.97385085</data>
-      <data key="d9">6.0</data>
-      <data key="d10">0.4035494651403118</data>
-      <data key="d11">0.5964505348596882</data>
-    </node>
     <node id="857316092878025059">
       <data key="d0">234</data>
       <data key="d1">15868</data>
@@ -157,6 +143,20 @@
       <data key="d9">6.0</data>
       <data key="d10">0.3834674508162693</data>
       <data key="d11">0.6165325491837307</data>
+    </node>
+    <node id="857316107931383399">
+      <data key="d0">67</data>
+      <data key="d1">30795</data>
+      <data key="d2">denovo</data>
+      <data key="d3">docosanamide</data>
+      <data key="d4">CCCCCCCCCCCCCCCCCCCCCC(=O)N</data>
+      <data key="d5">C22H45NO</data>
+      <data key="d6">340.357</data>
+      <data key="d7">22.793</data>
+      <data key="d8">-1.174</data>
+      <data key="d9">3.0</data>
+      <data key="d10">0.7051743570156886</data>
+      <data key="d11">0.29482564298431135</data>
     </node>
     <edge source="857316108157875835" target="857316087022776199">
       <data key="d15">0.7203442652031379</data>

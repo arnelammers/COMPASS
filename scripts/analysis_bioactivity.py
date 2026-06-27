@@ -236,7 +236,7 @@ def get_umap_figure(X, clustering):
         standard_embedding[:, 1][query_mask],
         c=colors[query_mask],
         marker="*",
-        alpha=0.5,
+        alpha=0.3,
         s=150,
         edgecolors="black",
         linewidths=0.5,

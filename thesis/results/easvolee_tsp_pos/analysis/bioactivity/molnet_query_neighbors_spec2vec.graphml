@@ -13,6 +13,20 @@
   <key id="d1" for="node" attr.name="id" attr.type="long" />
   <key id="d0" for="node" attr.name="component" attr.type="long" />
   <graph edgedefault="undirected">
+    <node id="857336446534831488">
+      <data key="d0">158</data>
+      <data key="d1">7229</data>
+      <data key="d2">spectral_match</data>
+      <data key="d3">benzothiazolol</data>
+      <data key="d4">C1=CC=C2C(=C1)NC(=O)S2</data>
+      <data key="d5" />
+      <data key="d6">152.017</data>
+      <data key="d7">7.45</data>
+      <data key="d8">0.95281935</data>
+      <data key="d9">2.0</data>
+      <data key="d10">0.5510081691121163</data>
+      <data key="d11">0.4489918308878838</data>
+    </node>
     <node id="857336466394862260">
       <data key="d0">384</data>
       <data key="d1">16463</data>
@@ -26,20 +40,6 @@
       <data key="d9">2.0</data>
       <data key="d10">0.7909425233588993</data>
       <data key="d11">0.2090574766411008</data>
-    </node>
-    <node id="857336458228551808">
-      <data key="d0">292</data>
-      <data key="d1">12766</data>
-      <data key="d2">spectral_match</data>
-      <data key="d3">Indigo J</data>
-      <data key="d4">C1=CC=C2C(=C1)C(=O)C(=C3C(=O)C4=CC=CC=C4N3)N2</data>
-      <data key="d5" />
-      <data key="d6">263.082</data>
-      <data key="d7">11.483</data>
-      <data key="d8">0.8020742</data>
-      <data key="d9">2.0</data>
-      <data key="d10">1.0</data>
-      <data key="d11">0.0</data>
     </node>
     <node id="857336480953292552">
       <data key="d0">613</data>
@@ -55,19 +55,19 @@
       <data key="d10">1.0</data>
       <data key="d11">0.0</data>
     </node>
-    <node id="857336446534831488">
-      <data key="d0">158</data>
-      <data key="d1">7229</data>
+    <node id="857336458228551808">
+      <data key="d0">292</data>
+      <data key="d1">12766</data>
       <data key="d2">spectral_match</data>
-      <data key="d3">benzothiazolol</data>
-      <data key="d4">C1=CC=C2C(=C1)NC(=O)S2</data>
+      <data key="d3">Indigo J</data>
+      <data key="d4">C1=CC=C2C(=C1)C(=O)C(=C3C(=O)C4=CC=CC=C4N3)N2</data>
       <data key="d5" />
-      <data key="d6">152.017</data>
-      <data key="d7">7.45</data>
-      <data key="d8">0.95281935</data>
+      <data key="d6">263.082</data>
+      <data key="d7">11.483</data>
+      <data key="d8">0.8020742</data>
       <data key="d9">2.0</data>
-      <data key="d10">0.5510081691121163</data>
-      <data key="d11">0.4489918308878838</data>
+      <data key="d10">1.0</data>
+      <data key="d11">0.0</data>
     </node>
   </graph>
 </graphml>
