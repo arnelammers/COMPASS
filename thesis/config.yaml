@@ -1,0 +1,57 @@
+datasets:
+  easvolee_tsp_pos:
+    mzmine:
+      template: "dda_orbitrap_pos"
+      retention_time_range: [0.5, 31]
+      approximate_feature_fwhm: 0.1
+      minimum_feature_height: 50000
+      blank_subtraction:
+        min_blank_presence: 3
+        fold_change_threshold: 3
+    analysis:
+      features:
+        pca:
+          samples_groupby: ["group", "fraction"]
+          procedural_blanks_groupby: ["fraction"]
+        da_condition_columns: ["fraction", "day_type"]
+      annotations:
+        formula_identification_score_cutoff: 0.8
+        spectral_library_match_score_cutoff: 0.8
+        structure_database_match_confidence_cutoff: 0.8
+        msnovelist_score_cutoff: -3
+      bioactivity:
+        cc_spaces: ["A3", "A5", "B1", "B4", "B5", "C3", "C4", "D1", "D5"]
+        query: "op"
+        clusterable_embedding_umap_n_neighbors: 15
+        clusterable_embedding_umap_min_dist: 0.0
+        clusterable_embedding_umap_n_components: 5
+        hdbscan_min_samples: 5
+        hdbscan_min_cluster_size: 10
+  easvolee_ufp_pos:
+    mzmine:
+      template: "dda_orbitrap_pos"
+      retention_time_range: [0.5, 31]
+      approximate_feature_fwhm: 0.1
+      minimum_feature_height: 50000
+      blank_subtraction:
+        min_blank_presence: 3
+        fold_change_threshold: 3
+    analysis:
+      features:
+        pca:
+          samples_groupby: ["group", "fraction"]
+          procedural_blanks_groupby: ["fraction"]
+        da_condition_columns: ["fraction", "day_type"]
+      annotations:
+        formula_identification_score_cutoff: 0.8
+        spectral_library_match_score_cutoff: 0.8
+        structure_database_match_confidence_cutoff: 0.8
+        msnovelist_score_cutoff: -3
+      bioactivity:
+        cc_spaces: ["A3", "A5", "B1", "B4", "B5", "C3", "C4", "D1", "D5"]
+        query: "op"
+        clusterable_embedding_umap_n_neighbors: 15
+        clusterable_embedding_umap_min_dist: 0.0
+        clusterable_embedding_umap_n_components: 5
+        hdbscan_min_samples: 5
+        hdbscan_min_cluster_size: 10
