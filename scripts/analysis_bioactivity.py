@@ -383,8 +383,24 @@ def get_query_neighbors_molecular_network(
 
 # Compute signatures
 signatures = read_signatures()
-scaler_signatures = StandardScaler()
-signatures_scaled = scaler_signatures.fit_transform(signatures)
+
+block_size = 128
+n_blocks = signatures.shape[1] // block_size
+
+scaled_blocks = []
+
+for i in range(n_blocks):
+    start = i * block_size
+    end = (i + 1) * block_size
+
+    block = signatures[:, start:end]
+
+    scaler = StandardScaler()
+    block_scaled = scaler.fit_transform(block)
+
+    scaled_blocks.append(block_scaled)
+
+signatures_scaled = np.hstack(scaled_blocks)
 
 additional = get_op_fingerprint(all_smiles)
 scaler_additional = StandardScaler()
