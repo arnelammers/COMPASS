@@ -23,5 +23,5 @@
         "editor.defaultFormatter": "redhat.vscode-yaml",
         "editor.formatOnSave": true
     },
-    "python-envs.defaultEnvManager": "ms-python.python:system"
+    "files.eol": "\n"
 }
